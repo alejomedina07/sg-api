@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,0" last-zoom="1" max-obj-count="22"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<role name="root"
+ password="Id70pP%2C!3S">
+</role>
+
+<database name="system_inventory" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="INV" layers="0" rect-visible="true" fill-color="#e1e1e1">
+	<role name="root"/>
+</schema>
+
+<schema name="SVC" layers="0" rect-visible="true" fill-color="#e1e1e1">
+	<role name="root"/>
+</schema>
+
+<schema name="APMT" layers="0" rect-visible="true" fill-color="#e1e1e1">
+	<role name="root"/>
+</schema>
+
+<schema name="CTM" layers="0" rect-visible="true" fill-color="#e1e1e1">
+	<role name="root"/>
+</schema>
+
+<schema name="USR" layers="0" rect-visible="true" fill-color="#e1e1e1">
+	<role name="root"/>
+</schema>
+
+<schema name="CNFG" layers="0" rect-visible="true" fill-color="#e1e1e1">
+	<role name="root"/>
+</schema>
+
+<table name="Inventory" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
+	<schema name="&quot;INV&quot;"/>
+	<role name="root"/>
+	<position x="40" y="60"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="quantity" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="Inventory_pk" type="pk-constr" table="&quot;INV&quot;.&quot;Inventory&quot;">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="created_by" index="5"/>
+		<object name="status_id" index="6"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="list_Inventory_fk" index="2"/>
+		<object name="user_Inventory_fk" index="1"/>
+	</customidxs>
+</table>
+
+<table name="inventory_in_out" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;INV&quot;"/>
+	<role name="root"/>
+	<position x="360" y="40"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="quantity" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="type" not-null="true">
+		<type name="char" length="1"/>
+	</column>
+	<constraint name="inventory_in_out_pk" type="pk-constr" table="&quot;INV&quot;.inventory_in_out">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="Inventory_id" index="3"/>
+		<object name="created_by" index="5"/>
+		<object name="service_id" index="4"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="Inventory_inventory_in_out_fk" index="1"/>
+		<object name="service_inventory_in_out_fk" index="2"/>
+		<object name="user_inventory_in_out_fk" index="3"/>
+	</customidxs>
+</table>
+
+<relationship name="Inventory_has_many_inventory_in_out" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#f670c1"
+	 src-table="&quot;INV&quot;.&quot;Inventory&quot;"
+	 dst-table="&quot;INV&quot;.inventory_in_out"
+	 src-required="false" dst-required="false"/>
+
+<index name="inventory_in_out_inventory_id_idx" table="&quot;INV&quot;.inventory_in_out"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="Inventory_id"/>
+		</idxelement>
+</index>
+
+<table name="service" layers="0" collapse-mode="1" max-obj-count="9" z-value="0">
+	<schema name="&quot;SVC&quot;"/>
+	<role name="root"/>
+	<position x="780" y="40"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="created_at" not-null="true" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="amount" not-null="true">
+		<type name="money" length="0"/>
+	</column>
+	<column name="description" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="service_pk" type="pk-constr" table="&quot;SVC&quot;.service">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="appointment_id" index="3"/>
+		<object name="created_by" index="6"/>
+		<object name="customer_id" index="4"/>
+		<object name="status_id" index="7"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="appointment_service_fk" index="1"/>
+		<object name="customer_service_fk" index="3"/>
+		<object name="list_service_fk" index="5"/>
+		<object name="service_uq" index="2"/>
+		<object name="user_service_fk" index="4"/>
+	</customidxs>
+</table>
+
+<relationship name="service_has_many_inventory_in_out" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#fe38ad"
+	 src-table="&quot;SVC&quot;.service"
+	 dst-table="&quot;INV&quot;.inventory_in_out"
+	 src-required="false" dst-required="false"/>
+
+<index name="inventory_in_out_service_id_idx" table="&quot;INV&quot;.inventory_in_out"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="service_id"/>
+		</idxelement>
+</index>
+
+<table name="appointment" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
+	<schema name="&quot;APMT&quot;"/>
+	<role name="root"/>
+	<position x="1060" y="440"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="date" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="duration" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="appointment_pk" type="pk-constr" table="&quot;APMT&quot;.appointment">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="appointment_type_id" index="8"/>
+		<object name="created_by" index="5"/>
+		<object name="customer_id" index="4"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="appointment_type_appointment_fk" index="3"/>
+		<object name="customer_appointment_fk" index="1"/>
+		<object name="user_appointment_fk" index="2"/>
+	</customidxs>
+</table>
+
+<relationship name="service_has_one_appointment" type="rel11" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#16d55c"
+	 src-table="&quot;APMT&quot;.appointment"
+	 dst-table="&quot;SVC&quot;.service"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="236.752" y="82.247"/>
+	</label>
+</relationship>
+
+<table name="customer" layers="0" collapse-mode="1" max-obj-count="12" z-value="0">
+	<schema name="&quot;CTM&quot;"/>
+	<role name="root"/>
+	<position x="660" y="320"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="document">
+		<type name="text" length="0"/>
+	</column>
+	<column name="address">
+		<type name="text" length="0"/>
+	</column>
+	<column name="phone_number" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="blood_type">
+		<type name="varchar" length="10"/>
+	</column>
+	<constraint name="customer_pk" type="pk-constr" table="&quot;CTM&quot;.customer">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="created_by" index="6"/>
+		<object name="document_type_id" index="9"/>
+		<object name="status_id" index="8"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="list_customer_fk" index="2"/>
+		<object name="list_customer_fk1" index="3"/>
+		<object name="user_customer_fk" index="1"/>
+	</customidxs>
+</table>
+
+<relationship name="customer_has_many_service" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#ecedfd"
+	 src-table="&quot;CTM&quot;.customer"
+	 dst-table="&quot;SVC&quot;.service"
+	 src-required="false" dst-required="false"/>
+
+<index name="service_id_appointment_id_idx" table="&quot;SVC&quot;.service"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="appointment_id"/>
+		</idxelement>
+</index>
+
+<index name="service_id_customer_id_idx" table="&quot;SVC&quot;.service"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="customer_id"/>
+		</idxelement>
+</index>
+
+<relationship name="customer_has_many_appointment" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#a7a323"
+	 src-table="&quot;CTM&quot;.customer"
+	 dst-table="&quot;APMT&quot;.appointment"
+	 src-required="false" dst-required="false"/>
+
+<index name="appointment_id_customer_id_idx" table="&quot;APMT&quot;.appointment"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="customer_id"/>
+		</idxelement>
+</index>
+
+<table name="user" layers="0" collapse-mode="1" max-obj-count="15" z-value="0">
+	<schema name="&quot;USR&quot;"/>
+	<role name="root"/>
+	<position x="320" y="460"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="first_name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="last_name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="address" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="phone_number" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="email">
+		<type name="text" length="0"/>
+	</column>
+	<column name="document_number" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="password">
+		<type name="text" length="0"/>
+	</column>
+	<column name="blood_type">
+		<type name="varchar" length="10"/>
+	</column>
+	<constraint name="user_pk" type="pk-constr" table="&quot;USR&quot;.&quot;user&quot;">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="document_number_unique" type="uq-constr" table="&quot;USR&quot;.&quot;user&quot;">
+		<columns names="document_number" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="email_unique" type="uq-constr" table="&quot;USR&quot;.&quot;user&quot;">
+		<columns names="email" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="phone_unique" type="uq-constr" table="&quot;USR&quot;.&quot;user&quot;">
+		<columns names="phone_number" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="document_type_id" index="10"/>
+		<object name="rol_id" index="8"/>
+		<object name="status_id" index="11"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="list_user_fk" index="5"/>
+		<object name="list_user_fk1" index="6"/>
+		<object name="rol_user_fk" index="1"/>
+	</customidxs>
+</table>
+
+<relationship name="user_has_many_service" type="rel1n" layers="0"
+	 src-col-pattern="created_by"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#1a3559"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;SVC&quot;.service"
+	 src-required="false" dst-required="false"/>
+
+<index name="service_user_id_idx" table="&quot;SVC&quot;.service"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="created_by"/>
+		</idxelement>
+</index>
+
+<relationship name="user_has_many_appointment" type="rel1n" layers="0"
+	 src-col-pattern="created_by"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#f46650"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;APMT&quot;.appointment"
+	 src-required="false" dst-required="false"/>
+
+<index name="appointment_user_id_idx" table="&quot;APMT&quot;.appointment"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="created_by"/>
+		</idxelement>
+</index>
+
+<table name="rol" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="&quot;USR&quot;"/>
+	<role name="root"/>
+	<position x="20" y="380"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="status" not-null="true" default-value="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="rol_pk" type="pk-constr" table="&quot;USR&quot;.rol">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="rol_has_many_user" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#49c8d4"
+	 src-table="&quot;USR&quot;.rol"
+	 dst-table="&quot;USR&quot;.&quot;user&quot;"
+	 src-required="false" dst-required="false"/>
+
+<index name="user_rol_id_idx" table="&quot;USR&quot;.&quot;user&quot;"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="rol_id"/>
+		</idxelement>
+</index>
+
+<table name="expense" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;INV&quot;"/>
+	<role name="root"/>
+	<position x="240" y="200"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="amount" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="expense_pk" type="pk-constr" table="&quot;INV&quot;.expense">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="created_by" index="5"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="user_expense_fk" index="1"/>
+	</customidxs>
+</table>
+
+<relationship name="user_has_many_expense" type="rel1n" layers="0"
+	 src-col-pattern="created_by"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#9c13cb"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;INV&quot;.expense"
+	 src-required="false" dst-required="false"/>
+
+<index name="expense_user_id_idx" table="&quot;INV&quot;.expense"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="created_by"/>
+		</idxelement>
+</index>
+
+<table name="list" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
+	<schema name="&quot;CNFG&quot;"/>
+	<role name="root"/>
+	<position x="760" y="720"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="key" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="updated_at">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="status" default-value="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="default">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="List_pk" type="pk-constr" table="&quot;CNFG&quot;.list">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="List_has_many_user" type="rel1n" layers="0"
+	 src-col-pattern="document_type_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#d3f60a"
+	 src-table="&quot;CNFG&quot;.list"
+	 dst-table="&quot;USR&quot;.&quot;user&quot;"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="46.8889" y="10.8391"/>
+	</label>
+</relationship>
+
+<relationship name="list_has_many_user" type="rel1n" layers="0"
+	 src-col-pattern="status_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#9959fd"
+	 src-table="&quot;CNFG&quot;.list"
+	 dst-table="&quot;USR&quot;.&quot;user&quot;"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<index name="user_status_id_idx" table="&quot;USR&quot;.&quot;user&quot;"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="status_id"/>
+		</idxelement>
+</index>
+
+<index name="user_document_type_id_idx" table="&quot;USR&quot;.&quot;user&quot;"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="document_type_id"/>
+		</idxelement>
+</index>
+
+<relationship name="user_has_many_customer" type="rel1n" layers="0"
+	 src-col-pattern="created_by"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#c0d671"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;CTM&quot;.customer"
+	 src-required="false" dst-required="false"/>
+
+<index name="customer_user_id_idx" table="&quot;CTM&quot;.customer"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="created_by"/>
+		</idxelement>
+</index>
+
+<relationship name="user_has_many_inventory_in_out" type="rel1n" layers="0"
+	 src-col-pattern="created_by"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#28fa41"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;INV&quot;.inventory_in_out"
+	 src-required="false" dst-required="false"/>
+
+<index name="inventory_in_out_user_id_idx" table="&quot;INV&quot;.inventory_in_out"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="created_by"/>
+		</idxelement>
+</index>
+
+<relationship name="user_has_many_Inventory" type="rel1n" layers="0"
+	 src-col-pattern="created_by"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#6786b6"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;INV&quot;.&quot;Inventory&quot;"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="list_has_many_service" type="rel1n" layers="0"
+	 src-col-pattern="status_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#3f1af6"
+	 src-table="&quot;CNFG&quot;.list"
+	 dst-table="&quot;SVC&quot;.service"
+	 src-required="false" dst-required="false"/>
+
+<index name="service_list_id_idx" table="&quot;SVC&quot;.service"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="status_id"/>
+		</idxelement>
+</index>
+
+<relationship name="status_has_many_customer" type="rel1n" layers="0"
+	 src-col-pattern="status_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#aa5d92"
+	 src-table="&quot;CNFG&quot;.list"
+	 dst-table="&quot;CTM&quot;.customer"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="list_has_many_customer" type="rel1n" layers="0"
+	 src-col-pattern="document_type_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#b47415"
+	 src-table="&quot;CNFG&quot;.list"
+	 dst-table="&quot;CTM&quot;.customer"
+	 src-required="false" dst-required="false"/>
+
+<table name="appointment_type" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="&quot;APMT&quot;"/>
+	<role name="root"/>
+	<position x="1240" y="720"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="status" default-value="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="background">
+		<type name="varchar" length="10"/>
+	</column>
+	<constraint name="appointment_type_pk" type="pk-constr" table="&quot;APMT&quot;.appointment_type">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="appointment_type_has_many_appointment" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#a7168b"
+	 src-table="&quot;APMT&quot;.appointment_type"
+	 dst-table="&quot;APMT&quot;.appointment"
+	 src-required="false" dst-required="false"/>
+
+<index name="appointment_appointment_type_id_idx" table="&quot;APMT&quot;.appointment"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="appointment_type_id"/>
+		</idxelement>
+</index>
+
+<relationship name="list_has_many_Inventory" type="rel1n" layers="0"
+	 src-col-pattern="status_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#35b26a"
+	 src-table="&quot;CNFG&quot;.list"
+	 dst-table="&quot;INV&quot;.&quot;Inventory&quot;"
+	 src-required="false" dst-required="false"/>
+
+<index name="inventory_status_id_idx" table="&quot;INV&quot;.&quot;Inventory&quot;"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="status_id"/>
+		</idxelement>
+</index>
+
+<index name="inventory_created_by_idx" table="&quot;INV&quot;.&quot;Inventory&quot;"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="created_by"/>
+		</idxelement>
+</index>
+
+</dbmodel>

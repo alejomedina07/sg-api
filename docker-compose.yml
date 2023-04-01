@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  database:
+    image: postgres
+    restart: always
+    environment:
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=Id70pP%2C!3S
+      - POSTGRES_DB=system_inventory
+    ports:
+      - '35432:5432'

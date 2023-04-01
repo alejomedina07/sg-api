@@ -1,0 +1,17 @@
+core:
+  environment: DEV
+  database:
+    host: localhost
+    port: 35432
+    username: root
+    password: Id70pP%2C!3S
+    database: system_inventory
+main:
+  port: 3000
+  jwt:
+    secret: sg-1nv3nt0ry$cl@v3?
+    expired: 4h
+  swagger:
+    title: Documentation System inventory
+    description: Aplication nest js
+    version: 1.0
