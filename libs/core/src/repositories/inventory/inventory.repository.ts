@@ -10,9 +10,11 @@ export class InventoryRepository {
 
   async createInventory(data: Inventory): Promise<any> {
     try {
+      console.log(4);
       const inventoryInsert = await this.inventoryRepository.manager.insert(Inventory, data);
       return { data: inventoryInsert.identifiers[0].id, msg: 'Inventario creado exitosamente!', code: 200 }
     } catch (e) {
+      console.log(1234, e);
       return { code: 500, msg: 'Error al intentar guardar' }
     }
   }

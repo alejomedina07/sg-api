@@ -18,6 +18,11 @@ export class AppointmentService {
     return this.appointmentRepository.createAppointment(data);
   }
 
+  async updateAppointment(id: number, data: CreateAppointmentDto): Promise<ResponseDto> {
+    return this.appointmentRepository.updateAppointment(id, data);
+  }
+
+
   async getAppointmentTypes(): Promise<ResponseDto> {
     return this.appointmentRepository.getAppointmentTypes()
   }

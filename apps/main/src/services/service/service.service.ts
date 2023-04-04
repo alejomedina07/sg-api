@@ -12,6 +12,10 @@ export class ServiceService {
     return await this.serviceRepository.getServices()
   }
 
+  async getReportServices(): Promise<ResponseDto> {
+    return await this.serviceRepository.getReportServices()
+  }
+
   async createService(data: CreateServiceDto): Promise<ResponseDto> {
     return await this.serviceRepository.createService(data);
   }

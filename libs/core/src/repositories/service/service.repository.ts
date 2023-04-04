@@ -24,4 +24,34 @@ export class ServiceRepository {
       return { code: 404, msg: 'Error al obtener' }
     }
   }
+
+  async getReportServices(): Promise<ResponseDto> {
+    try {
+      const query = `
+        SELECT 
+          to_char(DATE_TRUNC('month', created_at), 'YYYY-MM') as month,
+          CAST(COUNT(*) AS INTEGER) AS count,
+          SUM(amount) as total_amount
+        FROM
+            "SVC".service
+        GROUP BY 
+          month
+        ORDER BY 
+          month
+      `;
+      const result = await this.serviceRepository.query(query);
+      const data = result.map(({ month, total_amount, count }) => (
+        {
+          name:month,  count,
+          total_amount:  (parseInt(String( total_amount.replace( /[$,]/g, '' ) * 100 ))) / 100
+        }
+      ));
+      console.log(data);
+      return { data, code: 201, msg: 'Obtenido correctamente' }
+    } catch (e) {
+      console.log(e);
+      return { data: e, code: 500, msg: 'Error al obtener' }
+    }
+  }
+
 }

@@ -30,6 +30,7 @@ export class InventoryController {
   @UseGuards(JwtAuthGuard, RolesGuard, SetCreatedByGuard)
   @Post()
   async createInventory(@Body() data: CreateInventoryDto): Promise<ResponseDto> {
+    console.log(1);
     const response =  await this.inventoryService.createInventory(data);
     if (response.code !== 200 ) throw new HttpException('Error al intentar guardar', 500)
     return response;

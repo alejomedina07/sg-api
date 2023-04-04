@@ -19,7 +19,7 @@ export class ExpenseRepository {
 
   async getExpenses(): Promise<ResponseDto> {
     try {
-      return { data: await this.expenseRepository.manager.find( Expense ), msg: 'Obtenido correctamente!', code: 201 }
+      return { data: await this.expenseRepository.manager.find( Expense, { relations: ['createdBy'] } ), msg: 'Obtenido correctamente!', code: 201 }
     } catch (e) {
       return { code: 404, msg: 'Error al obtener' }
     }

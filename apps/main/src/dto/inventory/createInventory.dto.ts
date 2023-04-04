@@ -24,7 +24,7 @@ export class CreateInventoryDto {
 
   @ApiProperty({ description: 'status del cliente', required: true })
   @IsDefined({ message: 'status: El status es requerido' })
-  @IsInt({ message: 'status: El status del cliente debe ser texto' })
+  @IsInt({ message: 'status: El status del cliente debe ser un numero' })
   statusId:number
 
   @ApiProperty({ description: 'id del cliente', required: false })

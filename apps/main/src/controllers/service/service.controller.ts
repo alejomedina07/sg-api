@@ -19,7 +19,16 @@ export class ServiceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async getService(): Promise<ResponseDto> {
+    console.log(999);
+    // return await this.serviceService.getReportServices();
     return await this.serviceService.getService();
+  }
+
+
+  @Get('/report')
+  async getReportServices(): Promise<ResponseDto> {
+    console.log(123);
+    return await this.serviceService.getReportServices();
   }
 
 

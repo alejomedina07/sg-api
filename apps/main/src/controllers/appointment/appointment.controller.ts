@@ -1,5 +1,5 @@
-import { Body, Controller, Get, HttpException, Post, Query, UseGuards } from '@nestjs/common';
-import { AppointmentService }                                                  from "../../services/appointment/appointment.service";
+import { Body, Controller, Get, HttpException, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { AppointmentService }                                                       from "../../services/appointment/appointment.service";
 import { ResponseDto }                                                  from "../../dto/shared/response.dto";
 import { CreateAppointmentDto }                                         from "../../dto/appointment/createAppointment.dto";
 import { ApiBearerAuth }                                                from '@nestjs/swagger';
@@ -34,6 +34,16 @@ export class AppointmentController {
   @Post()
   async createAppointment(@Body() data: CreateAppointmentDto): Promise<ResponseDto> {
     const response = await this.appointmentService.createAppointment(data)
+    if (response.code !== 200) throw new HttpException( 'Error al intentar guardar!', 500 )
+    return response;
+  }
+
+
+  @Roles(Role.Admin, Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard, SetCreatedByGuard)
+  @Put(':id')
+  async updateAppointment( @Param('id') id: number, @Body() data: CreateAppointmentDto): Promise<ResponseDto> {
+    const response = await this.appointmentService.updateAppointment(id, data)
     if (response.code !== 200) throw new HttpException( 'Error al intentar guardar!', 500 )
     return response;
   }
