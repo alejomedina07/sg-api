@@ -19,4 +19,8 @@ export class ServiceService {
   async createService(data: CreateServiceDto): Promise<ResponseDto> {
     return await this.serviceRepository.createService(data);
   }
+
+  async updateService(id: number, data: CreateServiceDto): Promise<ResponseDto> {
+    return await this.serviceRepository.updateService(id, data);
+  }
 }

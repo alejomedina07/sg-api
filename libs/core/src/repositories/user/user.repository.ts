@@ -22,17 +22,22 @@ export class UserRepository {
     }
   }
 
+  async updateUser(id: number, data: User): Promise<any> {
+    try {
+      const userInsert = await this.userRepository.update(id, data);
+      return { data: userInsert.raw, msg: 'Usuario Creado!', code: 200 }
+    } catch (e) {
+      console.log(12, e);
+      return { code: 500, msg: 'Error al intentar guardar' + e, data:e }
+    }
+  }
+
   async getUsers(params: PaginationDto): Promise<ResponseDto> {
     try {
       const { page, limit } = params;
-      // const request = this.context.switchToHttp().getRequest();
-      // const user = request.user;
-      // console.log(12, user);
       const users = await this.userRepository.manager.find( User, {
-        select:['id', 'firstName', 'lastName', 'rol', 'status', 'documentType', 'documentNumber', 'createdAt', 'email', 'phoneNumber'],
-        // select: { id: true, rol: true, lastName:true, email:true },
+        select:['id', 'firstName', 'lastName', 'rol', 'rolId', 'address', 'bloodType', 'documentTypeId', 'statusId',  'status', 'documentType', 'documentNumber', 'createdAt', 'email', 'phoneNumber'],
         relations:[ 'rol', 'status', 'documentType'],
-        // relations: { rol: {id:true, name:true}},
         where: { status: true,  },
         // skip : ((page-1) * limit) || 0,
         // take: limit || 1000

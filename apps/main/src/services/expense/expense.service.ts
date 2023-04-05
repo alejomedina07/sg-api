@@ -16,4 +16,8 @@ export class ExpenseService {
     return this.expenseRepository.createExpense(data);
   }
 
+  async updateExpense(id: number, data: CreateExpenseDto): Promise<ResponseDto> {
+    return this.expenseRepository.updateExpense(id, data);
+  }
+
 }

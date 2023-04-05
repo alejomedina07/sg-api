@@ -13,7 +13,10 @@ export class InventoryService {
   }
 
   async createInventory(data: CreateInventoryDto): Promise<ResponseDto> {
-    console.log(2);
     return await this.inventoryRepository.createInventory(data);
+  }
+
+  async updateInventory(id: number, data: CreateInventoryDto): Promise<ResponseDto> {
+    return await this.inventoryRepository.updateInventory(id, data);
   }
 }

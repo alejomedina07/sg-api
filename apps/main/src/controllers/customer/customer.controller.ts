@@ -1,5 +1,5 @@
-import { Body, Controller, Get, HttpException, Post, UseGuards } from '@nestjs/common';
-import { CustomerService }                                       from '../../services/customer/customer.service';
+import { Body, Controller, Get, HttpException, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { CustomerService }                                                   from '../../services/customer/customer.service';
 import { ResponseDto }                                           from '../../dto/shared/response.dto';
 import { CreateCustomerDto }                                     from '../../dto/customer/createCustomer.dto';
 import { Roles }                                                 from '../../decorators/roles.decorator';
@@ -29,6 +29,15 @@ export class CustomerController {
   @Post()
   async createCustomer(@Body() data: CreateCustomerDto): Promise<ResponseDto> {
     const response = await this.customerService.createCustomer(data);
+    if (response.code !== 200) throw new HttpException( 'Error al intentar Obtener!', 500 )
+    return response;
+  }
+
+  @Roles(Role.Admin, Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Put(':id')
+  async updateCustomer(@Param('id') id: number, @Body() data: CreateCustomerDto): Promise<ResponseDto> {
+    const response = await this.customerService.updateCustomer(id, data);
     if (response.code !== 200) throw new HttpException( 'Error al intentar Obtener!', 500 )
     return response;
   }

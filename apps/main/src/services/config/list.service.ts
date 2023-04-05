@@ -12,6 +12,10 @@ export class ListService {
     return this.configRepository.createList(data);
   }
 
+  async updateList(id: number, data: CreateListDto): Promise<ResponseDto> {
+    return this.configRepository.updateList(id, data);
+  }
+
   async getList(params: GetListDto): Promise<ResponseDto> {
     return this.configRepository.getList(params);
   }

@@ -1,5 +1,5 @@
-import { Body, Controller, Get, HttpException, Post, UseGuards } from '@nestjs/common';
-import { ResponseDto }                                           from "../../dto/shared/response.dto";
+import { Body, Controller, Get, HttpException, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { ResponseDto }                                                       from "../../dto/shared/response.dto";
 import { InventoryService }                                      from "../../services/inventory/inventory.service";
 import { CreateInventoryDto }                                    from "../../dto/inventory/createInventory.dto";
 import { Roles }                                                 from '../../decorators/roles.decorator';
@@ -30,8 +30,17 @@ export class InventoryController {
   @UseGuards(JwtAuthGuard, RolesGuard, SetCreatedByGuard)
   @Post()
   async createInventory(@Body() data: CreateInventoryDto): Promise<ResponseDto> {
-    console.log(1);
     const response =  await this.inventoryService.createInventory(data);
+    if (response.code !== 200 ) throw new HttpException('Error al intentar guardar', 500)
+    return response;
+  }
+
+
+  @Roles(Role.Admin, Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Put(':id')
+  async updateInventory(@Param('id') id: number, @Body() data: CreateInventoryDto): Promise<ResponseDto> {
+    const response =  await this.inventoryService.updateInventory(id, data);
     if (response.code !== 200 ) throw new HttpException('Error al intentar guardar', 500)
     return response;
   }

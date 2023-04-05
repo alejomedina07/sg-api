@@ -21,6 +21,7 @@ export class AppointmentRepository {
 
   async updateAppointment(id: number, data: Appointment): Promise<ResponseDto> {
     try {
+      console.log(777, data);
       const appointmentInsert = await this.appointmentRepository.update(id, data);
       console.log(1231111, appointmentInsert);
       return { data: appointmentInsert.raw, msg: 'Cita actualizada exitosamente!', code: 200 }

@@ -16,4 +16,8 @@ export class CustomerService {
     return await this.customerRepository.createCustomer(data);
   }
 
+  async updateCustomer(id: number, data: CreateCustomerDto): Promise<ResponseDto> {
+    return await this.customerRepository.updateCustomer(id, data);
+  }
+
 }

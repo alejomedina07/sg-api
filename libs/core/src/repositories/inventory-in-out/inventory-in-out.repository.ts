@@ -17,6 +17,15 @@ export class InventoryInOutRepository {
     }
   }
 
+  async updateInventoryInOut(id: number, data: InventoryInOut): Promise<any> {
+    try {
+      const inventoryInOutInsert = await this.inventoryInOutRepository.update(id, data);
+      return { data: inventoryInOutInsert.raw, msg: 'Creado exitosamente!', code: 200 }
+    } catch (e) {
+      return { code: 500, msg: 'Error al intentar guardar' }
+    }
+  }
+
   async getInventoryInOuts(): Promise<ResponseDto> {
     try {
       return { data: await this.inventoryInOutRepository.manager.find( InventoryInOut ), msg: 'Obtenido correctamente!', code: 201 }

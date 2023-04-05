@@ -20,6 +20,17 @@ export class CustomerRepository {
     }
   }
 
+  async updateCustomer(id: number, data: Customer): Promise<any> {
+    try {
+      console.log(78, data);
+      const customerInsert = await this.customerRepository.update(id, data);
+      return { data: customerInsert.raw, msg: 'Cliente Creado exitosamente!', code: 200 }
+    } catch (e) {
+      console.log(e);
+      return { code: 500, msg: 'Error al intentar guardar' + e, data:e  }
+    }
+  }
+
   async getCustomers(): Promise<ResponseDto> {
     try {
       return { data: await this.customerRepository.manager.find( Customer, { relations:[ 'status', 'documentType'], } ), msg: 'Obtenido correctamente!', code: 201 }

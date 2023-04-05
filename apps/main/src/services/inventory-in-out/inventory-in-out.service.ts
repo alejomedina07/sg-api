@@ -15,4 +15,8 @@ export class InventoryInOutService {
   async createInventoryInOut(data: CreateInventoryInOutDto): Promise<ResponseDto> {
     return await this.inventoryInOutRepository.createInventoryInOut(data);
   }
+
+  async updateInventoryInOut(id: number, data: CreateInventoryInOutDto): Promise<ResponseDto> {
+    return await this.inventoryInOutRepository.updateInventoryInOut(id, data);
+  }
 }

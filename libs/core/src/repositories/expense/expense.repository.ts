@@ -17,6 +17,15 @@ export class ExpenseRepository {
     }
   }
 
+  async updateExpense(id: number, data: Expense): Promise<any> {
+    try {
+      const expenseInsert = await this.expenseRepository.update(id, data);
+      return { data: expenseInsert.raw, msg: 'Gasto creado exitosamente!', code: 200 }
+    } catch (e) {
+      return { code: 500, msg: 'Error al intentar guardar' }
+    }
+  }
+
   async getExpenses(): Promise<ResponseDto> {
     try {
       return { data: await this.expenseRepository.manager.find( Expense, { relations: ['createdBy'] } ), msg: 'Obtenido correctamente!', code: 201 }

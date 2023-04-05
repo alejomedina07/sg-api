@@ -19,6 +19,17 @@ export class InventoryRepository {
     }
   }
 
+  async updateInventory(id: number, data: Inventory): Promise<any> {
+    try {
+      console.log(4);
+      const inventoryInsert = await this.inventoryRepository.update(id, data);
+      return { data: inventoryInsert.raw, msg: 'Inventario creado exitosamente!', code: 200 }
+    } catch (e) {
+      console.log(1234, e);
+      return { code: 500, msg: 'Error al intentar guardar' }
+    }
+  }
+
   async getInventorys(): Promise<ResponseDto> {
     try {
       return { data: await this.inventoryRepository.manager.find( Inventory, { relations:['status'] } ), msg: 'Obtenido correctamente!', code: 201 }

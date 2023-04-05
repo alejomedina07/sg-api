@@ -40,7 +40,7 @@ export class AppointmentController {
 
 
   @Roles(Role.Admin, Role.User)
-  @UseGuards(JwtAuthGuard, RolesGuard, SetCreatedByGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
   async updateAppointment( @Param('id') id: number, @Body() data: CreateAppointmentDto): Promise<ResponseDto> {
     const response = await this.appointmentService.updateAppointment(id, data)

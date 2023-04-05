@@ -1,5 +1,5 @@
-import { Body, Controller, Get, HttpException, Post, UseGuards } from '@nestjs/common';
-import { ResponseDto }                                           from "../../dto/shared/response.dto";
+import { Body, Controller, Get, HttpException, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { ResponseDto }                                                       from "../../dto/shared/response.dto";
 import { InventoryInOutService }                                 from "../../services/inventory-in-out/inventory-in-out.service";
 import { CreateInventoryInOutDto }                               from "../../dto/inventoryInOut/createInventoryInOut.dto";
 import { ApiBearerAuth }                                         from '@nestjs/swagger';
@@ -30,6 +30,16 @@ export class InventoryInOutController {
   @Post()
   async createExpense(@Body() data: CreateInventoryInOutDto): Promise<ResponseDto> {
     const response =  await this.inventoryInOutService.createInventoryInOut(data);
+    if (response.code !== 200 ) throw new HttpException('Error al intentar guardar', 500)
+    return response;
+  }
+
+
+  @Roles(Role.Admin, Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard, SetCreatedByGuard)
+  @Put(':id')
+  async updateExpense(@Param('id') id: number, @Body() data: CreateInventoryInOutDto): Promise<ResponseDto> {
+    const response =  await this.inventoryInOutService.updateInventoryInOut(id, data);
     if (response.code !== 200 ) throw new HttpException('Error al intentar guardar', 500)
     return response;
   }

@@ -17,6 +17,15 @@ export class ServiceRepository {
     }
   }
 
+  async updateService(id: number, data: Service): Promise<any> {
+    try {
+      const serviceInsert = await this.serviceRepository.update(id, data);
+      return { data: serviceInsert.raw, msg: 'Servicio creado exitosamente!', code: 200 }
+    } catch (e) {
+      return { code: 500, msg: 'Error al intentar guardar' }
+    }
+  }
+
   async getServices(): Promise<ResponseDto> {
     try {
       return { data: await this.serviceRepository.manager.find( Service, { relations:['status'] } ), msg: 'Obtenido correctamente!', code: 201 }

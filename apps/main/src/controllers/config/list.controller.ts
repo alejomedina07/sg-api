@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
-import { ResponseDto }                                   from '../../dto/shared/response.dto';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { ResponseDto }                                               from '../../dto/shared/response.dto';
 import { ListService }                                   from '../../services/config/list.service';
 import { GetListDto }                                    from '../../dto/config/getList.dto';
 import { CreateListDto }                                 from '../../dto/config/CreateList.dto';
@@ -20,6 +20,13 @@ export class ListController {
   @Post('list')
   async createList(@Body() data:CreateListDto): Promise<ResponseDto> {
     return await this.mainService.createList(data);
+  }
+
+  @Roles(Role.Admin, Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Put('list/:id')
+  async updateList(@Param('id') id: number, @Body() data:CreateListDto): Promise<ResponseDto> {
+    return await this.mainService.updateList(id, data);
   }
 
   @Roles(Role.Admin, Role.User)

@@ -2,9 +2,9 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
-  Post, Query,
-  UseGuards,
+  HttpException, Param,
+  Post, Put, Query,
+  UseGuards
 } from '@nestjs/common';
 import { UserService }   from '../../services/user/user.service';
 import { CreateUserDto } from '../../dto/user/createUser.dto';
@@ -37,6 +37,15 @@ export class UserController {
   @Post()
   async createUser(@Body() user: CreateUserDto): Promise<ResponseDto> {
     const response = await this.mainService.createUser(user);
+    if (response.code !== 200 ) throw new HttpException(response.msg || 'Error!!', response.code || 500)
+    return response
+  }
+
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Put(':id')
+  async updateUser(@Param('id') id: number, @Body() user: CreateUserDto): Promise<ResponseDto> {
+    const response = await this.mainService.updateUser(id, user);
     if (response.code !== 200 ) throw new HttpException(response.msg || 'Error!!', response.code || 500)
     return response
   }

@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { ResponseDto }                            from "../../dto/shared/response.dto";
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { ResponseDto }                                        from "../../dto/shared/response.dto";
 import { CreateServiceDto }                 from "../../dto/service/createService.dto";
 import { ServiceService }                   from "../../services/service/service.service";
 import { Roles }                            from '../../decorators/roles.decorator';
@@ -37,5 +37,13 @@ export class ServiceController {
   @Post()
   async createService(@Body() data: CreateServiceDto): Promise<ResponseDto> {
     return await this.serviceService.createService(data);
+  }
+
+
+  @Roles(Role.Admin, Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Put(':id')
+  async updateService(@Param('id') id: number, @Body() data: CreateServiceDto): Promise<ResponseDto> {
+    return await this.serviceService.updateService(id, data);
   }
 }

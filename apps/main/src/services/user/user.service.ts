@@ -19,4 +19,10 @@ export class UserService {
     return this.userRepository.createUser(user);
   }
 
+
+  async updateUser(id: number, user: User): Promise<any> {
+    if (user.password) user.password = await this.cryptoService.encryptPassword(user.password);
+    return this.userRepository.updateUser(id, user);
+  }
+
 }
