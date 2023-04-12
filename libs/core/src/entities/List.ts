@@ -4,11 +4,12 @@ import {
   Index,
   OneToMany,
   PrimaryGeneratedColumn,
-}                    from "typeorm";
-import { Customer }  from "./Customer";
-import { Service }   from "./Service";
-import { User }      from "./User";
-import { Inventory } from 'sg/core/entities/Inventory';
+} from "typeorm";
+import { Inventory } from "./Inventory";
+import { Customer } from "./Customer";
+import { Expense } from "./Expense";
+import { Service } from "./Service";
+import { User } from "./User";
 
 @Index("List_pk", ["id"], { unique: true })
 @Entity("list", { schema: "CNFG" })
@@ -47,8 +48,14 @@ export class List {
   @OneToMany(() => Customer, (customer) => customer.status)
   customersStatus?: Customer[];
 
+  @OneToMany(() => Expense, (expense) => expense.type)
+  expenses?: Expense[];
+
   @OneToMany(() => Service, (service) => service.status)
   services?: Service[];
+
+  @OneToMany(() => Service, (service) => service.type)
+  servicesType: Service[];
 
   @OneToMany(() => User, (user) => user.documentType)
   usersDocumentType?: User[];

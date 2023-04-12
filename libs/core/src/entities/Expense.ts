@@ -7,9 +7,11 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { User } from "./User";
+import { List } from "./List";
 
 @Index("expense_user_id_idx", ["createdBy"], {})
 @Index("expense_pk", ["id"], { unique: true })
+@Index("expense_type_id_idx", ["typeId"], {})
 @Entity("expense", { schema: "INV" })
 export class Expense {
   @PrimaryGeneratedColumn({ type: "integer", name: "id" })
@@ -34,10 +36,20 @@ export class Expense {
   @Column("integer", { name: "created_by", nullable: true })
   createdById?: number | null;
 
+  @Column("integer", { name: "type_id", nullable: true })
+  typeId: number | null;
+
   @ManyToOne(() => User, (user) => user.expenses, {
     onDelete: "SET NULL",
     onUpdate: "CASCADE",
   })
   @JoinColumn([{ name: "created_by", referencedColumnName: "id" }])
   createdBy?: User;
+
+  @ManyToOne(() => List, (list) => list.expenses, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn([{ name: "type_id", referencedColumnName: "id" }])
+  type?: List;
 }

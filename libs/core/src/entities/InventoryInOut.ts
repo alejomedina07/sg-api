@@ -22,9 +22,6 @@ export class InventoryInOut {
   @Column("integer", { name: "quantity" })
   quantity: number;
 
-  @Column("character", { name: "type", length: 1 })
-  type: string;
-
   @Column("integer", { name: "Inventory_id", nullable: true })
   inventoryId: number | null;
 
@@ -33,6 +30,9 @@ export class InventoryInOut {
 
   @Column("integer", { name: "created_by", nullable: true })
   createdById?: number | null;
+
+  @Column("boolean", { name: "increment", nullable: true })
+  increment: boolean | null;
 
   @ManyToOne(() => Inventory, (inventory) => inventory.inventoryInOuts, {
     onDelete: "SET NULL",

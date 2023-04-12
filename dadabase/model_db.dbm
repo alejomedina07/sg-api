@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,0" last-zoom="1" max-obj-count="24"
+<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,0" last-zoom="1" max-obj-count="25"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -88,8 +88,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="quantity" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
-	<column name="type" not-null="true">
-		<type name="char" length="1"/>
+	<column name="increment" not-null="true">
+		<type name="boolean" length="1"/>
 	</column>
 	<constraint name="inventory_in_out_pk" type="pk-constr" table="&quot;INV&quot;.inventory_in_out">
 		<columns names="id" ref-type="src-columns"/>
@@ -149,15 +149,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<object name="appointment_id" index="3"/>
 		<object name="created_by" index="6"/>
 		<object name="customer_id" index="4"/>
-		<object name="service_type_id" index="8"/>
 		<object name="status_id" index="7"/>
+		<object name="type_id" index="8"/>
 	</customidxs>
 
 	<customidxs object-type="constraint">
 		<object name="appointment_service_fk" index="1"/>
 		<object name="customer_service_fk" index="3"/>
 		<object name="list_service_fk" index="5"/>
-		<object name="service_type_service_fk" index="6"/>
+		<object name="list_service_fk1" index="6"/>
 		<object name="service_uq" index="2"/>
 		<object name="user_service_fk" index="4"/>
 	</customidxs>
@@ -451,7 +451,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<table name="expense" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+<table name="expense" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
 	<schema name="&quot;INV&quot;"/>
 	<role name="root"/>
 	<position x="240" y="200"/>
@@ -476,9 +476,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 	<customidxs object-type="column">
 		<object name="created_by" index="5"/>
+		<object name="type_id" index="6"/>
 	</customidxs>
 
 	<customidxs object-type="constraint">
+		<object name="list_expense_fk" index="2"/>
 		<object name="user_expense_fk" index="1"/>
 	</customidxs>
 </table>
@@ -722,68 +724,37 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<table name="service_type" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
-	<schema name="&quot;SVC&quot;"/>
-	<role name="root"/>
-	<position x="1080" y="120"/>
-	<column name="id" not-null="true">
-		<type name="serial" length="0"/>
-	</column>
-	<column name="name" not-null="true">
-		<type name="text" length="0"/>
-	</column>
-	<column name="description">
-		<type name="text" length="0"/>
-	</column>
-	<column name="status" default-value="true">
-		<type name="boolean" length="0"/>
-	</column>
-	<column name="created_at" default-value="now()">
-		<type name="timestamp" length="0"/>
-	</column>
-	<constraint name="service_type_pk" type="pk-constr" table="&quot;SVC&quot;.service_type">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
-
-<table name="expense_type" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
-	<schema name="&quot;INV&quot;"/>
-	<role name="root"/>
-	<position x="500" y="240"/>
-	<column name="id" not-null="true">
-		<type name="serial" length="0"/>
-	</column>
-	<column name="name" not-null="true">
-		<type name="text" length="0"/>
-	</column>
-	<column name="desciption">
-		<type name="text" length="0"/>
-	</column>
-	<column name="status" default-value="true">
-		<type name="boolean" length="0"/>
-	</column>
-	<column name="created_at" default-value="now()">
-		<type name="timestamp" length="0"/>
-	</column>
-	<constraint name="expense_type_pk" type="pk-constr" table="&quot;INV&quot;.expense_type">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
-
-<relationship name="service_type_has_many_service" type="rel1n" layers="0"
-	 src-col-pattern="{st}_{sc}"
+<relationship name="list_has_many_expense" type="rel1n" layers="0"
+	 src-col-pattern="type_id"
 	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
 	 src-fk-pattern="{st}_{dt}_fk"
-	 custom-color="#525c88"
-	 src-table="&quot;SVC&quot;.service_type"
-	 dst-table="&quot;SVC&quot;.service"
+	 custom-color="#911bd0"
+	 src-table="&quot;CNFG&quot;.list"
+	 dst-table="&quot;INV&quot;.expense"
 	 src-required="false" dst-required="false"/>
 
-<index name="service_service_type_id_idx" table="&quot;SVC&quot;.service"
+<index name="expense_type_id_idx" table="&quot;INV&quot;.expense"
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
 	 index-type="btree" factor="0">
 		<idxelement use-sorting="false">
-			<column name="service_type_id"/>
+			<column name="type_id"/>
+		</idxelement>
+</index>
+
+<relationship name="list_type_has_many_service" type="rel1n" layers="0"
+	 src-col-pattern="type_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#87033d"
+	 src-table="&quot;CNFG&quot;.list"
+	 dst-table="&quot;SVC&quot;.service"
+	 src-required="false" dst-required="false"/>
+
+<index name="service_type_id_idx" table="&quot;SVC&quot;.service"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="type_id"/>
 		</idxelement>
 </index>
 

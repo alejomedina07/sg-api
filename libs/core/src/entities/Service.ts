@@ -20,6 +20,7 @@ import { List } from "./List";
 @Index("service_id_customer_id_idx", ["customerId"], {})
 @Index("service_pk", ["id"], { unique: true })
 @Index("service_list_id_idx", ["statusId"], {})
+@Index("service_type_id_idx", ["typeId"], {})
 @Entity("service", { schema: "SVC" })
 export class Service {
   @PrimaryGeneratedColumn({ type: "integer", name: "id" })
@@ -48,6 +49,9 @@ export class Service {
 
   @Column("integer", { name: "status_id", nullable: true })
   statusId?: number | null;
+
+  @Column("integer", { name: "type_id", nullable: true })
+  typeId: number | null;
 
   @OneToMany(() => InventoryInOut, (inventoryInOut) => inventoryInOut.service)
   inventoryInOuts?: InventoryInOut[];
@@ -79,4 +83,11 @@ export class Service {
   })
   @JoinColumn([{ name: "status_id", referencedColumnName: "id" }])
   status?: List;
+
+  @ManyToOne(() => List, (list) => list.servicesType, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn([{ name: "type_id", referencedColumnName: "id" }])
+  type: List;
 }
