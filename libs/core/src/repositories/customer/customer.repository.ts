@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Customer } from "sg/core/entities";
-import { ResponseDto } from "../../../../../apps/main/src/dto/shared/response.dto";
+import { Repository }        from 'typeorm';
+import { Appointment, Customer, Service } from "sg/core/entities";
+import { ResponseDto }       from "../../../../../apps/main/src/dto/shared/response.dto";
 
 @Injectable()
 export class CustomerRepository {
@@ -39,4 +39,19 @@ export class CustomerRepository {
       return { code: 404, msg: 'Error al obtener ' + e, data:e  }
     }
   }
+
+  async getCustomerById(id:number): Promise<Customer | ResponseDto> {
+
+    const customer = await this.customerRepository.manager.findOne( Customer, { where: { id: id }} );
+    const services = await this.customerRepository.manager.find( Service, {
+      relations: ['status', 'type', 'createdBy'],
+      where: { customerId : id },
+      order: { id: 'DESC' }
+    })
+    const appointments = await this.customerRepository.manager.find( Appointment, { where: { customerId : id }, order: { id: 'DESC' } } )
+    return { data: { customer, services, appointments }, msg: '', code: 201, }
+    // return await this.customerRepository.manager.findOne( Customer, { relations:[ 'services', 'appointments'], where: { id: id }} );
+  }
+
+
 }

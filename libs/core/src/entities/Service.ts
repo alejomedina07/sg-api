@@ -89,5 +89,5 @@ export class Service {
     onUpdate: "CASCADE",
   })
   @JoinColumn([{ name: "type_id", referencedColumnName: "id" }])
-  type: List;
+  type?: List;
 }

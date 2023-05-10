@@ -68,4 +68,14 @@ export class AppointmentController {
     return response;
   }
 
+  //
+  // @Roles(Role.Admin, Role.User)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Put(':id')
+  // async updateAppointmentType( @Param('id') id: number, @Body() data: CreateAppointmentTypeDto): Promise<ResponseDto> {
+  //   const response = await this.appointmentService.updateAppointmentType(id, data)
+  //   if (response.code !== 200) throw new HttpException( 'Error al intentar guardar!', 500 )
+  //   return response;
+  // }
+
 }

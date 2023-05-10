@@ -36,7 +36,7 @@ export class ListRepository {
 
       const [data, total] = key !== 'rol' ?
           await this.listRepository.manager.findAndCount( List, {
-            select:['id', 'name', 'description', 'key'],
+            select:['id', 'name', 'description', 'key', 'status'],
             where: { status: true, key },
             order: { name: 'ASC' },
             skip : ((page-1) * limit) || 0,
@@ -44,7 +44,7 @@ export class ListRepository {
           }
         )
         : await this.listRepository.manager.findAndCount( Rol, {
-            select:['id', 'name', 'description'],
+            select:['id', 'name', 'description', 'status'],
             where: { status: true,  },
             order: { name: 'ASC' },
             skip : ((page-1) * limit) || 0,

@@ -16,11 +16,11 @@ export class CreateInventoryDto {
   @IsDefined({ message: 'description: El description es requerido' })
   @IsString({ message: 'description: El description del cliente debe ser texto' })
   description:string | null
-
-  @ApiProperty({ description: 'quantity del cliente', required: true })
-  @IsDefined({ message: 'quantity: El quantity es requerido' })
-  @IsInt({ message: 'quantity: El quantity debe ser un número' })
-  quantity:number
+  //
+  // @ApiProperty({ description: 'quantity del cliente', required: true })
+  // @IsDefined({ message: 'quantity: El quantity es requerido' })
+  // @IsInt({ message: 'quantity: El quantity debe ser un número' })
+  // quantity:number
 
   @ApiProperty({ description: 'status del cliente', required: true })
   @IsDefined({ message: 'status: El status es requerido' })

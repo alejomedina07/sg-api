@@ -1,5 +1,5 @@
 export interface ResponseDto {
-  data?: any[];
+  data?: any[] | {};
   msg: string;
   code?: number
   total?: number

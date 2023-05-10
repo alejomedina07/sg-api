@@ -8,6 +8,7 @@ import { JwtAuthGuard }                                          from '../../gua
 import { RolesGuard }                                            from '../../guards/rol/roles.guard';
 import { SetCreatedByGuard }                                     from '../../guards/auth/setCreatedBy.guard';
 import { ApiBearerAuth }                                         from '@nestjs/swagger';
+import { Customer } from 'sg/core/entities';
 
 @ApiBearerAuth()
 @Controller('customer')
@@ -22,6 +23,20 @@ export class CustomerController {
     const response = await this.customerService.getCustomer()
     if (response.code !== 201) throw new HttpException( 'Error al intentar Obtener!', 404 )
     return response;
+  }
+
+  @Roles(Role.Admin, Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get(':id')
+  async getCustomerById(@Param('id') id:number): Promise<Customer | ResponseDto> {
+    console.log('this id: ', id);
+    try {
+      const customer = await this.customerService.getCustomerById(id);
+      return customer;
+    } catch (error) {
+      // console.log(999, error);
+      throw new HttpException( 'Error al intentar Obtener!', 500 )
+    }
   }
 
   @Roles(Role.Admin, Role.User)

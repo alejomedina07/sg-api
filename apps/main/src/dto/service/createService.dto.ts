@@ -27,6 +27,11 @@ export class CreateServiceDto {
   @IsInt({ message: 'customerId: El customerId debe ser un número' })
   customerId:number | null
 
+  @ApiProperty({ description: 'typeId del servicio', required: true })
+  @IsDefined({ message: 'typeId: El typeId es requerido' })
+  @IsInt({ message: 'typeId: El typeId debe ser un número' })
+  typeId:number | null;
+
   @ApiProperty({ description: 'createdById del servicio', required: true })
   @IsDefined({ message: 'createdById: El userId es requerido' })
   @IsInt({ message: 'createdById: El userId debe ser un número' })

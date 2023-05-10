@@ -22,6 +22,11 @@ export class CreateExpenseDto {
   @IsInt({ message: 'amount: El amount debe ser un número' })
   amount:number
 
+  @ApiProperty({ description: 'typeId del cliente', required: true })
+  @IsDefined({ message: 'typeId: El typeId es requerido' })
+  @IsInt({ message: 'typeId: El typeId debe ser un número' })
+  typeId:number
+
   @ApiProperty({ description: 'Creador del cliente', required: false })
   @IsOptional()
   @IsInt({ message: 'createdById: El creador debe ser un número' })

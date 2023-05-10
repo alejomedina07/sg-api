@@ -57,7 +57,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="description">
 		<type name="text" length="0"/>
 	</column>
-	<column name="quantity" not-null="true">
+	<column name="quantity" not-null="true" default-value="0">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="created_at" default-value="now()">
@@ -78,10 +78,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</customidxs>
 </table>
 
-<table name="inventory_in_out" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+<table name="inventory_in_out" layers="0" collapse-mode="1" max-obj-count="9" z-value="0">
 	<schema name="&quot;INV&quot;"/>
 	<role name="root"/>
-	<position x="360" y="40"/>
+	<position x="380" y="20"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -90,6 +90,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="increment" not-null="true">
 		<type name="boolean" length="1"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="note">
+		<type name="text" length="0"/>
 	</column>
 	<constraint name="inventory_in_out_pk" type="pk-constr" table="&quot;INV&quot;.inventory_in_out">
 		<columns names="id" ref-type="src-columns"/>
