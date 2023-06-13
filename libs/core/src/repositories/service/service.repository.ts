@@ -71,7 +71,7 @@ export class ServiceRepository {
     try {
       const queryService = `
           SELECT
-              to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD') AS name,
+              TO_CHAR(date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota'), 'YYYY-MM-DD') AS name,
               CAST(COUNT(*) AS INTEGER) AS count,
               SUM(amount) AS totalAmount
           FROM "SVC".service
@@ -80,11 +80,11 @@ export class ServiceRepository {
 
       const queryExpense = `
           SELECT
-              to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD') AS name,
+              TO_CHAR(date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota'), 'YYYY-MM-DD') AS name,
               CAST(COUNT(*) AS INTEGER) AS count,
               SUM(amount) AS totalAmount
           FROM "INV".expense
-          GROUP BY created_at
+          GROUP BY date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota')
           ORDER BY name`;
 
       const resultService = await this.serviceRepository.query(queryService);
@@ -112,3 +112,5 @@ export class ServiceRepository {
     }
   }
 }
+
+// Hello Florencia, thanks for contact me, currently I am b1 in English Level, I am interested in hearing more about the offer
