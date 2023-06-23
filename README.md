@@ -50,6 +50,13 @@ $ npm run start:prod
 typeorm-model-generator -h localhost -d system_inventory -u root -x 'Id70pP%2C!3S' -e postgres -o libs/core/src/entitiesNew -s APMT,CTM,INV,SVC,USR -p 35432
 
 ```
+## Generate controller and services
+
+```
+$ nest g s services/config/expenseType
+$ nest g co controllers/config/expenseType
+
+```
 
 
 ## Test

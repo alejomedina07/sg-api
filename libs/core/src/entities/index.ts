@@ -8,3 +8,4 @@ export * from './Rol';
 export * from './Service';
 export * from './User';
 export * from './List';
+export * from './Note';

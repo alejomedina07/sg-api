@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,0" last-zoom="1" max-obj-count="25"
+<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="15,691" last-zoom="1" max-obj-count="26"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -517,7 +517,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="list" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
 	<schema name="&quot;CNFG&quot;"/>
 	<role name="root"/>
-	<position x="860" y="780"/>
+	<position x="500" y="1020"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -769,5 +769,49 @@ CAUTION: Do not modify this file unless you know what you are doing.
 			<column name="type_id"/>
 		</idxelement>
 </index>
+
+<table name="note" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
+	<schema name="&quot;CNFG&quot;"/>
+	<role name="root"/>
+	<position x="900" y="1060"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="title" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="entity_type" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="entity_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="note_pk" type="pk-constr" table="&quot;CNFG&quot;.note">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="created_by" index="4"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="user_note_fk" index="1"/>
+	</customidxs>
+</table>
+
+<relationship name="user_has_many_note" type="rel1n" layers="0"
+	 src-col-pattern="created_by"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#410695"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;CNFG&quot;.note"
+	 src-required="false" dst-required="false"/>
 
 </dbmodel>

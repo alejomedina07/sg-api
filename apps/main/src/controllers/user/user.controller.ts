@@ -2,23 +2,25 @@ import {
   Body,
   Controller,
   Get,
-  HttpException, Param,
-  Post, Put, Query,
-  UseGuards
+  HttpException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
-import { UserService }   from '../../services/user/user.service';
+import { UserService } from '../../services/user/user.service';
 import { CreateUserDto } from '../../dto/user/createUser.dto';
-import { ResponseDto }   from '../../dto/shared/response.dto';
+import { ResponseDto } from '../../dto/shared/response.dto';
 
-import { Roles }           from '../../decorators/roles.decorator';
-import { Role }            from '../../enums/role.enum';
+import { Roles } from '../../decorators/roles.decorator';
+import { Role } from '../../enums/role.enum';
 
-import { ApiBearerAuth }     from '@nestjs/swagger';
-import { JwtAuthGuard }      from '../../guards/auth/jwtAuthGuard.guard';
-import { RolesGuard }        from '../../guards/rol/roles.guard';
-import { PaginationDto }     from '../../dto/shared/pagination.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../guards/auth/jwtAuthGuard.guard';
+import { RolesGuard } from '../../guards/rol/roles.guard';
+import { PaginationDto } from '../../dto/shared/pagination.dto';
 import { SetCreatedByGuard } from '../../guards/auth/setCreatedBy.guard';
-
 
 @ApiBearerAuth()
 @Controller('user')
@@ -28,7 +30,7 @@ export class UserController {
   @Roles(Role.Admin, Role.User)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
-  async getUsers( @Query() params: PaginationDto): Promise<ResponseDto> {
+  async getUsers(@Query() params: PaginationDto): Promise<ResponseDto> {
     return await this.mainService.getUsers(params);
   }
 
@@ -37,19 +39,23 @@ export class UserController {
   @Post()
   async createUser(@Body() user: CreateUserDto): Promise<ResponseDto> {
     const response = await this.mainService.createUser(user);
-    if (response.code !== 200 ) throw new HttpException(response.msg || 'Error!!', response.code || 500)
-    return response
+    if (response.code !== 200)
+      throw new HttpException(response.msg || 'Error!!', response.code || 500);
+    return response;
   }
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
-  async updateUser(@Param('id') id: number, @Body() user: CreateUserDto): Promise<ResponseDto> {
+  async updateUser(
+    @Param('id') id: number,
+    @Body() user: CreateUserDto,
+  ): Promise<ResponseDto> {
     const response = await this.mainService.updateUser(id, user);
-    if (response.code !== 200 ) throw new HttpException(response.msg || 'Error!!', response.code || 500)
-    return response
+    if (response.code !== 200)
+      throw new HttpException(response.msg || 'Error!!', response.code || 500);
+    return response;
   }
-
 
   // @UseInterceptors(
   //   FileInterceptor(
@@ -81,5 +87,4 @@ export class UserController {
   //   // )
   //   return 'holis'
   // }
-
 }
