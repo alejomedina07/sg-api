@@ -47,9 +47,9 @@ $ npm run start:prod
 ## Model generatr
 
 ```
-typeorm-model-generator -h localhost -d system_inventory -u root -x 'Id70pP%2C!3S' -e postgres -o libs/core/src/entitiesNew -s APMT,CTM,INV,SVC,USR -p 35432
+typeorm-model-generator -h localhost -d system_inventory -u root -x 'Id70pP%2C!3S' -e postgres -o libs/core/src/entitiesNew -s APMT,CTM,INV,SVC,USR,CNFG -p 35432
 
-```
+````
 ## Generate controller and services
 
 ```

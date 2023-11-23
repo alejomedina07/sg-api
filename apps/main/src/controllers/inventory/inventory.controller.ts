@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ResponseDto } from '../../dto/shared/response.dto';
@@ -17,6 +18,7 @@ import { JwtAuthGuard } from '../../guards/auth/jwtAuthGuard.guard';
 import { RolesGuard } from '../../guards/rol/roles.guard';
 import { SetCreatedByGuard } from '../../guards/auth/setCreatedBy.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { PaginationDto } from '../../dto/shared/pagination.dto';
 
 @ApiBearerAuth()
 @Controller('inventory')
@@ -61,8 +63,11 @@ export class InventoryController {
   @Roles(Role.Admin, Role.User)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/:id')
-  async getInventoryById(@Param('id') id: number): Promise<ResponseDto> {
-    const response = await this.inventoryService.getInventoryById(id);
+  async getInventoryById(
+    @Param('id') id: number,
+    @Query() params: PaginationDto,
+  ): Promise<ResponseDto> {
+    const response = await this.inventoryService.getInventoryById(id, params);
     if (response.code !== 200)
       throw new HttpException('Error al intentar obtener', 404);
     return response;

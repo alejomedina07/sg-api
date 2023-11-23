@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InventoryRepository } from 'sg/core/repositories/inventory/inventory.repository';
 import { ResponseDto } from '../../dto/shared/response.dto';
 import { CreateInventoryDto } from '../../dto/inventory/createInventory.dto';
+import { PaginationDto } from '../../dto/shared/pagination.dto';
 
 @Injectable()
 export class InventoryService {
@@ -11,8 +12,11 @@ export class InventoryService {
     return await this.inventoryRepository.getInventorys();
   }
 
-  async getInventoryById(id: number): Promise<ResponseDto> {
-    return await this.inventoryRepository.getInventoryById(id);
+  async getInventoryById(
+    id: number,
+    params: PaginationDto,
+  ): Promise<ResponseDto> {
+    return await this.inventoryRepository.getInventoryById(id, params);
   }
 
   async createInventory(data: CreateInventoryDto): Promise<ResponseDto> {

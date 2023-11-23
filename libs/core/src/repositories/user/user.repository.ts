@@ -1,57 +1,143 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository }                                  from '@nestjs/typeorm';
-import { Repository }                      from 'typeorm';
-import { User }                       from "sg/core/entities";
-import { ResponseDto }                     from "../../../../../apps/main/src/dto/shared/response.dto";
-import { PaginationDto }                   from '../../../../../apps/main/src/dto/shared/pagination.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
+import {
+  PermissionsPrivileges,
+  Privileges,
+  RolPermissions,
+  User,
+} from 'sg/core/entities';
+import { ResponseDto } from '../../../../../apps/main/src/dto/shared/response.dto';
+import { PaginationDto } from '../../../../../apps/main/src/dto/shared/pagination.dto';
 
 @Injectable()
 export class UserRepository {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-
   ) {}
 
   async createUser(data: User): Promise<any> {
     try {
       const userInsert = await this.userRepository.manager.insert(User, data);
-      return { data: userInsert.identifiers[0].id, msg: 'Usuario Creado!', code: 200 }
+      return {
+        data: userInsert.identifiers[0].id,
+        msg: 'Usuario Creado!',
+        code: 200,
+      };
     } catch (e) {
       console.log(12, e);
-      return { code: 500, msg: 'Error al intentar guardar' + e, data:e }
+      return { code: 500, msg: 'Error al intentar guardar' + e, data: e };
     }
   }
 
   async updateUser(id: number, data: User): Promise<any> {
     try {
       const userInsert = await this.userRepository.update(id, data);
-      return { data: userInsert.raw, msg: 'Usuario Creado!', code: 200 }
+      return { data: userInsert.raw, msg: 'Usuario Creado!', code: 200 };
     } catch (e) {
       console.log(12, e);
-      return { code: 500, msg: 'Error al intentar guardar' + e, data:e }
+      return { code: 500, msg: 'Error al intentar guardar' + e, data: e };
     }
   }
 
   async getUsers(params: PaginationDto): Promise<ResponseDto> {
     try {
       const { page, limit } = params;
-      const users = await this.userRepository.manager.find( User, {
-        select:['id', 'firstName', 'lastName', 'rol', 'rolId', 'address', 'bloodType', 'documentTypeId', 'statusId',  'status', 'documentType', 'documentNumber', 'createdAt', 'email', 'phoneNumber'],
-        relations:[ 'rol', 'status', 'documentType'],
-        where: { status: true,  },
+      const users = await this.userRepository.manager.find(User, {
+        select: [
+          'id',
+          'firstName',
+          'lastName',
+          'rol',
+          'rolId',
+          'address',
+          'bloodType',
+          'documentTypeId',
+          'statusId',
+          'status',
+          'documentType',
+          'documentNumber',
+          'createdAt',
+          'email',
+          'phoneNumber',
+        ],
+        relations: ['rol', 'status', 'documentType'],
+        where: { status: true },
+        order: { firstName: 'ASC' },
         // skip : ((page-1) * limit) || 0,
         // take: limit || 1000
       });
 
-      return { data: users, msg: 'Obtenido correctamente!', code: 201 }
+      return { data: users, msg: 'Obtenido correctamente!', code: 201 };
     } catch (e) {
       console.log(e);
-      return { code: 404, msg: 'Error al obtener' }
+      return { code: 404, msg: 'Error al obtener' };
     }
   }
 
-  async findOneUser( phoneNumber: string): Promise<User> {
-    return  await this.userRepository.manager.findOne(User, { select:['id', 'firstName', 'lastName', 'phoneNumber', 'password', 'rol'], relations: ['rol'], where:{phoneNumber} })
-    // return await this.userRepository.manager.findOneBy( User, { email, status:'active' } )
+  async findOneUser(phoneNumber: string): Promise<User> {
+    const user = await this.userRepository.manager.findOneOrFail(User, {
+      // select: ['id', 'firstName', 'lastName', 'phoneNumber', 'password', 'rol'],
+      // relations: ['rol', 'rol.permissions'],
+      relations: ['rol', 'rol.rolPermissions', 'rol.rolPrivileges'],
+      where: { phoneNumber },
+    });
+
+    // const rolPermissions = await this.userRepository.manager.findOneOrFail(
+    //   RolPermissions,
+    //   {
+    //     where: { rolId: user.rolId },
+    //   },
+    // );
+
+    // // Aplanar la estructura de relaciones para obtener todos los privilegios en un solo arreglo
+    // const allPrivileges = user.rols.reduce((privileges, rol) => {
+    //   rol.rolPermissions.forEach((rolPermission) => {
+    //     privileges.push(
+    //       ...rolPermission.permissions.rolPermissions.map(
+    //         (perm) => perm.privileges,
+    //       ),
+    //     );
+    //   });
+    //
+    //   rol.rolPrivileges.forEach((rolPrivilege) => {
+    //     privileges.push(rolPrivilege.privileges);
+    //   });
+    //
+    //   return privileges;
+    // }, []);
+
+    // Ahora, 'allPrivileges' contendrá todos los privilegios del usuario en un solo arreglo
+    // console.log(777, allPrivileges);
+
+    if (typeof user.rol !== 'string') {
+      const rolPermissionsId = user.rol.rolPermissions.map(
+        (item) => item.permissionsId,
+      );
+      const rolPrivilegesId = user.rol.rolPrivileges.map(
+        (item) => item.privilegesId,
+      );
+      // console.log(777, user.rol.rolPrivileges);
+      const permissionsPrivileges = await this.userRepository.manager.find(
+        PermissionsPrivileges,
+        {
+          where: { permissionsId: In(rolPermissionsId) },
+        },
+      );
+      const allPrivileges = await this.userRepository.manager.find(Privileges, {
+        where: {
+          id: In([
+            ...rolPrivilegesId,
+            ...permissionsPrivileges.map((item) => item.privilegesId),
+          ]),
+        },
+      });
+      console.log(777, allPrivileges);
+      const privileges = allPrivileges.map((item) => item.name);
+      console.log(666, privileges);
+      user.privileges = privileges;
+    }
+
+    return user;
   }
 }

@@ -29,7 +29,7 @@ export class NoteRepository {
   async updateNote(id: number, data: Note): Promise<any> {
     try {
       const noteInsert = await this.noteRepository.update(id, data);
-      return { data: noteInsert.raw, msg: 'Nota Creada!', code: 200 };
+      return { data: noteInsert.raw, msg: 'Nota Editada!', code: 200 };
     } catch (e) {
       console.log(12, e);
       return { code: 500, msg: 'Error al intentar guardar' + e, data: e };
@@ -38,17 +38,25 @@ export class NoteRepository {
 
   async getNotes(params: ListNoteDto): Promise<ResponseDto> {
     try {
-      const { page, limit } = params;
+      const { page, limit, entityType, entityId } = params;
       const notes = await this.noteRepository.manager.find(Note, {
-        where: { entityType: params.key, entityId: params.id },
-        relations: ['createdBy'],
-        // select: {
-        //   id: true,
-        //   title: true,
-        //   createdBy: {
-        //     select: ['id', 'firs'], // Selecciona solo los campos 'id' y 'name' de la relación 'createdBy'
-        //   },
-        // },
+        where: { entityType, entityId },
+        relations: ['createdBy', 'createdBy.rol'],
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          createdAt: true,
+          entityType: true,
+          entityId: true,
+          createdBy: {
+            lastName: true,
+            firstName: true,
+            id: true,
+            rol: false, // TODO ELIMINAR EL ROL
+          },
+        },
+        order: { createdAt: 'DESC' },
 
         // skip : ((page-1) * limit) || 0,
         // take: limit || 1000

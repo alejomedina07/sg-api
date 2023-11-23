@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Service } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/dto/shared/response.dto';
+import { GetReportDto } from '../../../../../apps/main/src/dto/shared/getReport.dto';
 
 @Injectable()
 export class ServiceRepository {
@@ -44,71 +45,13 @@ export class ServiceRepository {
       return {
         data: await this.serviceRepository.manager.find(Service, {
           relations: ['status', 'type'],
+          order: { id: 'desc' },
         }),
         msg: 'Obtenido correctamente!',
         code: 201,
       };
     } catch (e) {
       return { code: 404, msg: 'Error al obtener' };
-    }
-  }
-
-  async getServicesReport(): Promise<ResponseDto> {
-    try {
-      return {
-        data: await this.serviceRepository.manager.find(Service, {
-          relations: ['status', 'type'],
-        }),
-        msg: 'Obtenido correctamente!',
-        code: 201,
-      };
-    } catch (e) {
-      return { code: 404, msg: 'Error al obtener' };
-    }
-  }
-
-  async getReportServices(): Promise<ResponseDto> {
-    try {
-      const queryService = `
-          SELECT
-              TO_CHAR(date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota'), 'YYYY-MM-DD') AS name,
-              CAST(COUNT(*) AS INTEGER) AS count,
-              SUM(amount) AS totalAmount
-          FROM "SVC".service
-          group by name
-          ORDER BY name`;
-
-      const queryExpense = `
-          SELECT
-              TO_CHAR(date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota'), 'YYYY-MM-DD') AS name,
-              CAST(COUNT(*) AS INTEGER) AS count,
-              SUM(amount) AS totalAmount
-          FROM "INV".expense
-          GROUP BY date_trunc('day', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Bogota')
-          ORDER BY name`;
-
-      const resultService = await this.serviceRepository.query(queryService);
-      const resultExpense = await this.serviceRepository.query(queryExpense);
-      console.log(78, resultExpense);
-      const dataExpense = resultExpense.map(({ name, totalamount, count }) => ({
-        name,
-        count,
-        totalAmount:
-          parseInt(String(totalamount.replace(/[$,]/g, '') * 100)) / 100,
-      }));
-
-      const dataService = resultService.map(({ name, totalamount, count }) => ({
-        name,
-        count,
-        totalAmount:
-          parseInt(String(totalamount.replace(/[$,]/g, '') * 100)) / 100,
-      }));
-      const data = { dataService, dataExpense };
-      console.log(data);
-      return { data, code: 201, msg: 'Obtenido correctamente' };
-    } catch (e) {
-      console.log(e);
-      return { data: e, code: 500, msg: 'Error al obtener' };
     }
   }
 }

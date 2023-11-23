@@ -12,13 +12,13 @@ export class ListNoteDto {
   @IsString({ message: 'key: El nombre de usuario debe ser texto' })
   limit?: number;
 
-  @ApiProperty({ description: 'key del usuario', required: true })
-  @IsDefined({ message: 'key: El key es requerido' })
-  @IsString({ message: 'key: El key de usuario debe ser texto' })
-  key: string;
+  @ApiProperty({ description: 'entityType del usuario', required: true })
+  @IsDefined({ message: 'entityType: El entityType es requerido' })
+  @IsString({ message: 'entityType: El entityType de usuario debe ser texto' })
+  entityType: string;
 
   @ApiProperty({ description: 'id del cliente', required: true })
   @IsDefined({ message: 'id: El id es requerido' })
   @IsString({ message: 'id: El id debe ser texto' })
-  id: number;
+  entityId: number;
 }

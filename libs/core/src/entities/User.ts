@@ -9,13 +9,18 @@ import {
 } from 'typeorm';
 import { Inventory } from './Inventory';
 import { Appointment } from './Appointment';
+import { Attention } from './Attention';
 import { Customer } from './Customer';
 import { Expense } from './Expense';
 import { InventoryInOut } from './InventoryInOut';
-import { Service } from './Service';
-import { List } from './List';
 import { Note } from './Note';
+import { Permissions } from './Permissions';
+import { Privileges } from './Privileges';
+import { Procedure } from './Procedure';
 import { Rol } from './Rol';
+import { Service } from './Service';
+import { Turn } from './Turn';
+import { List } from './List';
 
 @Index('document_number_unique', ['documentNumber'], { unique: true })
 @Index('user_document_type_id_idx', ['documentTypeId'], {})
@@ -79,6 +84,9 @@ export class User {
   @OneToMany(() => Appointment, (appointment) => appointment.createdBy)
   appointments?: Appointment[];
 
+  @OneToMany(() => Attention, (attention) => attention.attentById)
+  attentions?: Attention[];
+
   @OneToMany(() => Customer, (customer) => customer.createdBy)
   customers?: Customer[];
 
@@ -88,8 +96,23 @@ export class User {
   @OneToMany(() => InventoryInOut, (inventoryInOut) => inventoryInOut.createdBy)
   inventoryInOuts?: InventoryInOut[];
 
+  @OneToMany(() => Permissions, (permissions) => permissions.createdBy)
+  permissions?: Permissions[];
+
+  @OneToMany(() => Privileges, (privileges) => privileges.createdBy)
+  privileges?: Privileges[] | string[];
+
+  @OneToMany(() => Procedure, (procedure) => procedure.createdBy)
+  procedures?: Procedure[];
+
+  @OneToMany(() => Rol, (rol) => rol.createdBy)
+  rols?: Rol[];
+
   @OneToMany(() => Service, (service) => service.createdBy)
   services?: Service[];
+
+  @OneToMany(() => Turn, (turn) => turn.createdBy)
+  turns?: Turn[];
 
   @ManyToOne(() => List, (list) => list.usersDocumentType, {
     onDelete: 'SET NULL',
@@ -104,7 +127,7 @@ export class User {
     eager: true,
   })
   @JoinColumn([{ name: 'rol_id', referencedColumnName: 'id' }])
-  rol?: Rol | string;
+  rol?: Rol | string | null;
 
   @ManyToOne(() => List, (list) => list.usersStatus, {
     onDelete: 'SET NULL',

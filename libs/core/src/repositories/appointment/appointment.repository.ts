@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, EntityManager, Repository } from 'typeorm';
+import { Between, EntityManager, FindManyOptions, Repository } from 'typeorm';
 import {
   Appointment,
   AppointmentType,
@@ -49,22 +49,9 @@ export class AppointmentRepository {
 
   async updateAppointment(id: number, data: Appointment): Promise<ResponseDto> {
     try {
-      // console.log(777, data);
-      // const appointmentInsert = await this.appointmentRepository.update(
-      //   id,
-      //   data,
-      // );
-      // console.log(1231111, appointmentInsert);
-      // return {
-      //   data: appointmentInsert.raw,
-      //   msg: 'Cita actualizada exitosamente!',
-      //   code: 200,
-      // };
       return this.entityManager.transaction(async (entityManager) => {
-        console.log(111, data);
         const dataAux = { ...data };
         delete data.service;
-        // delete data.addService;
         await entityManager.update(Appointment, id, data);
         const serviceAppointment = await entityManager.findOne(Service, {
           where: { appointmentId: id },
@@ -89,7 +76,6 @@ export class AppointmentRepository {
     end,
   }: AppointmentParamsDto): Promise<ResponseDto> {
     try {
-      console.log('Repository:: ', { start, end });
       const [data, total] =
         await this.appointmentRepository.manager.findAndCount(Appointment, {
           relations: ['appointmentType', 'customer', 'service'],
@@ -126,11 +112,44 @@ export class AppointmentRepository {
       return { code: 500, msg: 'Error al intentar guardar' };
     }
   }
-
-  async getAppointmentTypes(): Promise<ResponseDto> {
+  async updateAppointmentType(
+    id: number,
+    data: AppointmentType,
+  ): Promise<ResponseDto> {
     try {
+      const appointmentInsert = await this.appointmentRepository.manager.update(
+        AppointmentType,
+        id,
+        data,
+      );
+      // await this.appointmentRepository.manager.update();
+
       return {
-        data: await this.appointmentRepository.manager.find(AppointmentType),
+        data: appointmentInsert,
+        msg: 'Tipo de Cita Creada exitosamente!',
+        code: 200,
+      };
+    } catch (e) {
+      console.log(999, e);
+      return { code: 500, msg: 'Error al intentar guardar' };
+    }
+  }
+
+  async getAppointmentTypes(getAll?: boolean): Promise<ResponseDto> {
+    try {
+      let options: FindManyOptions = {
+        order: { name: 'ASC' },
+        where: { status: true },
+      };
+      if (getAll) delete options.where;
+
+      console.log(1111, options);
+
+      return {
+        data: await this.appointmentRepository.manager.find(
+          AppointmentType,
+          options,
+        ),
         msg: 'Obtenido correctamente!',
         code: 201,
       };

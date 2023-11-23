@@ -16,6 +16,12 @@ import { ListRepository } from 'sg/core/repositories/config/list.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { List, Note } from 'sg/core/entities';
 import { NoteRepository } from 'sg/core/repositories/note/note.repository';
+import { DateManagerService } from './services/share/date-manager/date-manager.service';
+import { ReportService } from './services/report/report.service';
+import { ReportController } from './controllers/report/report.controller';
+import { ReportModule } from './modules/report/report.module';
+import { TurnsGateway } from './gateways/turns.gateway';
+import { ConfigModule } from './config/config.module';
 
 @Module({
   imports: [
@@ -29,8 +35,16 @@ import { NoteRepository } from 'sg/core/repositories/note/note.repository';
     ServiceModule,
     UserModule,
     TypeOrmModule.forFeature([List, Note]),
+    ReportModule,
+    ConfigModule,
   ],
   controllers: [ListController, NoteController],
-  providers: [ListService, ListRepository, NoteService, NoteRepository],
+  providers: [
+    ListService,
+    ListRepository,
+    NoteService,
+    NoteRepository,
+    TurnsGateway,
+  ],
 })
 export class MainModule {}

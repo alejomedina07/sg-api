@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ResponseDto } from '../../dto/shared/response.dto';
@@ -30,15 +31,6 @@ export class ServiceController {
     console.log(999);
     // return await this.serviceService.getReportServices();
     return await this.serviceService.getService();
-  }
-
-  @Get('/report')
-  async getReportServices(): Promise<ResponseDto> {
-    console.log(123);
-    const res = await this.serviceService.getReportServices();
-    if (res.code === 500)
-      throw new HttpException(res.msg || 'Error!!', res.code || 500);
-    return res;
   }
 
   @Roles(Role.Admin, Role.User)

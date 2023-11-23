@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Inventory, InventoryInOut } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/dto/shared/response.dto';
+import { PaginationDto } from '../../../../../apps/main/src/dto/shared/pagination.dto';
 
 @Injectable()
 export class InventoryRepository {
@@ -56,8 +57,12 @@ export class InventoryRepository {
       return { code: 500, msg: 'Error al obtener' };
     }
   }
-  async getInventoryById(id: number): Promise<ResponseDto> {
+  async getInventoryById(
+    id: number,
+    params: PaginationDto,
+  ): Promise<ResponseDto> {
     try {
+      const { page, limit } = params;
       const inventory = await this.inventoryRepository.manager.findOne(
         Inventory,
         {
@@ -65,17 +70,17 @@ export class InventoryRepository {
         },
       );
 
-      const inventoryInOut = await this.inventoryRepository.manager.find(
-        InventoryInOut,
-        {
+      const [inventoryInOut, totalRecords] =
+        await this.inventoryRepository.manager.findAndCount(InventoryInOut, {
           where: { inventoryId: id },
           order: { createdAt: 'desc' },
           relations: ['createdBy'],
-        },
-      );
+          skip: (page - 1) * limit || 0,
+          take: limit || 1000,
+        });
 
       return {
-        data: { inventory, inventoryInOut },
+        data: { inventory, inventoryInOut, totalInventoryInOut: totalRecords },
         msg: 'Obtenido exitosamente',
         code: 200,
       };

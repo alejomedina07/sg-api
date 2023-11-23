@@ -13,8 +13,8 @@ import { UserService } from '../../services/user/user.service';
 import { CreateUserDto } from '../../dto/user/createUser.dto';
 import { ResponseDto } from '../../dto/shared/response.dto';
 
-import { Roles } from '../../decorators/roles.decorator';
-import { Role } from '../../enums/role.enum';
+import { Privileges, Roles } from '../../decorators/roles.decorator';
+import { Privilege, Role } from '../../enums/role.enum';
 
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../guards/auth/jwtAuthGuard.guard';
@@ -28,6 +28,7 @@ export class UserController {
   constructor(private readonly mainService: UserService) {}
 
   @Roles(Role.Admin, Role.User)
+  @Privileges(Privilege.userList)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async getUsers(@Query() params: PaginationDto): Promise<ResponseDto> {
@@ -35,6 +36,7 @@ export class UserController {
   }
 
   @Roles(Role.Admin)
+  @Privileges(Privilege.userCreate)
   @UseGuards(JwtAuthGuard, RolesGuard, SetCreatedByGuard)
   @Post()
   async createUser(@Body() user: CreateUserDto): Promise<ResponseDto> {
@@ -45,6 +47,7 @@ export class UserController {
   }
 
   @Roles(Role.Admin)
+  @Privileges(Privilege.userEdit)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
   async updateUser(
