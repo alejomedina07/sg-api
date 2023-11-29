@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ResponseDto } from '../../../../../apps/main/src/dto/shared/response.dto';
-import { PaginationDto } from '../../../../../apps/main/src/dto/shared/pagination.dto';
+import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
+import { PaginationDto } from '../../../../../apps/main/src/shared/dto/pagination.dto';
 import { Note } from 'sg/core/entities';
-import { ListNoteDto } from '../../../../../apps/main/src/dto/config/listNote.dto';
+import { ListNoteDto } from '../../../../../apps/main/src/modules/config/dto/listNote.dto';
 
 @Injectable()
 export class NoteRepository {

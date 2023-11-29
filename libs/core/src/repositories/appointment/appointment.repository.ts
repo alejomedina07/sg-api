@@ -8,8 +8,8 @@ import {
   InventoryInOut,
   Service,
 } from 'sg/core/entities';
-import { ResponseDto } from '../../../../../apps/main/src/dto/shared/response.dto';
-import { AppointmentParamsDto } from '../../../../../apps/main/src/dto/appointment/AppointmentParams.dto';
+import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
+import { AppointmentParamsDto } from '../../../../../apps/main/src/modules/appointment/dto/AppointmentParams.dto';
 
 @Injectable()
 export class AppointmentRepository {

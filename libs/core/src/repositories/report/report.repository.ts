@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Service } from 'sg/core/entities';
 import { Repository } from 'typeorm';
-import { GetReportDto } from '../../../../../apps/main/src/dto/shared/getReport.dto';
-import { ResponseDto } from '../../../../../apps/main/src/dto/shared/response.dto';
+import { GetReportDto } from '../../../../../apps/main/src/shared/dto/getReport.dto';
+import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
 
 @Injectable()
 export class ReportRepository {

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ResponseDto } from '../../../../../apps/main/src/dto/shared/response.dto';
+import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
 import { List, Rol } from 'sg/core/entities';
-import { GetListDto } from '../../../../../apps/main/src/dto/config/getList.dto';
+import { GetListDto } from '../../../../../apps/main/src/modules/config/dto/getList.dto';
 
 @Injectable()
 export class ListRepository {

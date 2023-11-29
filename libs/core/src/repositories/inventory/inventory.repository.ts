@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Inventory, InventoryInOut } from 'sg/core/entities';
-import { ResponseDto } from '../../../../../apps/main/src/dto/shared/response.dto';
-import { PaginationDto } from '../../../../../apps/main/src/dto/shared/pagination.dto';
+import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
+import { PaginationDto } from '../../../../../apps/main/src/shared/dto/pagination.dto';
 
 @Injectable()
 export class InventoryRepository {
