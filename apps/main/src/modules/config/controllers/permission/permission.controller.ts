@@ -31,4 +31,12 @@ export class PermissionController {
   async getPermission(): Promise<ResponseDto> {
     return this.permissionService.getPermission();
   }
+
+  @Roles(Role.Admin)
+  @Privileges(Privilege.configList)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('/privileges')
+  async getPrivileges(): Promise<ResponseDto> {
+    return this.permissionService.getPrivileges();
+  }
 }

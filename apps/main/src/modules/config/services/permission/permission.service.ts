@@ -13,4 +13,7 @@ export class PermissionService {
   async getPermission(): Promise<ResponseDto> {
     return this.rolRepository.getPermission();
   }
+  async getPrivileges(): Promise<ResponseDto> {
+    return this.rolRepository.getPrivileges();
+  }
 }

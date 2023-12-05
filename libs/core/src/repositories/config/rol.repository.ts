@@ -5,6 +5,7 @@ import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dt
 import {
   Permissions,
   PermissionsPrivileges,
+  Privileges,
   Rol,
   RolPermissions,
   RolPrivileges,
@@ -19,29 +20,47 @@ export class RolRepository {
     private readonly entityManager: EntityManager,
   ) {}
 
+  async getPrivileges(): Promise<ResponseDto> {
+    try {
+      return {
+        data: await this.rolRepository.manager.find(Privileges, {
+          select: ['id', 'name', 'description'],
+          order: { name: 'ASC' },
+          // skip: (page - 1) * limit || 0,
+          // take: limit || 1000,
+        }),
+        msg: 'Obtenido correctamente!',
+        code: 201,
+      };
+    } catch (e) {
+      console.log(e);
+      return { code: 500, msg: 'Error al obtener' };
+    }
+  }
+
   async getPermission(): Promise<ResponseDto> {
     try {
       let data: any = await this.rolRepository.manager.find(Permissions, {
         select: ['id', 'name', 'description'],
         order: { name: 'ASC' },
-        relations: [
-          'permissionsPrivileges',
-          'permissionsPrivileges.privileges',
-        ],
+        // relations: [
+        //   'permissionsPrivileges',
+        //   'permissionsPrivileges.privileges',
+        // ],
         // skip: (page - 1) * limit || 0,
         // take: limit || 1000,
       });
 
-      data = data.map((permission) => ({
-        id: permission.id,
-        name: permission.name,
-        description: permission.description,
-        privileges: permission.permissionsPrivileges.map((privilege) => ({
-          id: privilege.privileges.id,
-          name: privilege.privileges.name,
-          description: privilege.privileges.description,
-        })),
-      }));
+      // data = data.map((permission) => ({
+      //   id: permission.id,
+      //   name: permission.name,
+      //   description: permission.description,
+      //   privileges: permission.permissionsPrivileges.map((privilege) => ({
+      //     id: privilege.privileges.id,
+      //     name: privilege.privileges.name,
+      //     description: privilege.privileges.description,
+      //   })),
+      // }));
       return { data, msg: 'Obtenido correctamente!', code: 201 };
     } catch (e) {
       console.log(e);
