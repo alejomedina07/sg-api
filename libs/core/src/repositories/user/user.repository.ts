@@ -1,12 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import {
-  PermissionsPrivileges,
-  Privileges,
-  RolPermissions,
-  User,
-} from 'sg/core/entities';
+import { PermissionsPrivileges, Privileges, User } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
 import { PaginationDto } from '../../../../../apps/main/src/shared/dto/pagination.dto';
 
@@ -42,33 +37,38 @@ export class UserRepository {
 
   async getUsers(params: PaginationDto): Promise<ResponseDto> {
     try {
-      const { page, limit } = params;
-      const users = await this.userRepository.manager.find(User, {
-        select: [
-          'id',
-          'firstName',
-          'lastName',
-          'rol',
-          'rolId',
-          'address',
-          'bloodType',
-          'documentTypeId',
-          'statusId',
-          'status',
-          'documentType',
-          'documentNumber',
-          'createdAt',
-          'email',
-          'phoneNumber',
-        ],
-        relations: ['rol', 'status', 'documentType'],
-        where: { status: true },
-        order: { firstName: 'ASC' },
-        // skip : ((page-1) * limit) || 0,
-        // take: limit || 1000
-      });
+      const [users, totalRecords] =
+        await this.userRepository.manager.findAndCount(User, {
+          select: [
+            'id',
+            'firstName',
+            'lastName',
+            'rol',
+            'rolId',
+            'address',
+            'bloodType',
+            'documentTypeId',
+            'statusId',
+            'status',
+            'documentType',
+            'documentNumber',
+            'createdAt',
+            'email',
+            'phoneNumber',
+          ],
+          relations: ['rol', 'status', 'documentType'],
+          where: { status: true },
+          order: { firstName: 'ASC' },
+          // skip : ((page-1) * limit) || 0,
+          // take: limit || 1000
+        });
 
-      return { data: users, msg: 'Obtenido correctamente!', code: 201 };
+      return {
+        data: users,
+        total: totalRecords,
+        msg: 'Obtenido correctamente!',
+        code: 201,
+      };
     } catch (e) {
       console.log(e);
       return { code: 404, msg: 'Error al obtener' };

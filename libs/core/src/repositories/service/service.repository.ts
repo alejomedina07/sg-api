@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Service } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
-import { GetReportDto } from '../../../../../apps/main/src/shared/dto/getReport.dto';
+import { PaginationDto } from '../../../../../apps/main/src/shared/dto/pagination.dto';
 
 @Injectable()
 export class ServiceRepository {
@@ -40,13 +40,21 @@ export class ServiceRepository {
     }
   }
 
-  async getServices(): Promise<ResponseDto> {
+  async getServices(params: PaginationDto): Promise<ResponseDto> {
     try {
-      return {
-        data: await this.serviceRepository.manager.find(Service, {
+      const { page, limit } = params;
+      const [data, total] = await this.serviceRepository.manager.findAndCount(
+        Service,
+        {
           relations: ['status', 'type'],
           order: { id: 'desc' },
-        }),
+          skip: (page - 1) * limit || 0,
+          take: limit || 1000,
+        },
+      );
+      return {
+        data,
+        total,
         msg: 'Obtenido correctamente!',
         code: 201,
       };
@@ -55,5 +63,3 @@ export class ServiceRepository {
     }
   }
 }
-
-// Hello Florencia, thanks for contact me, currently I am b1 in English Level, I am interested in hearing more about the offer

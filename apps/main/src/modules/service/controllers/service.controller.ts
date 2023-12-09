@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
   Param,
   Post,
   Put,
@@ -18,6 +17,7 @@ import { JwtAuthGuard } from '../../../guards/auth/jwtAuthGuard.guard';
 import { RolesGuard } from '../../../guards/rol/roles.guard';
 import { SetCreatedByGuard } from '../../../guards/auth/setCreatedBy.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { PaginationDto } from '../../../shared/dto/pagination.dto';
 
 @ApiBearerAuth()
 @Controller('service')
@@ -28,10 +28,8 @@ export class ServiceController {
   @Privileges(Privilege.serviceList)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
-  async getService(): Promise<ResponseDto> {
-    console.log(999);
-    // return await this.serviceService.getReportServices();
-    return await this.serviceService.getService();
+  async getService(@Query() params: PaginationDto): Promise<ResponseDto> {
+    return await this.serviceService.getService(params);
   }
 
   @Roles(Role.Admin, Role.User)

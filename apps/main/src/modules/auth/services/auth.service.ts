@@ -16,7 +16,6 @@ export class AuthService {
     // let response:ResponseLogin = { msg: 'Usuario o contraseña incorrecta' };
     const { phoneNumber, password } = data;
     const user = await this.userRepository.findOneUser(phoneNumber);
-    console.log(888, user);
     if (user) {
       const compare = await this.cryptoService.comparePassword(
         password,

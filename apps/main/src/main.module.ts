@@ -16,11 +16,11 @@ import { ListRepository } from 'sg/core/repositories/config/list.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { List, Note } from 'sg/core/entities';
 import { NoteRepository } from 'sg/core/repositories/note/note.repository';
-import { DateManagerService } from './shared/services/date-manager/date-manager.service';
-import { ReportService } from './modules/report/services/report.service';
-import { ReportController } from './modules/report/controllers/report.controller';
+// import { DateManagerService } from './shared/services/date-manager/date-manager.service';
+// import { ReportService } from './modules/report/services/report.service';
+// import { ReportController } from './modules/report/controllers/report.controller';
 import { ReportModule } from './modules/report/report.module';
-import { TurnsGateway } from './gateways/turns.gateway';
+// import { TurnsGateway } from './gateways/turns.gateway';
 import { ConfigModule } from './modules/config/config.module';
 
 @Module({
@@ -44,7 +44,7 @@ import { ConfigModule } from './modules/config/config.module';
     ListRepository,
     NoteService,
     NoteRepository,
-    TurnsGateway,
+    // TurnsGateway,
   ],
 })
 export class MainModule {}

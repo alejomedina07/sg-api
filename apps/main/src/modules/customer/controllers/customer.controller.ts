@@ -42,10 +42,8 @@ export class CustomerController {
   async getCustomerById(
     @Param('id') id: number,
   ): Promise<Customer | ResponseDto> {
-    console.log('this id: ', id);
     try {
-      const customer = await this.customerService.getCustomerById(id);
-      return customer;
+      return await this.customerService.getCustomerById(id);
     } catch (error) {
       // console.log(999, error);
       throw new HttpException('Error al intentar Obtener!', 500);

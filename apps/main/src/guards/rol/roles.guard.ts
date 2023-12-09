@@ -12,12 +12,10 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    console.log(8, requiredRoles);
     const requiredPrivileges = this.reflector.getAllAndOverride<string[]>(
       PRIVILEGES_KEY,
       [context.getHandler(), context.getClass()],
     );
-    console.log(9, requiredPrivileges);
     if (!requiredRoles && !requiredPrivileges) {
       return true;
     }
@@ -26,7 +24,6 @@ export class RolesGuard implements CanActivate {
     let next = false;
     if (requiredRoles && requiredRoles.length > 0) {
       if (user?.rol && requiredRoles.some((role) => user.rol === role)) {
-        console.log(1);
         next = true;
       }
     }
@@ -37,11 +34,9 @@ export class RolesGuard implements CanActivate {
           userPrivileges.includes(privilege),
         )
       ) {
-        console.log(2);
         next = true;
       }
     }
-    console.log(3);
     return next;
   }
 }
