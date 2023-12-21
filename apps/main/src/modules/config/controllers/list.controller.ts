@@ -44,8 +44,7 @@ export class ListController {
   }
 
   @Roles(Role.Admin, Role.User)
-  @Privileges(Privilege.configList)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('list')
   async getList(@Query() params: GetListDto): Promise<ResponseDto> {
     return await this.mainService.getList(params);

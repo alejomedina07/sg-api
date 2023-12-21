@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,490" last-zoom="1" max-obj-count="46"
+<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,1556" last-zoom="1.35" max-obj-count="58"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -41,6 +41,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </schema>
 
 <schema name="CNFG" layers="0" rect-visible="true" fill-color="#e1e1e1">
+	<role name="root"/>
+</schema>
+
+<schema name="SVY" layers="0" rect-visible="true" fill-color="#e1e1e1">
 	<role name="root"/>
 </schema>
 
@@ -186,10 +190,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<table name="appointment" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
+<table name="appointment" layers="0" collapse-mode="1" max-obj-count="12" z-value="0">
 	<schema name="&quot;APMT&quot;"/>
 	<role name="root"/>
-	<position x="1500" y="40"/>
+	<position x="1540" y="160"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -214,6 +218,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 	<customidxs object-type="column">
 		<object name="appointment_type_id" index="8"/>
+		<object name="assigned_to_id" index="9"/>
 		<object name="created_by" index="5"/>
 		<object name="customer_id" index="4"/>
 	</customidxs>
@@ -222,6 +227,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<object name="appointment_type_appointment_fk" index="3"/>
 		<object name="customer_appointment_fk" index="1"/>
 		<object name="user_appointment_fk" index="2"/>
+		<object name="user_appointment_fk1" index="4"/>
 	</customidxs>
 </table>
 
@@ -1344,5 +1350,220 @@ CAUTION: Do not modify this file unless you know what you are doing.
 			<column name="permissions_id"/>
 		</idxelement>
 </index>
+
+<relationship name="assigned_to_has_many_appointment" type="rel1n" layers="0"
+	 src-col-pattern="assigned_to_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#8abbd2"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;APMT&quot;.appointment"
+	 src-required="false" dst-required="false"/>
+
+<index name="assigned_to_appointment_id_idx" table="&quot;APMT&quot;.appointment"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="assigned_to_id"/>
+		</idxelement>
+</index>
+
+<table name="survey" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+	<schema name="&quot;SVY&quot;"/>
+	<role name="root"/>
+	<position x="40" y="1260"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="survey_pk" type="pk-constr" table="&quot;SVY&quot;.survey">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="category" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;SVY&quot;"/>
+	<role name="root"/>
+	<position x="380" y="1240"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="status" default-value="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="category_pk" type="pk-constr" table="&quot;SVY&quot;.category">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="question" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;SVY&quot;"/>
+	<role name="root"/>
+	<position x="600" y="1260"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="status" default-value="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="question_pk" type="pk-constr" table="&quot;SVY&quot;.question">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="option_question" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+	<schema name="&quot;SVY&quot;"/>
+	<role name="root"/>
+	<position x="580" y="1540"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="option_question_pk" type="pk-constr" table="&quot;SVY&quot;.option_question">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="answer" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+	<schema name="&quot;SVY&quot;"/>
+	<role name="postgres"/>
+	<position x="100" y="1560"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="answer_pk" type="pk-constr" table="&quot;SVY&quot;.answer">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="category_has_many_question" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#9fd96e"
+	 src-table="&quot;SVY&quot;.category"
+	 dst-table="&quot;SVY&quot;.question"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="survey_has_many_category" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#7b7d22"
+	 src-table="&quot;SVY&quot;.survey"
+	 dst-table="&quot;SVY&quot;.category"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="user_has_many_survey" type="rel1n" layers="0"
+	 src-col-pattern="creaetd_by"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#83dfcc"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;SVY&quot;.survey"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="question_has_many_option_question" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#9e998b"
+	 src-table="&quot;SVY&quot;.question"
+	 dst-table="&quot;SVY&quot;.option_question"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="question_has_many_answer" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#af435e"
+	 src-table="&quot;SVY&quot;.question"
+	 dst-table="&quot;SVY&quot;.answer"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="option_question_has_many_answer" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#5f0a6e"
+	 src-table="&quot;SVY&quot;.option_question"
+	 dst-table="&quot;SVY&quot;.answer"
+	 src-required="false" dst-required="false"/>
+
+<table name="survey_category" layers="0" collapse-mode="1" max-obj-count="3" z-value="0">
+	<schema name="&quot;SVY&quot;"/>
+	<role name="root"/>
+	<position x="100" y="1400"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<constraint name="survey_category_pk" type="pk-constr" table="&quot;SVY&quot;.survey_category">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="survey_has_many_survey_category" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#9a539e"
+	 src-table="&quot;SVY&quot;.survey"
+	 dst-table="&quot;SVY&quot;.survey_category"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="category_has_many_survey_category" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#35dd7d"
+	 src-table="&quot;SVY&quot;.category"
+	 dst-table="&quot;SVY&quot;.survey_category"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="user_has_many_answer" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#1dc863"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;SVY&quot;.answer"
+	 src-required="false" dst-required="false"/>
 
 </dbmodel>

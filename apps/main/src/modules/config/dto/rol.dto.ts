@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  ArrayMinSize,
   IsArray,
   IsBoolean,
   IsDefined,
@@ -41,7 +40,7 @@ export class RolPermissionDto {
   @IsDefined({ message: 'permissionsId: El permissionsId es requerido' })
   @IsNumber({}, { each: true })
   @IsArray()
-  @ArrayMinSize(1)
+  // @ArrayMinSize(1)
   permissionsId: number[];
 
   @ApiProperty({

@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { PermissionsPrivileges, Privileges, User } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
-import { PaginationDto } from '../../../../../apps/main/src/shared/dto/pagination.dto';
 
 @Injectable()
 export class UserRepository {
@@ -12,6 +11,7 @@ export class UserRepository {
   ) {}
 
   async createUser(data: User): Promise<any> {
+    console.log(77777, data);
     try {
       const userInsert = await this.userRepository.manager.insert(User, data);
       return {
@@ -35,7 +35,27 @@ export class UserRepository {
     }
   }
 
-  async getUsers(params: PaginationDto): Promise<ResponseDto> {
+  async getUsersToList(): Promise<ResponseDto> {
+    try {
+      const data = await this.userRepository.manager.find(User, {
+        select: ['id', 'firstName', 'lastName'],
+        // where: { status: true }, // TODO
+        order: { firstName: 'ASC' },
+      });
+      return {
+        data: data.map((x) => {
+          return { id: x.id, name: `${x.firstName} ${x.lastName}` };
+        }),
+        msg: 'Obtenido correctamente!',
+        code: 201,
+      };
+    } catch (e) {
+      console.log(e);
+      return { code: 404, msg: 'Error al obtener' };
+    }
+  }
+
+  async getUsers(): Promise<ResponseDto> {
     try {
       const [users, totalRecords] =
         await this.userRepository.manager.findAndCount(User, {

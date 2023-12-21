@@ -1,15 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, EntityManager, FindManyOptions, Repository } from 'typeorm';
-import {
-  Appointment,
-  AppointmentType,
-  Inventory,
-  InventoryInOut,
-  Service,
-} from 'sg/core/entities';
+import { Appointment, AppointmentType, Service } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
 import { AppointmentParamsDto } from '../../../../../apps/main/src/modules/appointment/dto/AppointmentParams.dto';
+import { AppointmentSourceService } from 'sg/core/services/appointment/appointmentSource.service';
+import { DateManagerService } from '../../../../../apps/main/src/shared/services/date-manager/date-manager.service';
 
 @Injectable()
 export class AppointmentRepository {
@@ -17,23 +13,61 @@ export class AppointmentRepository {
     @InjectRepository(Appointment)
     private appointmentRepository: Repository<Appointment>,
     private readonly entityManager: EntityManager,
+    private appointmentSource: AppointmentSourceService,
+    private dateManagerService: DateManagerService,
   ) {}
 
-  getService(data: Appointment, appointmentId: number): Service {
-    return {
-      ...data.service,
-      appointmentId,
-      customerId: data.customerId,
-      createdById: data.createdById,
-    };
-  }
+  // getService(data: Appointment, appointmentId: number): Service {
+  //   return {
+  //     ...data.service,
+  //     appointmentId,
+  //     customerId: data.customerId,
+  //     createdById: data.createdById,
+  //   };
+  // }
 
   async createAppointment(data: Appointment): Promise<ResponseDto> {
     try {
       return this.entityManager.transaction(async (entityManager) => {
+        // const { startDate, endDate } = this.dateManagerService.getDayRange(
+        //   data.date,
+        // );
+        const { startDate, endDate } = this.dateManagerService.getMinuteRange(
+          new Date(data.date),
+          data.duration,
+        );
+
+        const existingAppointment = await entityManager.findOne(Appointment, {
+          where: {
+            date: Between(startDate, endDate),
+          },
+        });
+        if (existingAppointment) {
+          return { success: false, msg: 'Conflicto de horarios!', code: 400 };
+        }
+        // const isTimeSlotAvailable =
+        //   await this.appointmentSource.isAppointmentTimeSlotAvailable(
+        //     entityManager,
+        //     data.date,
+        //     data.duration,
+        //     startDate,
+        //     endDate,
+        //   );
+        //
+        // console.log(9999, isTimeSlotAvailable);
+        //
+        // if (!isTimeSlotAvailable) {
+        //   return { success: false, msg: 'Conflicto de horarios!', code: 400 };
+        // }
+        console.log(7777);
         const resAppointment = await entityManager.insert(Appointment, data);
         if (data.service) {
-          const dataService: Service = this.getService(
+          // const dataService: Service = this.getService(
+          //   data,
+          //   resAppointment.identifiers[0].id,
+          // );
+
+          const dataService: Service = this.appointmentSource.getService(
             data,
             resAppointment.identifiers[0].id,
           );
@@ -59,7 +93,11 @@ export class AppointmentRepository {
         console.log(8, serviceAppointment);
         console.log(dataAux);
         if (dataAux.service && !serviceAppointment) {
-          const dataService: Service = this.getService(dataAux, id);
+          // const dataService: Service = this.getService(dataAux, id);
+          const dataService: Service = this.appointmentSource.getService(
+            dataAux,
+            id,
+          );
           console.log(777, dataService);
           await entityManager.insert(Service, dataService);
         }
@@ -142,8 +180,6 @@ export class AppointmentRepository {
         where: { status: true },
       };
       if (getAll) delete options.where;
-
-      console.log(1111, options);
 
       return {
         data: await this.appointmentRepository.manager.find(

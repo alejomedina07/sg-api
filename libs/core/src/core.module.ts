@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoreService } from './core.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CoreTypeOrmConfigService } from "sg/core/configuration/database.config";
+import { CoreTypeOrmConfigService } from 'sg/core/configuration/database.config';
 import { CryptoService } from './services/crypto/crypto.service';
-import configurationConfig from "sg/core/configuration/configuration.config";
+import configurationConfig from 'sg/core/configuration/configuration.config';
 
 @Module({
   imports: [
@@ -17,7 +17,6 @@ import configurationConfig from "sg/core/configuration/configuration.config";
       inject: [ConfigService],
       useClass: CoreTypeOrmConfigService,
     }),
-
   ],
   providers: [CoreService, CryptoService],
   exports: [CoreService],

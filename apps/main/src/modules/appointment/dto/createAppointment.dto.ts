@@ -90,4 +90,9 @@ export class CreateAppointmentDto {
   @ValidateNested()
   @Type(() => ServiceAppointment)
   service?: ServiceAppointment; // Optional property
+
+  @ApiProperty({ description: 'assignedToId del usuario', required: true })
+  @IsDefined({ message: 'assignedToId: Asignar es requerido' })
+  @IsInt({ message: 'assignedToId: Asignar debe ser un número' })
+  assignedToId: number;
 }

@@ -32,7 +32,21 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async getUsers(@Query() params: PaginationDto): Promise<ResponseDto> {
-    return await this.mainService.getUsers(params);
+    const response = await this.mainService.getUsers(params);
+    if (response.code !== 201)
+      throw new HttpException(response.msg || 'Error!!', response.code || 500);
+    return response;
+  }
+
+  @Roles(Role.Admin, Role.User)
+  @Privileges(Privilege.userList, Privilege.appointmentCreate)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('to-list')
+  async getUsersToList(): Promise<ResponseDto> {
+    const response = await this.mainService.getUsersToList();
+    if (response.code !== 201)
+      throw new HttpException(response.msg || 'Error!!', response.code || 500);
+    return response;
   }
 
   @Roles(Role.Admin)

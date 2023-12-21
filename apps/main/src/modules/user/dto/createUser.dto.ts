@@ -1,8 +1,13 @@
-import { IsDefined, IsEmail, IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
-import { ApiProperty }                                             from '@nestjs/swagger';
+import {
+  IsDefined,
+  IsEmail,
+  IsInt,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
-
   @ApiProperty({ description: 'firstName del usuario', required: true })
   @IsDefined({ message: 'firstName: El nombre es requerido' })
   @IsString({ message: 'firstName: El nombre de usuario debe ser texto' })
@@ -40,7 +45,9 @@ export class CreateUserDto {
 
   @ApiProperty({ description: 'documentNumber del usuario', required: true })
   @IsDefined({ message: 'documentNumber: El número de documento es requerido' })
-  @IsString({ message: 'documentNumber: El número de documento de usuario debe ser texto' })
+  @IsString({
+    message: 'documentNumber: El número de documento de usuario debe ser texto',
+  })
   documentNumber: string;
 
   @ApiProperty({ description: 'rolId del usuario', required: true })
@@ -54,8 +61,7 @@ export class CreateUserDto {
   password: string;
 
   @ApiProperty({ description: 'statusId del usuario', required: true })
-  @IsDefined({ message: 'statusId: El estado de documento es requerido' })
+  @IsDefined({ message: 'statusId: El estado es requerido' })
   @IsInt({ message: 'statusId: El estado debe ser un número' })
   statusId: number;
-
 }

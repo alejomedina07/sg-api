@@ -48,7 +48,10 @@ export class AppointmentController {
   ): Promise<ResponseDto> {
     const response = await this.appointmentService.createAppointment(data);
     if (response.code !== 200)
-      throw new HttpException('Error al intentar guardar!', 500);
+      throw new HttpException(
+        response.msg || 'Error al intentar guardar!',
+        500,
+      );
     return response;
   }
 

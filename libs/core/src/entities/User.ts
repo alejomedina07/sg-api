@@ -81,6 +81,9 @@ export class User {
   @OneToMany(() => Inventory, (inventory) => inventory.createdBy)
   inventories?: Inventory[];
 
+  @OneToMany(() => Appointment, (appointment) => appointment.assignedTo)
+  appointmentsAssigned?: Appointment[];
+
   @OneToMany(() => Appointment, (appointment) => appointment.createdBy)
   appointments?: Appointment[];
 
