@@ -44,4 +44,9 @@ export enum Privilege {
   configCreate = 'config.create',
   configEdit = 'config.edit',
   configDelete = 'config.delete',
+  surveyAdmin = 'survey.admin',
+  surveyList = 'survey.list',
+  surveyCreate = 'survey.create',
+  surveyEdit = 'survey.edit',
+  surveyDelete = 'survey.delete',
 }

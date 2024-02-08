@@ -1,13 +1,13 @@
 -- Diff code generated with pgModeler (PostgreSQL Database Modeler)
 -- pgModeler version: 1.0.0-alpha1
--- Diff date: 2023-12-21 11:27:47
+-- Diff date: 2023-12-21 11:39:34
 -- Source model: system_inventory
 -- Database: system_inventory
 -- PostgreSQL version: 14.0
 
 -- [ Diff summary ]
 -- Dropped objects: 1
--- Created objects: 16
+-- Created objects: 25
 -- Changed objects: 1
 
 SET search_path=public,pg_catalog,"INV","SVC","APMT","CTM","USR","CNFG","SVY";
@@ -96,7 +96,7 @@ CREATE TABLE "SVY".answer (
 	CONSTRAINT answer_pk PRIMARY KEY (id)
 );
 -- ddl-end --
-ALTER TABLE "SVY".answer OWNER TO postgres;
+ALTER TABLE "SVY".answer OWNER TO root;
 -- ddl-end --
 
 -- object: "SVY".survey_category | type: TABLE --
@@ -111,18 +111,99 @@ CREATE TABLE "SVY".survey_category (
 ALTER TABLE "SVY".survey_category OWNER TO root;
 -- ddl-end --
 
+-- object: survey_created_by_id_idx | type: INDEX --
+-- DROP INDEX IF EXISTS "SVY".survey_created_by_id_idx CASCADE;
+CREATE INDEX survey_created_by_id_idx ON "SVY".survey
+USING btree
+(
+	creaetd_by
+);
+-- ddl-end --
+
+-- object: category_survey_id_idx | type: INDEX --
+-- DROP INDEX IF EXISTS "SVY".category_survey_id_idx CASCADE;
+CREATE INDEX category_survey_id_idx ON "SVY".category
+USING btree
+(
+	survey_id
+);
+-- ddl-end --
+
+-- object: question_category_id_idx | type: INDEX --
+-- DROP INDEX IF EXISTS "SVY".question_category_id_idx CASCADE;
+CREATE INDEX question_category_id_idx ON "SVY".question
+USING btree
+(
+	category_id
+);
+-- ddl-end --
+
+-- object: survey_category_category_id_idx | type: INDEX --
+-- DROP INDEX IF EXISTS "SVY".survey_category_category_id_idx CASCADE;
+CREATE INDEX survey_category_category_id_idx ON "SVY".survey_category
+USING btree
+(
+	category_id
+);
+-- ddl-end --
+
+-- object: survey_category_survey_id_idx | type: INDEX --
+-- DROP INDEX IF EXISTS "SVY".survey_category_survey_id_idx CASCADE;
+CREATE INDEX survey_category_survey_id_idx ON "SVY".survey_category
+USING btree
+(
+	survey_id
+);
+-- ddl-end --
+
+-- object: answer_question_id_idx | type: INDEX --
+-- DROP INDEX IF EXISTS "SVY".answer_question_id_idx CASCADE;
+CREATE INDEX answer_question_id_idx ON "SVY".answer
+USING btree
+(
+	question_id
+);
+-- ddl-end --
+
+-- object: answer_option_question_id_idx | type: INDEX --
+-- DROP INDEX IF EXISTS "SVY".answer_option_question_id_idx CASCADE;
+CREATE INDEX answer_option_question_id_idx ON "SVY".answer
+USING btree
+(
+	option_question_id
+);
+-- ddl-end --
+
+-- object: answer_user_id_idx | type: INDEX --
+-- DROP INDEX IF EXISTS "SVY".answer_user_id_idx CASCADE;
+CREATE INDEX answer_user_id_idx ON "SVY".answer
+USING btree
+(
+	user_id
+);
+-- ddl-end --
+
+-- object: option_question_question_id_idx | type: INDEX --
+-- DROP INDEX IF EXISTS "SVY".option_question_question_id_idx CASCADE;
+CREATE INDEX option_question_question_id_idx ON "SVY".option_question
+USING btree
+(
+	question_id
+);
+-- ddl-end --
+
 
 
 -- [ Changed objects ] --
-ALTER ROLE root
-	NOSUPERUSER
-	NOCREATEDB
-	NOCREATEROLE
-	NOINHERIT
-	NOLOGIN
-	NOREPLICATION
-	NOBYPASSRLS
-	UNENCRYPTED PASSWORD 'Id70pP%2C!3S';
+-- ALTER ROLE root
+-- 	NOSUPERUSER
+-- 	NOCREATEDB
+-- 	NOCREATEROLE
+-- 	NOINHERIT
+-- 	NOLOGIN
+-- 	NOREPLICATION
+-- 	NOBYPASSRLS
+-- 	UNENCRYPTED PASSWORD 'Id70pP%2C!3S';
 -- ddl-end --
 
 
@@ -190,3 +271,11 @@ REFERENCES "USR"."user" (id) MATCH FULL
 ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
 
+ALTER TABLE "SVY".survey DROP COLUMN IF EXISTS creaetd_by CASCADE;
+-- ddl-end --
+
+
+-- [ Created objects ] --
+-- object: created_by | type: COLUMN --
+-- ALTER TABLE "SVY".survey DROP COLUMN IF EXISTS created_by CASCADE;
+ALTER TABLE "SVY".survey ADD COLUMN created_by integer;

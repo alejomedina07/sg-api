@@ -22,6 +22,7 @@ import { NoteRepository } from 'sg/core/repositories/note/note.repository';
 import { ReportModule } from './modules/report/report.module';
 // import { TurnsGateway } from './gateways/turns.gateway';
 import { ConfigModule } from './modules/config/config.module';
+import { SurveyModule } from './modules/survey/survey.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ConfigModule } from './modules/config/config.module';
     TypeOrmModule.forFeature([List, Note]),
     ReportModule,
     ConfigModule,
+    SurveyModule,
   ],
   controllers: [ListController, NoteController],
   providers: [

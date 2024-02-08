@@ -112,6 +112,7 @@ export class AppointmentRepository {
   async getAppointments({
     start,
     end,
+    idUser,
   }: AppointmentParamsDto): Promise<ResponseDto> {
     try {
       const [data, total] =
@@ -119,6 +120,7 @@ export class AppointmentRepository {
           relations: ['appointmentType', 'customer', 'service'],
           where: {
             date: Between(start, end),
+            assignedToId: idUser,
           },
         });
 

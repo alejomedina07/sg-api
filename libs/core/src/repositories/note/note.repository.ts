@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
-import { PaginationDto } from '../../../../../apps/main/src/shared/dto/pagination.dto';
 import { Note } from 'sg/core/entities';
 import { ListNoteDto } from '../../../../../apps/main/src/modules/config/dto/listNote.dto';
 
@@ -38,7 +37,7 @@ export class NoteRepository {
 
   async getNotes(params: ListNoteDto): Promise<ResponseDto> {
     try {
-      const { page, limit, entityType, entityId } = params;
+      const { entityType, entityId } = params;
       const notes = await this.noteRepository.manager.find(Note, {
         where: { entityType, entityId },
         relations: ['createdBy', 'createdBy.rol'],
@@ -61,7 +60,6 @@ export class NoteRepository {
         // skip : ((page-1) * limit) || 0,
         // take: limit || 1000
       });
-
       return { data: notes, msg: 'Obtenido correctamente!', code: 201 };
     } catch (e) {
       console.log(e);

@@ -19,6 +19,8 @@ import { Privileges } from './Privileges';
 import { Procedure } from './Procedure';
 import { Rol } from './Rol';
 import { Service } from './Service';
+import { Survey } from './Survey';
+import { SurveyAnswer } from './SurveyAnswer';
 import { Turn } from './Turn';
 import { List } from './List';
 
@@ -99,6 +101,9 @@ export class User {
   @OneToMany(() => InventoryInOut, (inventoryInOut) => inventoryInOut.createdBy)
   inventoryInOuts?: InventoryInOut[];
 
+  @OneToMany(() => Note, (note) => note.createdBy)
+  notes?: Note[];
+
   @OneToMany(() => Permissions, (permissions) => permissions.createdBy)
   permissions?: Permissions[];
 
@@ -114,8 +119,17 @@ export class User {
   @OneToMany(() => Service, (service) => service.createdBy)
   services?: Service[];
 
+  @OneToMany(() => Survey, (survey) => survey.createdBy)
+  surveys?: Survey[];
+
   @OneToMany(() => Turn, (turn) => turn.createdBy)
   turns?: Turn[];
+
+  @OneToMany(() => SurveyAnswer, (surveyAnswer) => surveyAnswer.assignedTo)
+  surveyAnswers?: SurveyAnswer[];
+
+  @OneToMany(() => SurveyAnswer, (surveyAnswer) => surveyAnswer.createdBy)
+  surveyAnswersCreated?: SurveyAnswer[];
 
   @ManyToOne(() => List, (list) => list.usersDocumentType, {
     onDelete: 'SET NULL',
@@ -138,7 +152,4 @@ export class User {
   })
   @JoinColumn([{ name: 'status_id', referencedColumnName: 'id' }])
   status?: List;
-
-  @OneToMany(() => Note, (note) => note.createdBy)
-  notes?: Note[];
 }

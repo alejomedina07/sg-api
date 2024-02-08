@@ -31,7 +31,8 @@ insert into "USR".rol (name, description)
 values ('Admin', 'Administrador de la plataforma'), ('User', 'Usuario de la plataforma');
 
 insert into "USR".privileges (name, description)
-values  ('user.list', 'Listar usuarios'),
+values
+        ('user.list', 'Listar usuarios'),
         ('user.create', 'Crear usuarios'),
         ('user.edit', 'Editar usuarios'),
         ('user.delete', 'Eliminar usuarios'),
@@ -70,7 +71,14 @@ values  ('user.list', 'Listar usuarios'),
         ('config.list', 'Listar configuración'),
         ('config.create', 'Crear configuración'),
         ('config.edit', 'Editar configuración'),
-        ('config.delete', 'Eliminar configuración');
+        ('config.delete', 'Eliminar configuración'),
+        -- lanzar en prod
+        ('survey.list', 'Listar encuestas'),
+        ('survey.admin', 'Administrar encuestas'),
+        ('survey.create', 'Crear encuestas'),
+        ('survey.edit', 'Editar encuestas'),
+        ('survey.delete', 'Eliminar encuestas')
+;
 
 
 

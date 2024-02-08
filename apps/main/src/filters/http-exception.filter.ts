@@ -1,4 +1,9 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 
 @Catch(HttpException)
@@ -18,24 +23,34 @@ export class HttpExceptionFilter implements ExceptionFilter {
       resMessage = message.reduce((pv, cv) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        pv[cv.substring(0, cv.indexOf(':'))] = cv.substring(cv.indexOf(':') + 1);
+        pv[cv.substring(0, cv.indexOf(':'))] = cv.substring(
+          // @ts-ignore
+          cv.indexOf(':') + 1,
+        );
         return pv;
       }, {});
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-    } else if ( typeof message === 'string' && message?.toString() ) resMessage = message.toString();
+    } else if (typeof message === 'string' && message?.toString())
+      // @ts-ignore
+      resMessage = message.toString();
     else {
-
       let errorMessage = exception.getResponse() as string;
-      if ( typeof errorMessage === 'string' && errorMessage.includes('unique constraint')) {
-        errorMessage = errorMessage.slice(errorMessage.indexOf('unique constraint') +19, errorMessage.indexOf('_unique'));
+      if (
+        typeof errorMessage === 'string' &&
+        errorMessage.includes('unique constraint')
+      ) {
+        errorMessage = errorMessage.slice(
+          errorMessage.indexOf('unique constraint') + 19,
+          errorMessage.indexOf('_unique'),
+        );
         const reg = /[-_]\w/g;
 
-        errorMessage = errorMessage.replace(reg, (match, index) => {
+        errorMessage = errorMessage.replace(reg, (match) => {
           return match.charAt(1).toUpperCase();
         });
-        resMessage =  { [errorMessage]: 'Ya existe el campo' };
-      }else resMessage = exception.getResponse()
+        resMessage = { [errorMessage]: 'Ya existe el campo ' + errorMessage };
+      } else resMessage = exception.getResponse();
     }
 
     response.status(status).json({

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { PermissionsPrivileges, Privileges, User } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
+import { PaginationDto } from '../../../../../apps/main/src/shared/dto/pagination.dto';
 
 @Injectable()
 export class UserRepository {
@@ -55,7 +56,7 @@ export class UserRepository {
     }
   }
 
-  async getUsers(): Promise<ResponseDto> {
+  async getUsers(params: PaginationDto): Promise<ResponseDto> {
     try {
       const [users, totalRecords] =
         await this.userRepository.manager.findAndCount(User, {

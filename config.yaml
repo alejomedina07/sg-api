@@ -13,5 +13,5 @@ main:
     expired: 4h
   swagger:
     title: Documentation System inventory
-    description: Aplication nest js
+    description: Application nest js
     version: 1.0

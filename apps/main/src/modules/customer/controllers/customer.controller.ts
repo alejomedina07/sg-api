@@ -57,7 +57,7 @@ export class CustomerController {
   async createCustomer(@Body() data: CreateCustomerDto): Promise<ResponseDto> {
     const response = await this.customerService.createCustomer(data);
     if (response.code !== 200)
-      throw new HttpException('Error al intentar Obtener!', 500);
+      throw new HttpException(response.msg || 'Error!!', 500);
     return response;
   }
 

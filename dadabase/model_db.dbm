@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,1556" last-zoom="1.35" max-obj-count="58"
+<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="334,2783" last-zoom="1.8" max-obj-count="62"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -1147,9 +1147,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="&quot;SVC&quot;"/>
 	<role name="root"/>
 	<position x="1140" y="260"/>
-	<column name="id">
+	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
+	<constraint name="procedure_procedure_pk" type="pk-constr" table="&quot;SVC&quot;.procedure_procedure">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
 
 	<customidxs object-type="column">
 		<object name="procedure_id_children" index="2"/>
@@ -1368,10 +1371,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<table name="survey" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+<table name="survey" layers="0" collapse-mode="1" max-obj-count="9" z-value="0">
 	<schema name="&quot;SVY&quot;"/>
 	<role name="root"/>
-	<position x="40" y="1260"/>
+	<position x="220" y="1260"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1384,15 +1387,32 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="created_at" default-value="now()">
 		<type name="timestamp" length="0"/>
 	</column>
+	<column name="status" default-value="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="anonymous" default-value="false">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="all_users" default-value="false">
+		<type name="boolean" length="0"/>
+	</column>
 	<constraint name="survey_pk" type="pk-constr" table="&quot;SVY&quot;.survey">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="created_by" index="4"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="user_survey_fk" index="1"/>
+	</customidxs>
 </table>
 
-<table name="category" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+<table name="category" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
 	<schema name="&quot;SVY&quot;"/>
 	<role name="root"/>
-	<position x="380" y="1240"/>
+	<position x="620" y="1280"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1413,10 +1433,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="question" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+<table name="question" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
 	<schema name="&quot;SVY&quot;"/>
 	<role name="root"/>
-	<position x="600" y="1260"/>
+	<position x="760" y="1460"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1432,15 +1452,26 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="created_at" default-value="now()">
 		<type name="timestamp" length="0"/>
 	</column>
+	<column name="type" not-null="true">
+		<type name="varchar" length="50"/>
+	</column>
 	<constraint name="question_pk" type="pk-constr" table="&quot;SVY&quot;.question">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="category_id" index="5"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="category_question_fk" index="1"/>
+	</customidxs>
 </table>
 
 <table name="option_question" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
 	<schema name="&quot;SVY&quot;"/>
 	<role name="root"/>
-	<position x="580" y="1540"/>
+	<position x="660" y="1720"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1456,21 +1487,46 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="option_question_pk" type="pk-constr" table="&quot;SVY&quot;.option_question">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="question_id" index="4"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="question_option_question_fk" index="1"/>
+	</customidxs>
 </table>
 
-<table name="answer" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+<table name="answer" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
 	<schema name="&quot;SVY&quot;"/>
-	<role name="postgres"/>
-	<position x="100" y="1560"/>
+	<role name="root"/>
+	<position x="220" y="1780"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
 	<column name="created_at" default-value="now()">
 		<type name="timestamp" length="0"/>
 	</column>
+	<column name="text_answer">
+		<type name="text" length="0"/>
+	</column>
 	<constraint name="answer_pk" type="pk-constr" table="&quot;SVY&quot;.answer">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="option_question_id" index="3"/>
+		<object name="question_id" index="2"/>
+		<object name="survey_answer_id" index="5"/>
+		<object name="survey_id" index="6"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="option_question_answer_fk" index="2"/>
+		<object name="question_answer_fk" index="1"/>
+		<object name="survey_answer_answer_fk" index="3"/>
+		<object name="survey_answer_fk" index="4"/>
+	</customidxs>
 </table>
 
 <relationship name="category_has_many_question" type="rel1n" layers="0"
@@ -1482,17 +1538,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="&quot;SVY&quot;.question"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="survey_has_many_category" type="rel1n" layers="0"
-	 src-col-pattern="{st}_{sc}"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_{dt}_fk"
-	 custom-color="#7b7d22"
-	 src-table="&quot;SVY&quot;.survey"
-	 dst-table="&quot;SVY&quot;.category"
-	 src-required="false" dst-required="false"/>
-
 <relationship name="user_has_many_survey" type="rel1n" layers="0"
-	 src-col-pattern="creaetd_by"
+	 src-col-pattern="created_by"
 	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
 	 src-fk-pattern="{st}_{dt}_fk"
 	 custom-color="#83dfcc"
@@ -1530,13 +1577,23 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="survey_category" layers="0" collapse-mode="1" max-obj-count="3" z-value="0">
 	<schema name="&quot;SVY&quot;"/>
 	<role name="root"/>
-	<position x="100" y="1400"/>
+	<position x="500" y="1480"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
 	<constraint name="survey_category_pk" type="pk-constr" table="&quot;SVY&quot;.survey_category">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="category_id" index="2"/>
+		<object name="survey_id" index="1"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="category_survey_category_fk" index="2"/>
+		<object name="survey_survey_category_fk" index="1"/>
+	</customidxs>
 </table>
 
 <relationship name="survey_has_many_survey_category" type="rel1n" layers="0"
@@ -1557,13 +1614,181 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="&quot;SVY&quot;.survey_category"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="user_has_many_answer" type="rel1n" layers="0"
+<index name="survey_created_by_id_idx" table="&quot;SVY&quot;.survey"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="created_by"/>
+		</idxelement>
+</index>
+
+<index name="question_category_id_idx" table="&quot;SVY&quot;.question"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="category_id"/>
+		</idxelement>
+</index>
+
+<index name="survey_category_category_id_idx" table="&quot;SVY&quot;.survey_category"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="category_id"/>
+		</idxelement>
+</index>
+
+<index name="survey_category_survey_id_idx" table="&quot;SVY&quot;.survey_category"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="survey_id"/>
+		</idxelement>
+</index>
+
+<index name="answer_question_id_idx" table="&quot;SVY&quot;.answer"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="question_id"/>
+		</idxelement>
+</index>
+
+<index name="answer_option_question_id_idx" table="&quot;SVY&quot;.answer"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="option_question_id"/>
+		</idxelement>
+</index>
+
+<index name="option_question_question_id_idx" table="&quot;SVY&quot;.option_question"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="question_id"/>
+		</idxelement>
+</index>
+
+<table name="survey_answer" layers="0" collapse-mode="1" max-obj-count="9" z-value="0">
+	<schema name="&quot;SVY&quot;"/>
+	<role name="root"/>
+	<position x="280" y="1540"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="complete" default-value="false">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="comment">
+		<type name="text" length="0"/>
+	</column>
+	<column name="start_date">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="end_date">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="survey_answer_pk" type="pk-constr" table="&quot;SVY&quot;.survey_answer">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="assigned_to" index="6"/>
+		<object name="created_by" index="5"/>
+		<object name="survey_id" index="7"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="survey_survey_answer_fk" index="3"/>
+		<object name="user_survey_answer_fk" index="1"/>
+		<object name="user_survey_answer_fk1" index="2"/>
+	</customidxs>
+</table>
+
+<relationship name="user_has_many_survey_answer" type="rel1n" layers="0"
+	 src-col-pattern="created_by"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#0b3964"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;SVY&quot;.survey_answer"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="assigned_to_has_many_survey_answer" type="rel1n" layers="0"
+	 src-col-pattern="assigned_to"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#88e00c"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;SVY&quot;.survey_answer"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="survey_has_many_survey_answer" type="rel1n" layers="0"
 	 src-col-pattern="{st}_{sc}"
 	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
 	 src-fk-pattern="{st}_{dt}_fk"
-	 custom-color="#1dc863"
-	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 custom-color="#d303d6"
+	 src-table="&quot;SVY&quot;.survey"
+	 dst-table="&quot;SVY&quot;.survey_answer"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="survey_answer_has_many_answer" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#4cb678"
+	 src-table="&quot;SVY&quot;.survey_answer"
 	 dst-table="&quot;SVY&quot;.answer"
 	 src-required="false" dst-required="false"/>
+
+<index name="survey_answer_created_by_id_idx" table="&quot;SVY&quot;.survey_answer"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="created_by"/>
+		</idxelement>
+</index>
+
+<index name="survey_answer_assigned_to_id_idx" table="&quot;SVY&quot;.survey_answer"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="assigned_to"/>
+		</idxelement>
+</index>
+
+<index name="survey_answer_survey_id_idx" table="&quot;SVY&quot;.survey_answer"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="survey_id"/>
+		</idxelement>
+</index>
+
+<index name="answer_survey_answer_id_idx" table="&quot;SVY&quot;.answer"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="survey_answer_id"/>
+		</idxelement>
+</index>
+
+<relationship name="survey_has_many_answer" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#56c332"
+	 src-table="&quot;SVY&quot;.survey"
+	 dst-table="&quot;SVY&quot;.answer"
+	 src-required="false" dst-required="false"/>
+
+<index name="answer_survey_id_idx" table="&quot;SVY&quot;.answer"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="survey_id"/>
+		</idxelement>
+</index>
 
 </dbmodel>
