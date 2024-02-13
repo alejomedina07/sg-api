@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="334,2783" last-zoom="1.8" max-obj-count="62"
+<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="22,0" last-zoom="1" max-obj-count="68"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -85,7 +85,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="inventory_in_out" layers="0" collapse-mode="1" max-obj-count="9" z-value="0">
 	<schema name="&quot;INV&quot;"/>
 	<role name="root"/>
-	<position x="380" y="20"/>
+	<position x="300" y="20"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -138,7 +138,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="service" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
 	<schema name="&quot;SVC&quot;"/>
 	<role name="root"/>
-	<position x="780" y="40"/>
+	<position x="980" y="40"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -193,7 +193,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="appointment" layers="0" collapse-mode="1" max-obj-count="12" z-value="0">
 	<schema name="&quot;APMT&quot;"/>
 	<role name="root"/>
-	<position x="1540" y="160"/>
+	<position x="1660" y="160"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -480,7 +480,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="expense" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
 	<schema name="&quot;INV&quot;"/>
 	<role name="root"/>
-	<position x="240" y="200"/>
+	<position x="100" y="260"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -684,7 +684,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="appointment_type" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
 	<schema name="&quot;APMT&quot;"/>
 	<role name="root"/>
-	<position x="1680" y="320"/>
+	<position x="1800" y="320"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1094,7 +1094,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="procedure" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
 	<schema name="&quot;SVC&quot;"/>
 	<role name="root"/>
-	<position x="1060" y="20"/>
+	<position x="1260" y="20"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1146,7 +1146,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="procedure_procedure" layers="0" collapse-mode="1" max-obj-count="3" z-value="0">
 	<schema name="&quot;SVC&quot;"/>
 	<role name="root"/>
-	<position x="1140" y="260"/>
+	<position x="1340" y="260"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1788,6 +1788,177 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 index-type="btree" factor="0">
 		<idxelement use-sorting="false">
 			<column name="survey_id"/>
+		</idxelement>
+</index>
+
+<table name="provider" layers="0" collapse-mode="1" max-obj-count="12" z-value="0">
+	<schema name="&quot;INV&quot;"/>
+	<role name="root"/>
+	<position x="600" y="40"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="phone_number" not-null="true">
+		<type name="varchar" length="20"/>
+	</column>
+	<column name="address">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="email">
+		<type name="varchar" length="150"/>
+	</column>
+	<column name="document" not-null="true">
+		<type name="varchar" length="30"/>
+	</column>
+	<column name="status" default-value="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="provider_pk" type="pk-constr" table="&quot;INV&quot;.provider">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="email_unique" type="uq-constr" table="&quot;INV&quot;.provider">
+		<columns names="email" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="created_by_id" index="9"/>
+		<object name="document_type_id" index="8"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="list_provider_fk" index="1"/>
+		<object name="user_provider_fk" index="2"/>
+	</customidxs>
+</table>
+
+<relationship name="list_has_many_provider" type="rel1n" layers="0"
+	 src-col-pattern="document_type_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#a97092"
+	 src-table="&quot;CNFG&quot;.list"
+	 dst-table="&quot;INV&quot;.provider"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="user_has_many_provider" type="rel1n" layers="0"
+	 src-col-pattern="created_by_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#4f8ef8"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;INV&quot;.provider"
+	 src-required="false" dst-required="false"/>
+
+<table name="account_payable" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
+	<schema name="&quot;INV&quot;"/>
+	<role name="root"/>
+	<position x="380" y="300"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="paid" default-value="false">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="max_date_of_pay" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="reference">
+		<type name="varchar" length="100"/>
+	</column>
+	<constraint name="account_payable_pk" type="pk-constr" table="&quot;INV&quot;.account_payable">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="created_by_id" index="6"/>
+		<object name="expense_id" index="5"/>
+		<object name="provider_id" index="7"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="account_payable_uq" index="2"/>
+		<object name="expense_account_payable_fk" index="1"/>
+		<object name="provider_account_payable_fk" index="4"/>
+		<object name="user_account_payable_fk" index="3"/>
+	</customidxs>
+</table>
+
+<relationship name="account_payable_has_one_expense" type="rel11" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#8c831c"
+	 src-table="&quot;INV&quot;.expense"
+	 dst-table="&quot;INV&quot;.account_payable"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="user_has_many_account_payable" type="rel1n" layers="0"
+	 src-col-pattern="created_by_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#3046d7"
+	 src-table="&quot;USR&quot;.&quot;user&quot;"
+	 dst-table="&quot;INV&quot;.account_payable"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="provider_has_many_account_payable" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#e7656b"
+	 src-table="&quot;INV&quot;.provider"
+	 dst-table="&quot;INV&quot;.account_payable"
+	 src-required="false" dst-required="false"/>
+
+<index name="provider_document_type_id_idx" table="&quot;INV&quot;.provider"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="document_type_id"/>
+		</idxelement>
+</index>
+
+<index name="provider_created_by_id_idx" table="&quot;INV&quot;.provider"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="created_by_id"/>
+		</idxelement>
+</index>
+
+<index name="account_payable_expense_id_idx" table="&quot;INV&quot;.account_payable"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="expense_id"/>
+		</idxelement>
+</index>
+
+<index name="account_payable_created_by_id_idx" table="&quot;INV&quot;.account_payable"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="created_by_id"/>
+		</idxelement>
+</index>
+
+<index name="account_payable_provider_id_idx" table="&quot;INV&quot;.account_payable"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="provider_id"/>
 		</idxelement>
 </index>
 

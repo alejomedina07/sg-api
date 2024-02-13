@@ -36,7 +36,7 @@ export class Procedure {
   status: boolean;
 
   @Column('integer', { name: 'created_by', nullable: true })
-  createdById: number | null;
+  createdById?: number | null;
 
   @Column('boolean', { name: 'parent', nullable: true })
   parent: boolean | null;

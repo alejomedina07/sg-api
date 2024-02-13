@@ -77,7 +77,11 @@ values
         ('survey.admin', 'Administrar encuestas'),
         ('survey.create', 'Crear encuestas'),
         ('survey.edit', 'Editar encuestas'),
-        ('survey.delete', 'Eliminar encuestas')
+        ('survey.delete', 'Eliminar encuestas'),
+        ('procedure.list', 'Listar procedimientos'),
+        ('procedure.create', 'Crear procedimientos'),
+        ('procedure.edit', 'Editar procedimientos'),
+        ('procedure.delete', 'Eliminar procedimientos')
 ;
 
 

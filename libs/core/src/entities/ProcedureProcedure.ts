@@ -8,12 +8,13 @@ import {
 } from 'typeorm';
 import { Procedure } from './Procedure';
 
+@Index('procedure_procedure_pk', ['id'], { unique: true })
 @Index('procedure_procedure_id_children', ['procedureIdChildren'], {})
 @Index('procedure_procedure_id_parent_idx', ['procedureIdParent'], {})
 @Entity('procedure_procedure', { schema: 'SVC' })
 export class ProcedureProcedure {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
-  id: number;
+  id?: number;
 
   @Column('integer', { name: 'procedure_id_parent', nullable: true })
   procedureIdParentId: number | null;

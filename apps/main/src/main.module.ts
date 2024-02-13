@@ -23,6 +23,7 @@ import { ReportModule } from './modules/report/report.module';
 // import { TurnsGateway } from './gateways/turns.gateway';
 import { ConfigModule } from './modules/config/config.module';
 import { SurveyModule } from './modules/survey/survey.module';
+import { ProcedureModule } from './modules/procedure/procedure.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { SurveyModule } from './modules/survey/survey.module';
     ReportModule,
     ConfigModule,
     SurveyModule,
+    ProcedureModule,
   ],
   controllers: [ListController, NoteController],
   providers: [
