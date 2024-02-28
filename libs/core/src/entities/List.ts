@@ -4,43 +4,47 @@ import {
   Index,
   OneToMany,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { Inventory } from "./Inventory";
-import { Customer } from "./Customer";
-import { Expense } from "./Expense";
-import { Service } from "./Service";
-import { User } from "./User";
+} from 'typeorm';
+import { Inventory } from './Inventory';
+import { Customer } from './Customer';
+import { Expense } from './Expense';
+import { Provider } from './Provider';
+import { Service } from './Service';
+import { User } from './User';
 
-@Index("List_pk", ["id"], { unique: true })
-@Entity("list", { schema: "CNFG" })
+@Index('List_pk', ['id'], { unique: true })
+@Entity('list', { schema: 'CNFG' })
 export class List {
-  @PrimaryGeneratedColumn({ type: "integer", name: "id" })
+  @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
   id?: number;
 
-  @Column("text", { name: "name" })
+  @Column('text', { name: 'name' })
   name: string;
 
-  @Column("text", { name: "key" })
+  @Column('text', { name: 'key' })
   key: string;
 
-  @Column("text", { name: "description", nullable: true })
+  @Column('text', { name: 'description', nullable: true })
   description: string | null;
 
-  @Column("timestamp without time zone", {
-    name: "created_at",
+  @Column('timestamp without time zone', {
+    name: 'created_at',
     nullable: true,
-    default: () => "now()",
+    default: () => 'now()',
   })
   createdAt?: Date | null;
 
-  @Column("timestamp without time zone", { name: "updated_at", nullable: true })
+  @Column('timestamp without time zone', { name: 'updated_at', nullable: true })
   updatedAt?: Date | null;
 
-  @Column("boolean", { name: "status", nullable: true, default: () => "true" })
+  @Column('boolean', { name: 'status', nullable: true, default: () => 'true' })
   status: boolean | null;
 
-  @Column("boolean", { name: "default", nullable: true })
+  @Column('boolean', { name: 'default', nullable: true })
   default?: boolean | null;
+
+  @OneToMany(() => Inventory, (inventory) => inventory.status)
+  inventories?: Inventory[];
 
   @OneToMany(() => Customer, (customer) => customer.documentType)
   customersDocumentType?: Customer[];
@@ -50,6 +54,9 @@ export class List {
 
   @OneToMany(() => Expense, (expense) => expense.type)
   expenses?: Expense[];
+
+  @OneToMany(() => Provider, (provider) => provider.documentType)
+  providers?: Provider[];
 
   @OneToMany(() => Service, (service) => service.status)
   services?: Service[];
@@ -62,9 +69,4 @@ export class List {
 
   @OneToMany(() => User, (user) => user.status)
   usersStatus?: User[];
-
-
-  @OneToMany(() => Inventory, (inventory) => inventory.status)
-  inventories?: Inventory[];
-
 }

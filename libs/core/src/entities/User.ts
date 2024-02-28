@@ -8,15 +8,18 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Inventory } from './Inventory';
+import { AccountPayable } from './AccountPayable';
 import { Appointment } from './Appointment';
 import { Attention } from './Attention';
 import { Customer } from './Customer';
 import { Expense } from './Expense';
 import { InventoryInOut } from './InventoryInOut';
 import { Note } from './Note';
+import { Payment } from './Payment';
 import { Permissions } from './Permissions';
 import { Privileges } from './Privileges';
 import { Procedure } from './Procedure';
+import { Provider } from './Provider';
 import { Rol } from './Rol';
 import { Service } from './Service';
 import { Survey } from './Survey';
@@ -83,6 +86,9 @@ export class User {
   @OneToMany(() => Inventory, (inventory) => inventory.createdBy)
   inventories?: Inventory[];
 
+  @OneToMany(() => AccountPayable, (accountPayable) => accountPayable.createdBy)
+  accountPayables?: AccountPayable[];
+
   @OneToMany(() => Appointment, (appointment) => appointment.assignedTo)
   appointmentsAssigned?: Appointment[];
 
@@ -104,6 +110,9 @@ export class User {
   @OneToMany(() => Note, (note) => note.createdBy)
   notes?: Note[];
 
+  @OneToMany(() => Payment, (payment) => payment.createdBy)
+  payments?: Payment[];
+
   @OneToMany(() => Permissions, (permissions) => permissions.createdBy)
   permissions?: Permissions[];
 
@@ -112,6 +121,9 @@ export class User {
 
   @OneToMany(() => Procedure, (procedure) => procedure.createdBy)
   procedures?: Procedure[];
+
+  @OneToMany(() => Provider, (provider) => provider.createdBy)
+  providers?: Provider[];
 
   @OneToMany(() => Rol, (rol) => rol.createdBy)
   rols?: Rol[];

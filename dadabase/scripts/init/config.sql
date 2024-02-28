@@ -72,7 +72,6 @@ values
         ('config.create', 'Crear configuración'),
         ('config.edit', 'Editar configuración'),
         ('config.delete', 'Eliminar configuración'),
-        -- lanzar en prod
         ('survey.list', 'Listar encuestas'),
         ('survey.admin', 'Administrar encuestas'),
         ('survey.create', 'Crear encuestas'),
@@ -81,7 +80,24 @@ values
         ('procedure.list', 'Listar procedimientos'),
         ('procedure.create', 'Crear procedimientos'),
         ('procedure.edit', 'Editar procedimientos'),
-        ('procedure.delete', 'Eliminar procedimientos')
+        ('procedure.delete', 'Eliminar procedimientos'),
+        -- lanzar en prod
+        ('provider.list', 'Listar proveedores'),
+        ('provider.create', 'Crear proveedores'),
+        ('provider.edit', 'Editar proveedores'),
+        ('provider.delete', 'Eliminar proveedores'),
+
+
+        ('accountPayable.list', 'Listar cuentas por pagar'),
+        ('accountPayable.create', 'Crear cuentas por pagar'),
+        ('accountPayable.edit', 'Editar cuentas por pagar'),
+        ('accountPayable.delete', 'Eliminar cuentas por pagar'),
+
+
+        ('payment.list', 'Listar pagos'),
+        ('payment.create', 'Crear pagos'),
+        ('payment.edit', 'Editar pagos'),
+        ('payment.delete', 'Eliminar pagos')
 ;
 
 
@@ -93,3 +109,17 @@ values
 -- values ('Tipo 1', 'typeService', 'Descripción de ejemplo Tipo 1'),
 --        ('Tipo 2', 'typeService', 'Descripción de ejemplo Tipo 2'),
 --        ('Tipo 3', 'typeService', 'Descripción de ejemplo Tipo 3');
+
+
+--
+-- insert into "USR".privileges (name, description)
+-- values         ('accountPayable.list', 'Listar cuentas por pagar'),
+--                ('accountPayable.create', 'Crear cuentas por pagar'),
+--                ('accountPayable.edit', 'Editar cuentas por pagar'),
+--                ('accountPayable.delete', 'Eliminar cuentas por pagar'),
+--
+--
+--                ('payment.list', 'Listar pagos'),
+--                ('payment.create', 'Crear pagos'),
+--                ('payment.edit', 'Editar pagos'),
+--                ('payment.delete', 'Eliminar pagos');

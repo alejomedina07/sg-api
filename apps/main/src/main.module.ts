@@ -24,6 +24,7 @@ import { ReportModule } from './modules/report/report.module';
 import { ConfigModule } from './modules/config/config.module';
 import { SurveyModule } from './modules/survey/survey.module';
 import { ProcedureModule } from './modules/procedure/procedure.module';
+import { ProviderModule } from './modules/provider/provider.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { ProcedureModule } from './modules/procedure/procedure.module';
     ConfigModule,
     SurveyModule,
     ProcedureModule,
+    ProviderModule,
   ],
   controllers: [ListController, NoteController],
   providers: [

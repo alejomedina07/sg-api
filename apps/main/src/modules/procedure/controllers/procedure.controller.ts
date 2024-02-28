@@ -44,7 +44,7 @@ export class ProcedureController {
   @Privileges(Privilege.procedureCreate)
   @UseGuards(JwtAuthGuard, RolesGuard, SetCreatedByGuard)
   @Post()
-  async createNote(
+  async createProcedure(
     @Body() procedure: CreateProcedureDto,
   ): Promise<ResponseDto> {
     const response = await this.procedureService.createProcedure(procedure);
@@ -72,7 +72,7 @@ export class ProcedureController {
   @Privileges(Privilege.procedureEdit)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
-  async updateNote(
+  async updateProcedure(
     @Param('id') id: number,
     @Body() procedure: CreateProcedureDto,
   ): Promise<ResponseDto> {

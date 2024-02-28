@@ -1,4 +1,4 @@
-<p align="center">
+<p >
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
@@ -47,7 +47,7 @@ $ npm run start:prod
 ## Model generatr
 
 ```
-typeorm-model-generator -h localhost -d system_inventory -u root -x 'Id70pP%2C!3S' -e postgres -o libs/core/src/entitiesNew -s APMT,CTM,INV,SVC,USR,CNFG,SVY -p 35432
+typeorm-model-generator -h localhost -d system_inventory -u root -x 'Id70pP%2C!3S' -e postgres -o libs/core/src/entitiesNew -s APMT,CTM,INV,SVC,USR,CNFG,SVY,PVD -p 35432
 
 ````
 ## Generate controller and services
