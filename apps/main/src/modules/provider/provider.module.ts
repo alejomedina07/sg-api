@@ -10,6 +10,7 @@ import { PaymentController } from './controllers/payment/payment.controller';
 import { AccountPayableRepository } from 'sg/core/repositories/provider/account-payable.repository';
 import { PaymentRepository } from 'sg/core/repositories/provider/payment.repository';
 import { PaymentService } from './services/payment/payment.service';
+import { FilterListService } from 'sg/core/services/filters/filterList.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Provider, AccountPayable, Payment])],
@@ -25,6 +26,7 @@ import { PaymentService } from './services/payment/payment.service';
     ProviderService,
     AccountPayableService,
     PaymentService,
+    FilterListService,
   ],
 })
 export class ProviderModule {}

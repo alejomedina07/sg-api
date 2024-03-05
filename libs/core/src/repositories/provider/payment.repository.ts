@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, FindManyOptions, Repository } from 'typeorm';
 import {
   AccountPayable,
   Expense,
@@ -9,10 +9,31 @@ import {
 } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
 import { CreatePaymentDto } from '../../../../../apps/main/src/modules/provider/dto/createPayment.dto';
+import { GetPaymentDto } from '../../../../../apps/main/src/modules/provider/dto/getPayment.dto';
+import { TypeFiltersDto } from '../../../../../apps/main/src/modules/provider/dto/typeFilters.dto';
+import { FilterListService } from 'sg/core/services/filters/filterList.service';
+
+const TYPES_FILTERS: TypeFiltersDto = {
+  CONTAINS: {
+    description: true,
+    reference: true,
+    amount: true,
+    method: true,
+  },
+  NUMBERS: {
+    id: true,
+    providerId: true,
+    createdById: true,
+  },
+  RELATION: {
+    createdBy: 'firstName',
+  },
+};
 
 @Injectable()
 export class PaymentRepository {
   constructor(
+    private filterListService: FilterListService,
     @InjectRepository(Payment)
     private paymentRepository: Repository<Payment>,
     private readonly entityManager: EntityManager,
@@ -76,16 +97,32 @@ export class PaymentRepository {
     }
   }
 
-  async getPayments(): Promise<ResponseDto> {
+  async getPayments(params: GetPaymentDto): Promise<ResponseDto> {
     try {
-      return {
-        data: await this.paymentRepository.manager.find(Payment, {
-          relations: ['createdBy'],
-          order: { id: 'desc' },
-        }),
-        msg: 'Obtenido correctamente!',
-        code: 201,
+      const { page = 0, limit = 1000, filters, order } = params;
+
+      let queryOptions: FindManyOptions<Payment> = {
+        // relations: ['createdBy', 'provider'],
+        relations: ['createdBy'],
+        order: order || { id: 'desc' },
+        skip: (page - 1) * limit || 0,
+        take: limit || 1000,
       };
+
+      queryOptions = this.filterListService.getQueryFilters(
+        filters,
+        TYPES_FILTERS,
+        queryOptions,
+      );
+
+      console.log(4, queryOptions);
+
+      const [data, total] = await this.paymentRepository.manager.findAndCount(
+        Payment,
+        queryOptions,
+      );
+
+      return { data, total, msg: 'Obtenido correctamente!', code: 201 };
     } catch (e) {
       console.log(666, e);
       return { code: 404, msg: 'Error al obtener' };

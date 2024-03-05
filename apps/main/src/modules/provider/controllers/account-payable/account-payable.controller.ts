@@ -41,6 +41,17 @@ export class AccountPayableController {
   }
 
   @Roles(Role.Admin, Role.User)
+  @Privileges(Privilege.accountPayableEdit)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get(':id')
+  async getAccountPayableById(@Param('id') id: number): Promise<ResponseDto> {
+    const response = await this.accountPayableService.getAccountPayableById(id);
+    if (response.code !== 201)
+      throw new HttpException(response.msg || 'Error!!', response.code || 500);
+    return response;
+  }
+
+  @Roles(Role.Admin, Role.User)
   @Privileges(Privilege.accountPayableCreate)
   @UseGuards(JwtAuthGuard, RolesGuard, SetCreatedByGuard)
   @Post()

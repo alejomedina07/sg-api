@@ -1,18 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  Equal,
-  FindManyOptions,
-  FindOperator,
-  ILike,
-  MoreThanOrEqual,
-  Repository,
-} from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { AccountPayable, Provider } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
 import { GetAccountPayableDto } from '../../../../../apps/main/src/modules/provider/dto/getAccountPayable.dto';
+import { TypeFiltersDto } from '../../../../../apps/main/src/modules/provider/dto/typeFilters.dto';
+import { FilterListService } from 'sg/core/services/filters/filterList.service';
 
-const TYPES_FILTERS = {
+const TYPES_FILTERS: TypeFiltersDto = {
   BOOLEAN: {
     paid: true,
   },
@@ -25,11 +20,15 @@ const TYPES_FILTERS = {
     id: true,
     providerId: true,
   },
+  RELATION: {
+    provider: 'name',
+  },
 };
 
 @Injectable()
 export class AccountPayableRepository {
   constructor(
+    private filterListService: FilterListService,
     @InjectRepository(AccountPayable)
     private accountPayableRepository: Repository<AccountPayable>,
     @InjectRepository(Provider)
@@ -80,57 +79,41 @@ export class AccountPayableRepository {
         skip: (page - 1) * limit || 0,
         take: limit || 1000,
       };
+      queryOptions = this.filterListService.getQueryFilters(
+        filters,
+        TYPES_FILTERS,
+        queryOptions,
+      );
 
-      if (filters) {
-        const whereConditions: Array<{
-          [key: string]:
-            | FindOperator<any>
-            | { [key: string]: FindOperator<any> | any };
-        }> = [];
-        let whereWithAnd = {};
-        for (let key in filters) {
-          if (filters.hasOwnProperty(key)) {
-            if (TYPES_FILTERS.CONTAINS[key]) {
-              whereConditions.push({ [key]: ILike(`%${filters[key]}%`) });
-              whereWithAnd[key] = ILike(`%${filters[key]}%`);
-            } else if (TYPES_FILTERS.NUMBERS[key]) {
-              whereConditions.push({
-                [key]: MoreThanOrEqual(parseInt(filters[key])),
-              });
-              whereWithAnd[key] = MoreThanOrEqual(parseInt(filters[key]));
-            } else if (TYPES_FILTERS.BOOLEAN[key]) {
-              whereConditions.push({ [key]: Equal(filters[key] === 'true') });
-              whereWithAnd[key] = Equal(filters[key] === 'true');
-            }
-          }
-        }
-
-        if (filters.provider) {
-          if (filters.type === 'AND')
-            whereWithAnd['provider'] = { name: ILike(`%${filters.provider}%`) };
-          else
-            whereConditions.push({
-              provider: { name: ILike(`%${filters.provider}%`) },
-            });
-        }
-
-        if (filters.type === 'AND') {
-          queryOptions.where =
-            Object.keys(whereWithAnd).length > 0 ? whereWithAnd : undefined;
-        } else {
-          queryOptions.where =
-            whereConditions.length > 0 ? whereConditions : undefined;
-        }
-      }
       const [data, total] =
         await this.accountPayableRepository.manager.findAndCount(
           AccountPayable,
           queryOptions,
         );
 
+      return { data, total, msg: 'Obtenido correctamente!', code: 201 };
+    } catch (e) {
+      console.log(666, e);
+      return { code: 500, msg: 'Error al obtener' };
+    }
+  }
+
+  async getAccountPayableById(id: number): Promise<ResponseDto> {
+    try {
       return {
-        data,
-        total,
+        data: await this.accountPayableRepository.manager.findOne(
+          AccountPayable,
+          {
+            where: { id },
+            relations: [
+              'paymentAccountPayables',
+              'paymentAccountPayables.payment',
+              'paymentAccountPayables.payment.createdBy',
+              'provider',
+              'createdBy',
+            ],
+          },
+        ),
         msg: 'Obtenido correctamente!',
         code: 201,
       };

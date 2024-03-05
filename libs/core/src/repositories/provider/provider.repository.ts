@@ -75,6 +75,12 @@ export class ProviderRepository {
       return {
         data: await this.providerRepository.manager.findOne(Provider, {
           where: { id },
+          relations: [
+            'createdBy',
+            'accountPayables',
+            'accountPayables.paymentAccountPayables',
+            'accountPayables.paymentAccountPayables.payment',
+          ],
         }),
         msg: 'Obtenido correctamente!',
         code: 201,

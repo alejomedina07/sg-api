@@ -17,8 +17,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const { message } = exception.getResponse() as { message: object[] };
     let resMessage;
 
-    console.log(123, exception.getResponse());
-
     if (Array.isArray(message)) {
       resMessage = message.reduce((pv, cv) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -13,6 +13,10 @@ export class AccountPayableService {
     return this.accountPayableRepository.getAccountPayables(params);
   }
 
+  async getAccountPayableById(id: number): Promise<ResponseDto> {
+    return this.accountPayableRepository.getAccountPayableById(id);
+  }
+
   async createAccountPayable(
     accountPayable: CreateAccountPayableDto,
   ): Promise<any> {
