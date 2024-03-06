@@ -225,7 +225,6 @@ export class SurveyRepository {
   }
 
   // Answer
-
   async createAnswer(data: CreateAnswerDto): Promise<any> {
     try {
       return this.entityManager.transaction(async (entityManager) => {
