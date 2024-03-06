@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, In, Repository } from 'typeorm';
+import { EntityManager, In, Not, Repository } from 'typeorm';
 import { Answer, Survey, SurveyAnswer, SurveyCategory } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
 import { CreateAnswerDto } from '../../../../../apps/main/src/modules/survey/dto/createAnswer.dto';
@@ -133,15 +133,38 @@ export class SurveyRepository {
           SurveyAnswer,
           {
             where: { assignedToId, complete },
+            select: ['id', 'surveyId', 'assignedToId', 'complete'],
+          },
+        );
+
+        const surveysFinished = await this.surveyRepository.manager.find(
+          SurveyAnswer,
+          {
+            where: { assignedToId, complete: true },
             select: ['id', 'surveyId', 'assignedToId'],
           },
         );
+
+        console.log(13224, surveysAssigned);
         let where: object[] = [
-          { id: In(surveysAssigned.map((sa) => sa.surveyId)), status: true },
-          { anonymous: true, status: true },
+          {
+            anonymous: true,
+            status: true,
+            id: Not(In(surveysFinished.map((sf) => sf.surveyId))),
+          },
         ];
+        if (surveysAssigned?.length)
+          where.push({
+            id: In(surveysAssigned.map((sa) => sa.surveyId)),
+            status: true,
+          });
+        if (assignedToId != 0)
+          where.push({
+            allUsers: true,
+            status: true,
+            id: Not(In(surveysFinished.map((sf) => sf.surveyId))),
+          });
         console.log(99996969, where);
-        if (assignedToId != 0) where.push({ allUsers: true, status: true });
         data = await this.surveyRepository.manager.find(Survey, {
           where,
           order: { id: 'desc' },
@@ -210,8 +233,11 @@ export class SurveyRepository {
           where: { surveyId: data.surveyId, assignedToId: data.assignedToId },
         });
         let surveyAnswerId: number;
-        if (surveyAnswer) {
-          console.log('surveyAnswer', surveyAnswer);
+        const survey = await entityManager.findOne(Survey, {
+          where: { id: data.surveyId },
+          select: ['id', 'anonymous'],
+        });
+        if (surveyAnswer && !survey.anonymous) {
           surveyAnswer = {
             ...surveyAnswer,
             comment: data.comment,
@@ -219,17 +245,18 @@ export class SurveyRepository {
             endDate: data.endDate,
             complete: true,
           };
-          console.log('data', surveyAnswer);
-          // data.id = surveyAnswer.id;
           const surveyAnswerUpdate = await entityManager.update(
             SurveyAnswer,
             { id: surveyAnswer.id },
             surveyAnswer,
           );
           surveyAnswerId = surveyAnswerUpdate.affected;
-          console.log('surveyAnswerId', surveyAnswerId);
         } else {
-          const surveyInsert = await entityManager.insert(SurveyAnswer, data);
+          const surveyInsert = await entityManager.insert(SurveyAnswer, {
+            ...data,
+            complete: true,
+            createdById: data.assignedToId,
+          });
           surveyAnswerId = surveyInsert.identifiers[0].id;
         }
 
@@ -266,8 +293,6 @@ export class SurveyRepository {
             });
           }
         });
-
-        console.log(456, optionsToInsert);
 
         await entityManager.insert(Answer, optionsToInsert);
         return { success: true, msg: 'Creado exitosamente!', code: 200 };
