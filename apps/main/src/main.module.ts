@@ -20,10 +20,10 @@ import { NoteRepository } from 'sg/core/repositories/note/note.repository';
 // import { ReportService } from './modules/report/services/report.service';
 // import { ReportController } from './modules/report/controllers/report.controller';
 import { ReportModule } from './modules/report/report.module';
-// import { TurnsGateway } from './gateways/turns.gateway';
+import { TurnsGateway } from './gateways/turns.gateway';
 import { ConfigModule } from './modules/config/config.module';
 import { SurveyModule } from './modules/survey/survey.module';
-import { ProcedureModule } from './modules/procedure/procedure.module';
+import { TurnModule } from './modules/turn/turn.module';
 import { ProviderModule } from './modules/provider/provider.module';
 
 @Module({
@@ -41,7 +41,7 @@ import { ProviderModule } from './modules/provider/provider.module';
     ReportModule,
     ConfigModule,
     SurveyModule,
-    ProcedureModule,
+    TurnModule,
     ProviderModule,
   ],
   controllers: [ListController, NoteController],
@@ -50,7 +50,7 @@ import { ProviderModule } from './modules/provider/provider.module';
     ListRepository,
     NoteService,
     NoteRepository,
-    // TurnsGateway,
+    TurnsGateway,
   ],
 })
 export class MainModule {}

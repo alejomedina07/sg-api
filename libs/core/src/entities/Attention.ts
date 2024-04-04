@@ -7,12 +7,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './User';
-import { Procedure } from './Procedure';
 import { Turn } from './Turn';
+import { TypeTurn } from './TypeTurn';
 
-@Index('attention_attent_id_idx', ['attentBy'], {})
+// @Index('attention_attent_id_idx', ['attentBy'], {})
 @Index('attention_pk', ['id'], { unique: true })
-@Index('attention_procedure_id_idx', ['procedureId'], {})
 @Index('attention_turn_id_idx', ['turnId'], {})
 @Entity('attention', { schema: 'CTM' })
 export class Attention {
@@ -22,11 +21,8 @@ export class Attention {
   @Column('integer', { name: 'turn_id', nullable: true })
   turnId: number | null;
 
-  @Column('integer', { name: 'attent_by', nullable: true })
+  @Column('integer', { name: 'attent_by_id', nullable: true })
   attentById: number | null;
-
-  @Column('integer', { name: 'procedure_id', nullable: true })
-  procedureId: number | null;
 
   @Column('timestamp without time zone', {
     name: 'created_at',
@@ -35,19 +31,24 @@ export class Attention {
   })
   createdAt?: Date | null;
 
-  @ManyToOne(() => User, (user) => user.attentions, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'attent_by', referencedColumnName: 'id' }])
-  attentBy: User;
+  @Column('integer', { name: 'type_turn_id', nullable: true })
+  typeTurnId: number | null;
 
-  @ManyToOne(() => Procedure, (procedure) => procedure.attentions, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'procedure_id', referencedColumnName: 'id' }])
-  procedure?: Procedure;
+  @Column('timestamp without time zone', { name: 'finish_at', nullable: true })
+  finishAt?: Date | null;
+
+  @Column('integer', { name: 'total_time', nullable: true })
+  totalTime?: number | null;
+
+  @Column('text', { name: 'description', nullable: true })
+  description?: string | null;
+
+  // @ManyToOne(() => User, (user) => user.attentions, {
+  //   onDelete: 'SET NULL',
+  //   onUpdate: 'CASCADE',
+  // })
+  // @JoinColumn([{ name: 'attent_by_id', referencedColumnName: 'id' }])
+  // attentBy?: User;
 
   @ManyToOne(() => Turn, (turn) => turn.attentions, {
     onDelete: 'SET NULL',
@@ -55,4 +56,11 @@ export class Attention {
   })
   @JoinColumn([{ name: 'turn_id', referencedColumnName: 'id' }])
   turn?: Turn;
+
+  @ManyToOne(() => TypeTurn, (typeTurn) => typeTurn.attentions, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'type_turn_id', referencedColumnName: 'id' }])
+  typeTurn?: TypeTurn;
 }

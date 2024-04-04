@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateProcedureDto {
+export class CreateTypeTurnDto {
   @ApiProperty({ description: 'id del procedimiento', required: false })
   @IsOptional()
   @IsInt({ message: 'id: El id debe ser un número' })
@@ -47,8 +47,4 @@ export class CreateProcedureDto {
   @IsOptional()
   @IsInt({ message: 'createdById: El createdById debe ser un número' })
   createdById?: number;
-
-  @ApiProperty({ description: 'parent del procedimiento', required: false })
-  @IsDefined({ message: 'parent: El campo es requerido' })
-  parent: boolean;
 }

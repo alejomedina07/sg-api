@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="65,228" last-zoom="1.1" max-obj-count="72"
+<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,271" last-zoom="1.1" max-obj-count="68"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -142,7 +142,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="service" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
 	<schema name="&quot;SVC&quot;"/>
 	<role name="root"/>
-	<position x="1080" y="40"/>
+	<position x="1120" y="40"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -197,7 +197,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="appointment" layers="0" collapse-mode="1" max-obj-count="12" z-value="0">
 	<schema name="&quot;APMT&quot;"/>
 	<role name="root"/>
-	<position x="1820" y="20"/>
+	<position x="1440" y="40"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -251,7 +251,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="customer" layers="0" collapse-mode="1" max-obj-count="14" z-value="0">
 	<schema name="&quot;CTM&quot;"/>
 	<role name="root"/>
-	<position x="1520" y="560"/>
+	<position x="1460" y="480"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -691,7 +691,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="appointment_type" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
 	<schema name="&quot;APMT&quot;"/>
 	<role name="root"/>
-	<position x="1980" y="240"/>
+	<position x="1600" y="260"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1056,33 +1056,52 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<table name="turn" layers="0" collapse-mode="1" max-obj-count="4" z-value="0">
+<table name="turn" layers="0" collapse-mode="1" max-obj-count="12" z-value="0">
 	<schema name="&quot;CTM&quot;"/>
 	<role name="root"/>
-	<position x="1820" y="560"/>
+	<position x="1620" y="740"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
 	<column name="full_name" not-null="true">
-		<type name="varchar" length="50"/>
+		<type name="varchar" length="200"/>
+	</column>
+	<column name="company">
+		<type name="varchar" length="200"/>
+	</column>
+	<column name="document">
+		<type name="varchar" length="20"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="finish_at">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="total_time">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="time_appointment">
+		<type name="varchar" length="10"/>
+	</column>
+	<column name="is_finish" default-value="false">
+		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="turn_pk" type="pk-constr" table="&quot;CTM&quot;.turn">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 
 	<customidxs object-type="column">
-		<object name="created_by" index="2"/>
-		<object name="procedure_id" index="3"/>
+		<object name="created_by_id" index="9"/>
 	</customidxs>
 
 	<customidxs object-type="constraint">
-		<object name="procedure_turn_fk" index="2"/>
 		<object name="user_turn_fk" index="1"/>
 	</customidxs>
 </table>
 
 <relationship name="user_has_many_turn" type="rel1n" layers="0"
-	 src-col-pattern="created_by"
+	 src-col-pattern="created_by_id"
 	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
 	 src-fk-pattern="{st}_{dt}_fk"
 	 custom-color="#05c5f7"
@@ -1094,14 +1113,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
 	 index-type="btree" factor="0">
 		<idxelement use-sorting="false">
-			<column name="created_by"/>
+			<column name="created_by_id"/>
 		</idxelement>
 </index>
 
-<table name="procedure" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
-	<schema name="&quot;SVC&quot;"/>
+<table name="type_turn" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+	<schema name="&quot;CTM&quot;"/>
 	<role name="root"/>
-	<position x="1360" y="20"/>
+	<position x="1780" y="500"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1117,10 +1136,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="status" not-null="true">
 		<type name="boolean" length="0"/>
 	</column>
-	<column name="parent">
-		<type name="boolean" length="0"/>
-	</column>
-	<constraint name="procedure_pk" type="pk-constr" table="&quot;SVC&quot;.procedure">
+	<constraint name="procedure_pk" type="pk-constr" table="&quot;CTM&quot;.type_turn">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 
@@ -1129,7 +1145,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</customidxs>
 
 	<customidxs object-type="constraint">
-		<object name="user_procedure_fk" index="1"/>
+		<object name="user_type_turn_fk" index="1"/>
 	</customidxs>
 </table>
 
@@ -1139,10 +1155,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-fk-pattern="{st}_{dt}_fk"
 	 custom-color="#4826e5"
 	 src-table="&quot;USR&quot;.&quot;user&quot;"
-	 dst-table="&quot;SVC&quot;.procedure"
+	 dst-table="&quot;CTM&quot;.type_turn"
 	 src-required="false" dst-required="false"/>
 
-<index name="procedure_created_by_idx" table="&quot;SVC&quot;.procedure"
+<index name="procedure_created_by_idx" table="&quot;CTM&quot;.type_turn"
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
 	 index-type="btree" factor="0">
 		<idxelement use-sorting="false">
@@ -1150,106 +1166,38 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<table name="procedure_procedure" layers="0" collapse-mode="1" max-obj-count="3" z-value="0">
-	<schema name="&quot;SVC&quot;"/>
-	<role name="root"/>
-	<position x="1440" y="260"/>
-	<column name="id" not-null="true">
-		<type name="serial" length="0"/>
-	</column>
-	<constraint name="procedure_procedure_pk" type="pk-constr" table="&quot;SVC&quot;.procedure_procedure">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-
-	<customidxs object-type="column">
-		<object name="procedure_id_children" index="2"/>
-		<object name="procedure_id_parent" index="1"/>
-	</customidxs>
-
-	<customidxs object-type="constraint">
-		<object name="procedure_procedure_procedure_fk" index="0"/>
-		<object name="procedure_procedure_procedure_fk1" index="1"/>
-	</customidxs>
-</table>
-
-<relationship name="procedure_id_parent_has_many_procedure_procedure" type="rel1n" layers="0"
-	 src-col-pattern="procedure_id_parent"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_{dt}_fk"
-	 custom-color="#599055"
-	 src-table="&quot;SVC&quot;.procedure"
-	 dst-table="&quot;SVC&quot;.procedure_procedure"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="procedure_has_many_procedure_procedure" type="rel1n" layers="0"
-	 src-col-pattern="procedure_id_children"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_{dt}_fk"
-	 custom-color="#17a4a5"
-	 src-table="&quot;SVC&quot;.procedure"
-	 dst-table="&quot;SVC&quot;.procedure_procedure"
-	 src-required="false" dst-required="false">
-	<label ref-type="name-label">
-		<position x="0" y="0"/>
-	</label>
-</relationship>
-
-<index name="procedure_procedure_id_parent_idx" table="&quot;SVC&quot;.procedure_procedure"
-	 concurrent="false" unique="false" fast-update="false" buffering="false"
-	 index-type="btree" factor="0">
-		<idxelement use-sorting="false">
-			<column name="procedure_id_parent"/>
-		</idxelement>
-</index>
-
-<index name="procedure_procedure_id_children" table="&quot;SVC&quot;.procedure_procedure"
-	 concurrent="false" unique="false" fast-update="false" buffering="false"
-	 index-type="btree" factor="0">
-		<idxelement use-sorting="false">
-			<column name="procedure_id_children"/>
-		</idxelement>
-</index>
-
-<relationship name="procedure_has_many_turn" type="rel1n" layers="0"
-	 src-col-pattern="{st}_{sc}"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_{dt}_fk"
-	 custom-color="#6e99d7"
-	 src-table="&quot;SVC&quot;.procedure"
-	 dst-table="&quot;CTM&quot;.turn"
-	 src-required="false" dst-required="false"/>
-
-<index name="turn_procedure_id_idx" table="&quot;CTM&quot;.turn"
-	 concurrent="false" unique="false" fast-update="false" buffering="false"
-	 index-type="btree" factor="0">
-		<idxelement use-sorting="false">
-			<column name="procedure_id"/>
-		</idxelement>
-</index>
-
-<table name="attention" layers="0" collapse-mode="1" max-obj-count="6" z-value="0">
+<table name="attention" layers="0" collapse-mode="1" max-obj-count="9" z-value="0">
 	<schema name="&quot;CTM&quot;"/>
 	<role name="root"/>
-	<position x="1820" y="720"/>
+	<position x="1960" y="680"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
 	<column name="created_at" default-value="now()">
 		<type name="timestamp" length="0"/>
 	</column>
+	<column name="finish_at">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="total_time">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
 	<constraint name="attention_pk" type="pk-constr" table="&quot;CTM&quot;.attention">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 
 	<customidxs object-type="column">
-		<object name="attent_by" index="2"/>
-		<object name="procedure_id" index="3"/>
+		<object name="attent_by_id" index="7"/>
 		<object name="turn_id" index="1"/>
+		<object name="type_turn_id" index="4"/>
 	</customidxs>
 
 	<customidxs object-type="constraint">
-		<object name="procedure_attention_fk" index="3"/>
 		<object name="turn_attention_fk" index="1"/>
+		<object name="type_turn_attention_fk" index="3"/>
 		<object name="user_attention_fk" index="2"/>
 	</customidxs>
 </table>
@@ -1264,7 +1212,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-required="false" dst-required="false"/>
 
 <relationship name="user_has_many_attention" type="rel1n" layers="0"
-	 src-col-pattern="attent_by"
+	 src-col-pattern="attent_by_id"
 	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
 	 src-fk-pattern="{st}_{dt}_fk"
 	 custom-color="#41e800"
@@ -1277,7 +1225,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
 	 src-fk-pattern="{st}_{dt}_fk"
 	 custom-color="#130b87"
-	 src-table="&quot;SVC&quot;.procedure"
+	 src-table="&quot;CTM&quot;.type_turn"
 	 dst-table="&quot;CTM&quot;.attention"
 	 src-required="false" dst-required="false"/>
 
@@ -1293,7 +1241,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
 	 index-type="btree" factor="0">
 		<idxelement use-sorting="false">
-			<column name="attent_by"/>
+			<column name="attent_by_id"/>
 		</idxelement>
 </index>
 
@@ -1301,7 +1249,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 concurrent="false" unique="false" fast-update="false" buffering="false"
 	 index-type="btree" factor="0">
 		<idxelement use-sorting="false">
-			<column name="procedure_id"/>
+			<column name="type_turn_id"/>
 		</idxelement>
 </index>
 

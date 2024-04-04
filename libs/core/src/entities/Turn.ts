@@ -9,39 +9,60 @@ import {
 } from 'typeorm';
 import { Attention } from './Attention';
 import { User } from './User';
-import { Procedure } from './Procedure';
 
-@Index('turn_created_by_idx', ['createdBy'], {})
+// @Index('turn_created_by_idx', ['createdBy'], {})
 @Index('turn_pk', ['id'], { unique: true })
-@Index('turn_procedure_id_idx', ['procedureId'], {})
 @Entity('turn', { schema: 'CTM' })
 export class Turn {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
   id?: number;
 
-  @Column('integer', { name: 'created_by', nullable: true })
-  createdById: number | null;
-
-  @Column('integer', { name: 'procedure_id', nullable: true })
-  procedureId: number | null;
-
-  @Column('character varying', { name: 'full_name', length: 50 })
+  @Column('character varying', { name: 'full_name', length: 200 })
   fullName: string;
+
+  @Column('character varying', { name: 'company', nullable: true, length: 200 })
+  company: string | null;
+
+  @Column('character varying', { name: 'document', nullable: true, length: 20 })
+  document: string | null;
+
+  @Column('timestamp without time zone', {
+    name: 'created_at',
+    nullable: true,
+    default: () => 'now()',
+  })
+  createdAt?: Date | null;
+
+  @Column('timestamp without time zone', { name: 'finish_at', nullable: true })
+  finishAt?: Date | null;
+
+  @Column('integer', { name: 'total_time', nullable: true })
+  totalTime?: number | null;
+
+  @Column('integer', { name: 'created_by_id', nullable: true })
+  createdById?: number | null;
+
+  @Column('boolean', {
+    name: 'is_finish',
+    nullable: true,
+    default: () => 'false',
+  })
+  isFinish?: boolean | null;
+
+  @Column('character varying', {
+    name: 'time_appointment',
+    nullable: true,
+    length: 10,
+  })
+  timeAppointment?: string;
 
   @OneToMany(() => Attention, (attention) => attention.turn)
   attentions?: Attention[];
 
-  @ManyToOne(() => User, (user) => user.turns, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'created_by', referencedColumnName: 'id' }])
-  createdBy?: User;
-
-  @ManyToOne(() => Procedure, (procedure) => procedure.turns, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'procedure_id', referencedColumnName: 'id' }])
-  procedure?: Procedure;
+  // @ManyToOne(() => User, (user) => user.turns, {
+  //   onDelete: 'SET NULL',
+  //   onUpdate: 'CASCADE',
+  // })
+  // @JoinColumn([{ name: 'createdBy', referencedColumnName: 'id' }]) // Cambiado a 'createdById'
+  // createdBy?: User;
 }

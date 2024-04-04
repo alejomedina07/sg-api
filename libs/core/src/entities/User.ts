@@ -18,13 +18,13 @@ import { Note } from './Note';
 import { Payment } from './Payment';
 import { Permissions } from './Permissions';
 import { Privileges } from './Privileges';
-import { Procedure } from './Procedure';
 import { Provider } from './Provider';
 import { Rol } from './Rol';
 import { Service } from './Service';
 import { Survey } from './Survey';
 import { SurveyAnswer } from './SurveyAnswer';
 import { Turn } from './Turn';
+import { TypeTurn } from './TypeTurn';
 import { List } from './List';
 
 @Index('document_number_unique', ['documentNumber'], { unique: true })
@@ -119,9 +119,6 @@ export class User {
   @OneToMany(() => Privileges, (privileges) => privileges.createdBy)
   privileges?: Privileges[] | string[];
 
-  @OneToMany(() => Procedure, (procedure) => procedure.createdBy)
-  procedures?: Procedure[];
-
   @OneToMany(() => Provider, (provider) => provider.createdBy)
   providers?: Provider[];
 
@@ -134,14 +131,17 @@ export class User {
   @OneToMany(() => Survey, (survey) => survey.createdBy)
   surveys?: Survey[];
 
-  @OneToMany(() => Turn, (turn) => turn.createdBy)
-  turns?: Turn[];
-
   @OneToMany(() => SurveyAnswer, (surveyAnswer) => surveyAnswer.assignedTo)
   surveyAnswers?: SurveyAnswer[];
 
   @OneToMany(() => SurveyAnswer, (surveyAnswer) => surveyAnswer.createdBy)
   surveyAnswersCreated?: SurveyAnswer[];
+
+  // @OneToMany(() => Turn, (turn) => turn.createdBy)
+  // turns?: Turn[];
+
+  @OneToMany(() => TypeTurn, (typeTurn) => typeTurn.createdBy)
+  typeTurns?: TypeTurn[];
 
   @ManyToOne(() => List, (list) => list.usersDocumentType, {
     onDelete: 'SET NULL',
