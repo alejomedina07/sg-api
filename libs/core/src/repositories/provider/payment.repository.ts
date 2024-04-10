@@ -68,11 +68,14 @@ export class PaymentRepository {
           const currentAmount = `${accountPayable.amount}`;
 
           const amountPaid =
-            parseFloat(currentRecord.amountPaid.replace('$', '')) +
-            parseFloat(currentAmount.replace('$', ''));
+            parseFloat(currentRecord.amountPaid.replace(/[\$,]/g, '')) +
+            parseFloat(currentAmount.replace(/[\$,]/g, ''));
 
           currentRecord.amountPaid = `${amountPaid}`;
-          if (parseFloat(currentRecord.amount.replace('$', '')) === amountPaid)
+          if (
+            parseFloat(currentRecord.amount.replace(/[\$,]/g, '')) ===
+            amountPaid
+          )
             currentRecord.paid = true;
           await entityManager.save(AccountPayable, currentRecord);
         }

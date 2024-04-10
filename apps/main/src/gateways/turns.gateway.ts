@@ -12,7 +12,9 @@ interface Person {
   room: string;
   name: string;
   company?: string;
+  note?: string;
   isFinish?: boolean;
+  createdAt?: string;
   id: number;
   idPre?: number;
   roomAppointMent?: string;
@@ -22,7 +24,7 @@ interface Person {
   attentions?: any[];
 }
 
-@WebSocketGateway(81, {
+@WebSocketGateway(3001, {
   cors: { origin: '*' },
 })
 export class TurnsGateway
@@ -85,6 +87,10 @@ export class TurnsGateway
       turns = [...this.turns];
       turns.push(payload);
       // console.log(123456, turns);
+      turnsTaken = this.turnsTaken.filter((item) => item.id !== payload.id);
+
+      this.turnsTaken = turnsTaken;
+
       this.turns = turns;
     } else {
       turnsTaken = this.turnsTaken.filter((item) => item.id !== payload.id);
@@ -107,7 +113,7 @@ export class TurnsGateway
 
   @SubscribeMessage('takenTurn')
   handleTakenTurn(client: Socket, payload: Person) {
-    // console.log('takenTurn:::', payload);
+    console.log('takenTurn:::', payload);
     const index = this.turns.findIndex((item) => item.id === payload.id);
     // Verifica si se encontró un elemento con id igual a 1
     if (index !== -1) {
@@ -115,11 +121,18 @@ export class TurnsGateway
       const turn = this.turns.splice(index, 1)[0];
       const turnTaken = {
         ...turn,
-        // roomAppointMent: payload.roomAppointMent,
-        // takeBy: payload.takeBy,
         ...payload,
       };
+
       this.turnsTaken.push(turnTaken);
+
+      console.log();
+
+      // const turnsTaken = this.turnsTaken.filter(
+      //   (item) => item.id !== payload.id,
+      // );
+      //
+      // this.turnsTaken = [...turnsTaken, turnTaken];
       this.server
         .to(`room_${payload.room}`)
         .emit('turnTakenList', { turnsTaken: this.turnsTaken, turnTaken });
@@ -137,6 +150,7 @@ export class TurnsGateway
   }
   @SubscribeMessage('callAgain')
   handleCallAgain(client: Socket, payload: Person) {
+    console.log(777, this.turnsTaken);
     this.server.to(`room_${payload.room}`).emit('callAgain', payload);
   }
 }

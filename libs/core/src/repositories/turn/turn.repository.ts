@@ -82,13 +82,14 @@ export class TurnRepository {
 
   async createTurn(data: Turn): Promise<ResponseDto> {
     try {
+      const createdAt = this.getCurrentDate();
       const procedureInsert = await this.turnRepository.manager.insert(Turn, {
         ...data,
-        createdAt: this.getCurrentDate(),
+        createdAt,
       });
       return {
-        data: procedureInsert.identifiers[0].id,
-        msg: 'Procedimiento Creada!',
+        data: { id: procedureInsert.identifiers[0].id, createdAt },
+        msg: 'Turno Creado!',
         code: 200,
       };
     } catch (e) {
