@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Attention } from './Attention';
+import { List } from './List';
 import { Turn } from './Turn';
 import { User } from './User';
 
@@ -46,4 +47,14 @@ export class TypeTurn {
   })
   @JoinColumn([{ name: 'created_by', referencedColumnName: 'id' }])
   createdBy?: User;
+
+  @ManyToOne(() => List, (list) => list.typeTurns, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'type_turn_id', referencedColumnName: 'id' }])
+  typeTurn?: List;
+
+  @Column('integer', { name: 'type_turn_id' })
+  typeTurnId: number;
 }

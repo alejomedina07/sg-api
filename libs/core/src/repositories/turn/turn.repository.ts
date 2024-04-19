@@ -17,13 +17,14 @@ export class TurnRepository {
   ) {}
 
   getCurrentDate(): Date {
-    const bogotaTimeZone = 'America/Bogota';
-    const currentDate = new Date();
-    const bogotaDate = format(
-      utcToZonedTime(currentDate, bogotaTimeZone),
-      'yyyy-MM-dd HH:mm:ss',
-    );
-    return new Date(bogotaDate);
+    // const bogotaTimeZone = 'America/Bogota';
+    // const currentDate = new Date();
+    // const bogotaDate = format(
+    //   utcToZonedTime(currentDate, bogotaTimeZone),
+    //   'yyyy-MM-dd HH:mm:ss',
+    // );
+    // return new Date(bogotaDate);
+    return new Date();
   }
 
   // type-turn
@@ -57,16 +58,22 @@ export class TurnRepository {
 
   async getTypeTurns(list: boolean): Promise<ResponseDto> {
     try {
-      const data = list
+      let data = list
         ? await this.typeTurnRepository.manager.find(TypeTurn, {
             where: { status: true },
-            select: ['name', 'description', 'id'],
+            select: ['name', 'description', 'id', 'typeTurn', 'typeTurnId'],
+            relations: ['typeTurn'],
             order: { name: 'DESC' },
           })
         : await this.typeTurnRepository.manager.find(TypeTurn, {
+            relations: ['typeTurn'],
             order: { createdAt: 'DESC' },
           });
-
+      if (list) {
+        data = data.map((item) => {
+          return { ...item, typeName: item.typeTurn.name };
+        });
+      }
       return {
         data,
         msg: 'Obtenido correctamente!',

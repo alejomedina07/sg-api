@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,271" last-zoom="1.1" max-obj-count="68"
+<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,270" last-zoom="1.1" max-obj-count="69"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -1117,7 +1117,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<table name="type_turn" layers="0" collapse-mode="1" max-obj-count="7" z-value="0">
+<table name="type_turn" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
 	<schema name="&quot;CTM&quot;"/>
 	<role name="root"/>
 	<position x="1780" y="500"/>
@@ -2042,5 +2042,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 			<column name="expense_id"/>
 		</idxelement>
 </index>
+
+<relationship name="list_has_many_type_turn" type="rel1n" layers="0"
+	 src-col-pattern="type_turn_id"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_{dt}_fk"
+	 custom-color="#c09025"
+	 src-table="&quot;CNFG&quot;.list"
+	 dst-table="&quot;CTM&quot;.type_turn"
+	 src-required="false" dst-required="false"/>
 
 </dbmodel>

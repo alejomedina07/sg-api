@@ -153,4 +153,30 @@ export class TurnsGateway
     console.log(777, this.turnsTaken);
     this.server.to(`room_${payload.room}`).emit('callAgain', payload);
   }
+
+  @SubscribeMessage('changeRoom')
+  handleChangeRoom(client: Socket, payload: Person) {
+    // console.log('handleDeleteTurn:::', payload);
+    const turn = this.turns.filter((item) => item.id === payload.id);
+    // console.log(turns);
+    if (turn?.length) {
+      const turns = this.turns.filter((item) => item.id !== payload.id);
+      this.turns = [payload, ...turns];
+    }
+
+    const turnTaken = this.turnsTaken.filter((item) => item.id === payload.id);
+    // console.log(turns);
+    if (turnTaken?.length) {
+      const turnsTaken = this.turnsTaken.filter(
+        (item) => item.id !== payload.id,
+      );
+      this.turnsTaken = [payload, ...turnsTaken];
+    }
+
+    // console.log(this.turns);
+    this.server.to(`room_${payload.room}`).emit('turnList', this.turns);
+    this.server
+      .to(`room_${payload.room}`)
+      .emit('turnTakenList', { turnsTaken: this.turnsTaken });
+  }
 }

@@ -11,6 +11,7 @@ import { Expense } from './Expense';
 import { Provider } from './Provider';
 import { Service } from './Service';
 import { User } from './User';
+import { TypeTurn } from 'sg/core/entities/TypeTurn';
 
 @Index('List_pk', ['id'], { unique: true })
 @Entity('list', { schema: 'CNFG' })
@@ -69,4 +70,7 @@ export class List {
 
   @OneToMany(() => User, (user) => user.status)
   usersStatus?: User[];
+
+  @OneToMany(() => TypeTurn, (typeTurn) => typeTurn.typeTurn)
+  typeTurns?: TypeTurn[];
 }

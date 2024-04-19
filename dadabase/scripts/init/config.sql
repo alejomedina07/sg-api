@@ -24,7 +24,12 @@ values ('Activo', 'statusUser', 'Estado activo'),
        ('TI', 'documentType', 'Tarjeta de identidad'),
        ('CC DIG', 'documentType', 'Cédula Digital'),
        ('NIT', 'documentType', 'Empresa'),
-       ('TE', 'documentType', 'Tarjeta de extranjería');
+       ('TE', 'documentType', 'Tarjeta de extranjería'),
+       ('Médico General.', 'typeTurn', 'Médico General.');
+
+
+-- insert into "CNFG".list (name, key, description)
+-- values ('Médico General.', 'typeTurn', 'Médico General.');
 
 
 insert into "USR".rol (name, description)
