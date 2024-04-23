@@ -48,7 +48,7 @@ export class TurnRepository {
 
   async updateTypeTurn(id: number, data: TypeTurn): Promise<ResponseDto> {
     try {
-      const procedureInsert = await this.typeTurnRepository.update(id, data);
+      const procedureInsert = await this.typeTurnRepository.update(id, { name: data.name, status: data.status, typeTurnId: data.typeTurnId, description: data.description, });
       return { data: procedureInsert.raw, msg: 'Nota Editada!', code: 200 };
     } catch (e) {
       console.log(12, e);
