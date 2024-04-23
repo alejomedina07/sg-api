@@ -25,7 +25,7 @@ export class TurnController {
   constructor(private turnService: TurnService) {}
 
   @Roles(Role.Admin, Role.User)
-  @Privileges(Privilege.turnList)
+  @Privileges(Privilege.typeTurnList)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/type')
   async getTypeTurns(): Promise<ResponseDto> {
@@ -33,7 +33,11 @@ export class TurnController {
   }
 
   @Roles(Role.Admin, Role.User)
-  @Privileges(Privilege.turnList)
+  @Privileges(
+    Privilege.typeTurnList,
+    Privilege.turnList,
+    Privilege.attentionCreate,
+  )
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/type/list')
   async getTypeTurnsList(): Promise<ResponseDto> {
@@ -41,7 +45,7 @@ export class TurnController {
   }
 
   @Roles(Role.Admin, Role.User)
-  @Privileges(Privilege.turnCreate)
+  @Privileges(Privilege.typeTurnCreate)
   @UseGuards(JwtAuthGuard, RolesGuard, SetCreatedByGuard)
   @Post('/type')
   async createTypeTurn(@Body() turn: CreateTypeTurnDto): Promise<ResponseDto> {
@@ -52,7 +56,7 @@ export class TurnController {
   }
 
   @Roles(Role.Admin)
-  @Privileges(Privilege.turnEdit)
+  @Privileges(Privilege.typeTurnEdit)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put('/type/:id')
   async updateTypeTurn(

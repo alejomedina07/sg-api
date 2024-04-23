@@ -41,15 +41,15 @@ export class Procedure {
   @Column('boolean', { name: 'parent', nullable: true })
   parent: boolean | null;
 
-  @OneToMany(() => Attention, (attention) => attention.procedure)
-  attentions?: Attention[];
-
-  @ManyToOne(() => User, (user) => user.procedures, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'created_by', referencedColumnName: 'id' }])
-  createdBy?: User;
+  // @OneToMany(() => Attention, (attention) => attention.procedure)
+  // attentions?: Attention[];
+  //
+  // @ManyToOne(() => User, (user) => user.procedures, {
+  //   onDelete: 'SET NULL',
+  //   onUpdate: 'CASCADE',
+  // })
+  // @JoinColumn([{ name: 'created_by', referencedColumnName: 'id' }])
+  // createdBy?: User;
 
   @OneToMany(
     () => ProcedureProcedure,
@@ -62,7 +62,7 @@ export class Procedure {
     (procedureProcedure) => procedureProcedure.procedureIdParentId,
   )
   procedureProceduresParent?: ProcedureProcedure[];
-
-  @OneToMany(() => Turn, (turn) => turn.procedure)
-  turns?: Turn[];
+  //
+  // @OneToMany(() => Turn, (turn) => turn.procedure)
+  // turns?: Turn[];
 }

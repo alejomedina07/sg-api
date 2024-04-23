@@ -27,15 +27,24 @@ export class RolesGuard implements CanActivate {
         next = true;
       }
     }
+    console.log(7891, requiredPrivileges);
     if (requiredPrivileges && requiredPrivileges.length > 0) {
       const userPrivileges = user?.privileges || [];
+      console.log(7891, userPrivileges);
       if (
-        requiredPrivileges.every((privilege) =>
+        requiredPrivileges.some((privilege) =>
           userPrivileges.includes(privilege),
         )
       ) {
         next = true;
       }
+      // if (
+      //   requiredPrivileges.every((privilege) =>
+      //     userPrivileges.includes(privilege),
+      //   )
+      // ) {
+      //   next = true;
+      // }
     }
     return next;
   }

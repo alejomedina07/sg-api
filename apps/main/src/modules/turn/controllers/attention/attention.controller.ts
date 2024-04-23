@@ -23,16 +23,16 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 export class AttentionController {
   constructor(private turnService: AttentionService) {}
 
-  @Roles(Role.Admin, Role.User)
-  @Privileges(Privilege.turnList)
+  @Roles(Role.Admin)
+  @Privileges(Privilege.attentionList)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async getAttentions(): Promise<ResponseDto> {
     return await this.turnService.getAttentions();
   }
 
-  @Roles(Role.Admin, Role.User)
-  @Privileges(Privilege.turnCreate)
+  @Roles(Role.Admin)
+  @Privileges(Privilege.attentionCreate)
   @UseGuards(JwtAuthGuard, RolesGuard, SetCreatedByGuard)
   @Post()
   async createAttention(
@@ -45,7 +45,7 @@ export class AttentionController {
   }
 
   @Roles(Role.Admin)
-  @Privileges(Privilege.turnEdit)
+  @Privileges(Privilege.attentionEdit)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put('/:id')
   async updateAttention(
@@ -59,7 +59,7 @@ export class AttentionController {
   }
 
   @Roles(Role.Admin)
-  @Privileges(Privilege.turnEdit)
+  @Privileges(Privilege.attentionCreate)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put('/finish/:id')
   async finishAttentionAttention(

@@ -1,25 +1,25 @@
 insert into "CNFG".list (name, key, description)
 values ('Activo', 'statusUser', 'Estado activo'),
-       ('Inactivo', 'statusUser', 'Estado inactivo'),
-       ('Pendiente', 'statusUser', 'Estado Pendiente'),
+--        ('Inactivo', 'statusUser', 'Estado inactivo'),
+--        ('Pendiente', 'statusUser', 'Estado Pendiente'),
        ('Activo', 'statusService', 'Estado activo'),
-       ('Inactivo', 'statusService', 'Estado inactivo'),
-       ('Pendiente', 'statusService', 'Estado Pendiente'),
+--        ('Inactivo', 'statusService', 'Estado inactivo'),
+--        ('Pendiente', 'statusService', 'Estado Pendiente'),
        ('Tipo 1', 'typeService', 'Descripción de ejemplo Tipo 1'),
-       ('Tipo 2', 'typeService', 'Descripción de ejemplo Tipo 2'),
-       ('Tipo 3', 'typeService', 'Descripción de ejemplo Tipo 3'),
+--        ('Tipo 2', 'typeService', 'Descripción de ejemplo Tipo 2'),
+--        ('Tipo 3', 'typeService', 'Descripción de ejemplo Tipo 3'),
        ('Tipo 1', 'typeExpense', 'Descripción de ejemplo'),
-       ('Tipo 2', 'typeExpense', 'Descripción de ejemplo'),
-       ('Tipo 3', 'typeExpense', 'Descripción de ejemplo'),
+--        ('Tipo 2', 'typeExpense', 'Descripción de ejemplo'),
+--        ('Tipo 3', 'typeExpense', 'Descripción de ejemplo'),
        ('Activo', 'statusCustomer', 'Estado activo'),
-       ('Inactivo', 'statusCustomer', 'Estado inactivo'),
-       ('Pendiente', 'statusCustomer', 'Estado Pendiente'),
+--        ('Inactivo', 'statusCustomer', 'Estado inactivo'),
+--        ('Pendiente', 'statusCustomer', 'Estado Pendiente'),
        ('Activo', 'statusAppointment', 'Estado activo'),
-       ('Inactivo', 'statusAppointment', 'Estado inactivo'),
-       ('Pendiente', 'statusAppointment', 'Estado Pendiente'),
+--        ('Inactivo', 'statusAppointment', 'Estado inactivo'),
+--        ('Pendiente', 'statusAppointment', 'Estado Pendiente'),
        ('Activo', 'statusInventory', 'Estado activo'),
-       ('Inactivo', 'statusInventory', 'Estado inactivo'),
-       ('Pendiente', 'statusInventory', 'Estado Pendiente'),
+--        ('Inactivo', 'statusInventory', 'Estado inactivo'),
+--        ('Pendiente', 'statusInventory', 'Estado Pendiente'),
        ('CC', 'documentType', 'Cédula de ciudadanía'),
        ('TI', 'documentType', 'Tarjeta de identidad'),
        ('CC DIG', 'documentType', 'Cédula Digital'),
@@ -83,10 +83,10 @@ values
         ('survey.edit', 'Editar encuestas'),
         ('survey.delete', 'Eliminar encuestas'),
         -- lanzar en prod
-        ('typeTurn.list', 'Listar Tipos de turnos'),
-        ('typeTurn.create', 'Crear Tipos de turnos'),
-        ('typeTurn.edit', 'Editar Tipos de turnos'),
-        ('typeTurn.delete', 'Eliminar Tipos de turnos'),
+        ('typeTurn.list', 'Listar Tipos de turnos.(Salas)'),
+        ('typeTurn.create', 'Crear Tipos de turnos.(Salas)'),
+        ('typeTurn.edit', 'Editar Tipos de turnos.(Salas)'),
+        ('typeTurn.delete', 'Eliminar Tipos de turnos.(Salas)'),
         ('provider.list', 'Listar proveedores'),
         ('provider.create', 'Crear proveedores'),
         ('provider.edit', 'Editar proveedores'),
@@ -102,7 +102,11 @@ values
         ('payment.list', 'Listar pagos'),
         ('payment.create', 'Crear pagos'),
         ('payment.edit', 'Editar pagos'),
-        ('payment.delete', 'Eliminar pagos')
+        ('payment.delete', 'Eliminar pagos'),
+        ('attention.list', 'Listar Atenciones de turnos.(Salas)'),
+        ('attention.create', 'Crear Atenciones de turnos.(Salas)'),
+        ('attention.edit', 'Editar Atenciones de turnos.(Salas)'),
+        ('attention.delete', 'Eliminar Atenciones de turnos.(Salas)')
 ;
 
 
@@ -117,14 +121,8 @@ values
 
 
 --
--- insert into "USR".privileges (name, description)
--- values         ('accountPayable.list', 'Listar cuentas por pagar'),
---                ('accountPayable.create', 'Crear cuentas por pagar'),
---                ('accountPayable.edit', 'Editar cuentas por pagar'),
---                ('accountPayable.delete', 'Eliminar cuentas por pagar'),
---
---
---                ('payment.list', 'Listar pagos'),
---                ('payment.create', 'Crear pagos'),
---                ('payment.edit', 'Editar pagos'),
---                ('payment.delete', 'Eliminar pagos');
+insert into "USR".privileges (name, description)
+values         ('attention.list', 'Listar Atenciones de turnos.(Salas)'),
+               ('attention.create', 'Crear Atenciones de turnos.(Salas)'),
+               ('attention.edit', 'Editar Atenciones de turnos.(Salas)'),
+               ('attention.delete', 'Eliminar Atenciones de turnos.(Salas)');

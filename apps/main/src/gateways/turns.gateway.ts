@@ -141,7 +141,7 @@ export class TurnsGateway
   }
   @SubscribeMessage('deleteTurn')
   handleDeleteTurn(client: Socket, payload: Person) {
-    // console.log('handleDeleteTurn:::', payload);
+    console.log('handleDeleteTurn:::', payload);
     const turns = this.turns.filter((item) => item.id !== payload.id);
     // console.log(turns);
     this.turns = turns;

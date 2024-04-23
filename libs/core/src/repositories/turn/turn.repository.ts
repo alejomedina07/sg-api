@@ -63,7 +63,7 @@ export class TurnRepository {
             where: { status: true },
             select: ['name', 'description', 'id', 'typeTurn', 'typeTurnId'],
             relations: ['typeTurn'],
-            order: { name: 'DESC' },
+            order: { typeTurnId: 'DESC' },
           })
         : await this.typeTurnRepository.manager.find(TypeTurn, {
             relations: ['typeTurn'],
