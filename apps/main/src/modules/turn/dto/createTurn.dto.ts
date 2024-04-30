@@ -42,6 +42,13 @@ export class CreateTurnDto {
   })
   timeAppointment?: string;
 
+  @ApiProperty({ description: 'Nota del turno', required: false })
+  @IsOptional()
+  @IsString({
+    message: 'note: La nota del turno debe ser texto',
+  })
+  note?: string;
+
   @ApiProperty({ description: 'createdAt del turno', required: false })
   @IsOptional()
   @IsDate({ message: 'createdAt: La fecha no es correcta' })

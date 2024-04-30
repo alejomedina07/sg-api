@@ -43,12 +43,12 @@ export class Attention {
   @Column('text', { name: 'description', nullable: true })
   description?: string | null;
 
-  // @ManyToOne(() => User, (user) => user.attentions, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'attent_by_id', referencedColumnName: 'id' }])
-  // attentBy?: User;
+  @ManyToOne(() => User, (user) => user.attentions, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'attent_by_id', referencedColumnName: 'id' }])
+  attentBy?: User;
 
   @ManyToOne(() => Turn, (turn) => turn.attentions, {
     onDelete: 'SET NULL',

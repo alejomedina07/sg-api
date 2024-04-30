@@ -4,6 +4,7 @@ import { In, Repository } from 'typeorm';
 import { PermissionsPrivileges, Privileges, User } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
 import { PaginationDto } from '../../../../../apps/main/src/shared/dto/pagination.dto';
+import { UpdateProfileDto } from '../../../../../apps/main/src/modules/user/dto/updateProfile.dto';
 
 @Injectable()
 export class UserRepository {
@@ -29,7 +30,22 @@ export class UserRepository {
   async updateUser(id: number, data: User): Promise<any> {
     try {
       const userInsert = await this.userRepository.update(id, data);
-      return { data: userInsert.raw, msg: 'Usuario Creado!', code: 200 };
+      return { data: userInsert.raw, msg: 'Usuario Actualizado!', code: 200 };
+    } catch (e) {
+      console.log(12, e);
+      return { code: 500, msg: 'Error al intentar guardar' + e, data: e };
+    }
+  }
+
+  async updateProfile(data: UpdateProfileDto): Promise<any> {
+    try {
+      console.log(777, data);
+      const userInsert = await this.userRepository.update(data.createdById, {
+        address: data.address,
+        phoneNumber: data.phoneNumber,
+        password: data.password,
+      });
+      return { data: userInsert.raw, msg: 'Usuario Actualizado!', code: 200 };
     } catch (e) {
       console.log(12, e);
       return { code: 500, msg: 'Error al intentar guardar' + e, data: e };

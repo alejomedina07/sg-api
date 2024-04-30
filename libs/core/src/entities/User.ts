@@ -137,8 +137,8 @@ export class User {
   @OneToMany(() => SurveyAnswer, (surveyAnswer) => surveyAnswer.createdBy)
   surveyAnswersCreated?: SurveyAnswer[];
 
-  // @OneToMany(() => Turn, (turn) => turn.createdBy)
-  // turns?: Turn[];
+  @OneToMany(() => Turn, (turn) => turn.createdBy)
+  turns?: Turn[];
 
   @OneToMany(() => TypeTurn, (typeTurn) => typeTurn.createdBy)
   typeTurns?: TypeTurn[];

@@ -56,13 +56,16 @@ export class Turn {
   })
   timeAppointment?: string;
 
+  @Column('text', { name: 'note', nullable: true })
+  note?: string;
+
   @OneToMany(() => Attention, (attention) => attention.turn)
   attentions?: Attention[];
 
-  // @ManyToOne(() => User, (user) => user.turns, {
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn([{ name: 'createdBy', referencedColumnName: 'id' }]) // Cambiado a 'createdById'
-  // createdBy?: User;
+  @ManyToOne(() => User, (user) => user.turns, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'created_by_id', referencedColumnName: 'id' }]) // Cambiado a 'createdById'
+  createdBy?: User;
 }

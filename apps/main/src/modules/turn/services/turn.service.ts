@@ -4,6 +4,7 @@ import { ResponseDto } from '../../../shared/dto/response.dto';
 import { Turn, TypeTurn } from 'sg/core/entities';
 import { CreateTypeTurnDto } from '../dto/createTypeTurn.dto';
 import { CreateTurnDto } from '../dto/createTurn.dto';
+import { GetTurnDto } from '../dto/getTurnDto.dto';
 
 @Injectable()
 export class TurnService {
@@ -11,6 +12,10 @@ export class TurnService {
 
   async getTypeTurns(list: boolean): Promise<ResponseDto> {
     return this.turnRepository.getTypeTurns(list);
+  }
+
+  async getCountTypeTurns(): Promise<ResponseDto> {
+    return this.turnRepository.getCountTypeTurns();
   }
 
   async createTypeTurn(typeTurn: CreateTypeTurnDto): Promise<any> {
@@ -23,8 +28,12 @@ export class TurnService {
 
   // TURN
 
-  async getTurns(): Promise<ResponseDto> {
-    return this.turnRepository.getTurns();
+  async getTurns(params: GetTurnDto): Promise<ResponseDto> {
+    return this.turnRepository.getTurns(params);
+  }
+
+  async getAttention(turnId: number): Promise<ResponseDto> {
+    return this.turnRepository.getAttention(turnId);
   }
 
   async createTurn(typeTurn: CreateTurnDto): Promise<any> {

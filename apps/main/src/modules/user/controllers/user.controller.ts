@@ -21,11 +21,22 @@ import { JwtAuthGuard } from '../../../guards/auth/jwtAuthGuard.guard';
 import { RolesGuard } from '../../../guards/rol/roles.guard';
 import { PaginationDto } from '../../../shared/dto/pagination.dto';
 import { SetCreatedByGuard } from '../../../guards/auth/setCreatedBy.guard';
+import { UpdateProfileDto } from '../dto/updateProfile.dto';
 
 @ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly mainService: UserService) {}
+
+  @UseGuards(JwtAuthGuard, SetCreatedByGuard)
+  @Put('/profile')
+  async updateProfile(@Body() user: UpdateProfileDto): Promise<ResponseDto> {
+    console.log(123456);
+    const response = await this.mainService.updateProfile(user);
+    if (response.code !== 200)
+      throw new HttpException(response.msg || 'Error!!', response.code || 500);
+    return response;
+  }
 
   @Roles(Role.Admin, Role.User)
   @Privileges(Privilege.userList)
@@ -48,7 +59,7 @@ export class UserController {
       throw new HttpException(response.msg || 'Error!!', response.code || 500);
     return response;
   }
-
+  //
   @Roles(Role.Admin)
   @Privileges(Privilege.userCreate)
   @UseGuards(JwtAuthGuard, RolesGuard, SetCreatedByGuard)

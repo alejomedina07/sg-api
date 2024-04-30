@@ -1,14 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
-import { format, differenceInMinutes } from 'date-fns';
-import { utcToZonedTime } from 'date-fns-tz';
+import { EntityManager, FindManyOptions, Repository } from 'typeorm';
+import { differenceInMinutes } from 'date-fns';
 import { Attention, Turn, TypeTurn } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
+import { FilterListService } from 'sg/core/services/filters/filterList.service';
+import { GetAccountPayableDto } from '../../../../../apps/main/src/modules/provider/dto/getAccountPayable.dto';
+import { TypeFiltersDto } from '../../../../../apps/main/src/modules/provider/dto/typeFilters.dto';
+import { GetTurnDto } from '../../../../../apps/main/src/modules/turn/dto/getTurnDto.dto';
+
+const TYPES_FILTERS: TypeFiltersDto = {
+  BOOLEAN: {
+    isFinish: true,
+  },
+  CONTAINS: {
+    fullName: true,
+    company: true,
+    document: true,
+    // createdAt: true,
+    // finishAt: true,
+  },
+  NUMBERS: {
+    id: true,
+    createdById: true,
+  },
+  RELATION: {
+    createdBy: 'first_name',
+  },
+};
 
 @Injectable()
 export class TurnRepository {
   constructor(
+    private filterListService: FilterListService,
     @InjectRepository(TypeTurn)
     private typeTurnRepository: Repository<TypeTurn>,
     @InjectRepository(Turn)
@@ -48,7 +72,12 @@ export class TurnRepository {
 
   async updateTypeTurn(id: number, data: TypeTurn): Promise<ResponseDto> {
     try {
-      const procedureInsert = await this.typeTurnRepository.update(id, { name: data.name, status: data.status, typeTurnId: data.typeTurnId, description: data.description, });
+      const procedureInsert = await this.typeTurnRepository.update(id, {
+        name: data.name,
+        status: data.status,
+        typeTurnId: data.typeTurnId,
+        description: data.description,
+      });
       return { data: procedureInsert.raw, msg: 'Nota Editada!', code: 200 };
     } catch (e) {
       console.log(12, e);
@@ -76,6 +105,31 @@ export class TurnRepository {
       }
       return {
         data,
+        msg: 'Obtenido correctamente!',
+        code: 201,
+      };
+    } catch (e) {
+      console.log(e);
+      return { code: 500, msg: 'Error al obtener' };
+    }
+  }
+
+  async getCountTypeTurns(): Promise<ResponseDto> {
+    try {
+      const query = `SELECT
+                         a.type_turn_id as id,
+                         tt.name as room,
+                         l.name as type,
+                         ROUND(AVG(a.total_time)::numeric, 2) AS average,
+                         COUNT(*) AS quantity
+                     FROM "CTM".attention a
+                              INNER JOIN "CTM".type_turn tt ON tt.id = a.type_turn_id
+                              INNER JOIN "CNFG".list l ON tt.type_turn_id = l.id
+                     WHERE DATE_TRUNC('day', a.created_at::timestamp) = CURRENT_DATE
+                     GROUP BY a.type_turn_id, tt.name, l.name;`;
+
+      return {
+        data: await this.typeTurnRepository.query(query),
         msg: 'Obtenido correctamente!',
         code: 201,
       };
@@ -119,15 +173,41 @@ export class TurnRepository {
     }
   }
 
-  async getTurns(): Promise<ResponseDto> {
+  async getTurns(params: GetTurnDto): Promise<ResponseDto> {
     try {
-      return {
-        data: await this.typeTurnRepository.manager.find(Turn, {
-          order: { createdAt: 'DESC' },
-        }),
-        msg: 'Obtenido correctamente!',
-        code: 201,
+      const { page = 0, limit = 1000, filters, order } = params;
+      let queryOptions: FindManyOptions<Turn> = {
+        relations: ['createdBy'],
+        order: order || { id: 'desc' },
+        skip: (page - 1) * limit || 0,
+        take: limit || 1000,
       };
+      queryOptions = this.filterListService.getQueryFilters(
+        filters,
+        TYPES_FILTERS,
+        queryOptions,
+      );
+
+      const [data, total] = await this.typeTurnRepository.manager.findAndCount(
+        Turn,
+        queryOptions,
+      );
+
+      return { data, total, msg: 'Obtenido correctamente!', code: 201 };
+    } catch (e) {
+      console.log(e);
+      return { code: 500, msg: 'Error al obtener' };
+    }
+  }
+
+  async getAttention(turnId: number): Promise<ResponseDto> {
+    try {
+      const data = await this.turnRepository.manager.find(Attention, {
+        where: { turnId },
+        relations: ['typeTurn', 'attentBy'],
+      });
+
+      return { data, msg: 'Obtenido correctamente!', code: 201 };
     } catch (e) {
       console.log(e);
       return { code: 500, msg: 'Error al obtener' };
@@ -196,6 +276,7 @@ export class TurnRepository {
           await entityManager.update(Turn, data.turnId, {
             finishAt,
             totalTime: differenceInMinutes(finishAt, turnSelected.createdAt),
+            isFinish: true,
           });
         }
 

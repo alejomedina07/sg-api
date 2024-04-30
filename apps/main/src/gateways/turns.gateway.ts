@@ -147,7 +147,16 @@ export class TurnsGateway
     this.turns = turns;
     // console.log(this.turns);
     this.server.to(`room_${payload.room}`).emit('turnList', this.turns);
+    const turnsTaken = this.turns.filter((item) => item.id !== payload.id);
+    // console.log(turns);
+    this.turnsTaken = turnsTaken;
+    // console.log(this.turns);
+    // this.server.to(`room_${payload.room}`).emit('turnList', this.turns);
+    this.server
+      .to(`room_${payload.room}`)
+      .emit('turnTakenList', { turnsTaken: this.turnsTaken });
   }
+
   @SubscribeMessage('callAgain')
   handleCallAgain(client: Socket, payload: Person) {
     console.log(777, this.turnsTaken);
@@ -171,6 +180,33 @@ export class TurnsGateway
         (item) => item.id !== payload.id,
       );
       this.turnsTaken = [payload, ...turnsTaken];
+    }
+
+    // console.log(this.turns);
+    this.server.to(`room_${payload.room}`).emit('turnList', this.turns);
+    this.server
+      .to(`room_${payload.room}`)
+      .emit('turnTakenList', { turnsTaken: this.turnsTaken });
+  }
+
+  @SubscribeMessage('unlock')
+  handleUnlock(client: Socket, payload: Person) {
+    // console.log('handleDeleteTurn:::', payload);
+    // const turn = this.turns.filter((item) => item.id === payload.id);
+    // // console.log(turns);
+    // if (turn?.length) {
+    //   const turns = this.turns.filter((item) => item.id !== payload.id);
+    //   this.turns = [payload, ...turns];
+    // }
+
+    const turnTaken = this.turnsTaken.filter((item) => item.id === payload.id);
+    // console.log(turns);
+    if (turnTaken?.length) {
+      const turnsTaken = this.turnsTaken.filter(
+        (item) => item.id !== payload.id,
+      );
+      this.turnsTaken = [...turnsTaken];
+      this.turns = [payload, ...this.turns];
     }
 
     // console.log(this.turns);

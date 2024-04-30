@@ -96,6 +96,44 @@ export class ReportRepository {
     }
   }
 
+  async getReportTurn(params: GetReportDto): Promise<ResponseDto> {
+    try {
+      const { startDate, endDate } = params;
+      const queryTurn = `
+          SELECT
+              t.created_by_id,
+              u.first_name || ' ' || u.last_name AS name,
+              CAST(COUNT(*) AS INTEGER) AS count
+          FROM "CTM".turn AS t
+          INNER JOIN "USR"."user" AS u ON u.id = t.created_by_id
+          WHERE t.created_at >= '${startDate}' AND t.created_at <= '${endDate}'
+          GROUP BY t.created_by_id, u.first_name, u.last_name
+      `;
+      const queryAttention = `
+          SELECT at.attent_by_id,
+                 u.first_name || ' ' || u.last_name AS name,
+                 SUM(at.total_time) AS total_minutes,
+                 AVG(at.total_time) AS average,
+                 COUNT(*) AS count
+          FROM "CTM".attention at
+          INNER JOIN "USR"."user" AS u ON u.id = at.attent_by_id
+          WHERE at.created_at >= '${startDate}' AND at.created_at <= '${endDate}'
+          GROUP BY at.attent_by_id, u.first_name, u.last_name;
+      `;
+      return {
+        data: {
+          turns: await this.serviceRepository.query(queryTurn),
+          attentions: await this.serviceRepository.query(queryAttention),
+        },
+        code: 201,
+        msg: 'Obtenido correctamente',
+      };
+    } catch (e) {
+      console.log(e);
+      return { data: e, code: 500, msg: 'Error al obtener' };
+    }
+  }
+
   async getReportDashboard(params: GetReportDto): Promise<ResponseDto> {
     try {
       const { startDate, endDate } = params;

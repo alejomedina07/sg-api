@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,270" last-zoom="1.1" max-obj-count="69"
+<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,515" last-zoom="1.1" max-obj-count="69"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -1056,7 +1056,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<table name="turn" layers="0" collapse-mode="1" max-obj-count="12" z-value="0">
+<table name="turn" layers="0" collapse-mode="1" max-obj-count="13" z-value="0">
 	<schema name="&quot;CTM&quot;"/>
 	<role name="root"/>
 	<position x="1620" y="740"/>
@@ -1086,6 +1086,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="is_finish" default-value="false">
 		<type name="boolean" length="0"/>
+	</column>
+	<column name="note">
+		<type name="text" length="0"/>
 	</column>
 	<constraint name="turn_pk" type="pk-constr" table="&quot;CTM&quot;.turn">
 		<columns names="id" ref-type="src-columns"/>

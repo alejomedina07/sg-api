@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
@@ -18,6 +19,8 @@ import { ResponseDto } from '../../../shared/dto/response.dto';
 import { SetCreatedByGuard } from '../../../guards/auth/setCreatedBy.guard';
 import { CreateTypeTurnDto } from '../dto/createTypeTurn.dto';
 import { CreateTurnDto } from '../dto/createTurn.dto';
+import { GetAccountPayableDto } from '../../provider/dto/getAccountPayable.dto';
+import { GetTurnDto } from '../dto/getTurnDto.dto';
 
 @ApiBearerAuth()
 @Controller('turn')
@@ -30,6 +33,14 @@ export class TurnController {
   @Get('/type')
   async getTypeTurns(): Promise<ResponseDto> {
     return await this.turnService.getTypeTurns(false);
+  }
+
+  @Roles(Role.Admin, Role.User)
+  @Privileges(Privilege.turnList, Privilege.attentionList)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('/type/count')
+  async getCountTypeTurns(): Promise<ResponseDto> {
+    return await this.turnService.getCountTypeTurns();
   }
 
   @Roles(Role.Admin, Role.User)
@@ -75,8 +86,16 @@ export class TurnController {
   @Privileges(Privilege.turnList)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
-  async getTurns(): Promise<ResponseDto> {
-    return await this.turnService.getTurns();
+  async getTurns(@Query() params: GetTurnDto): Promise<ResponseDto> {
+    return await this.turnService.getTurns(params);
+  }
+
+  @Roles(Role.Admin, Role.User)
+  @Privileges(Privilege.turnList)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('/attention/:turnId')
+  async getAttention(@Param('turnId') turnId: number): Promise<ResponseDto> {
+    return await this.turnService.getAttention(turnId);
   }
 
   @Roles(Role.Admin, Role.User)

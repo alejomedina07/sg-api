@@ -23,6 +23,12 @@ export class ReportService {
     );
   }
 
+  async getReportTurn(queryParams: FilterParamsDto): Promise<ResponseDto> {
+    return await this.reportRepository.getReportTurn(
+      this.getStructureParams(queryParams),
+    );
+  }
+
   async getReportDashboard(queryParams: FilterParamsDto): Promise<ResponseDto> {
     return await this.reportRepository.getReportDashboard(
       this.getStructureParams(queryParams),
@@ -56,6 +62,7 @@ export class ReportService {
         return this.dateManagerService.getMonthRange(queryParams.month);
         break;
       case 'range':
+        console.log(8888, queryParams);
         return {
           startDate: queryParams.start_date + ' 00:00:00',
           endDate: queryParams.end_date + '  23:59:59',

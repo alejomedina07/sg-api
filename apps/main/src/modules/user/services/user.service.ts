@@ -4,6 +4,7 @@ import { UserRepository } from 'sg/core/repositories/user/user.repository';
 import { CryptoService } from 'sg/core/services/crypto/crypto.service';
 import { ResponseDto } from '../../../shared/dto/response.dto';
 import { PaginationDto } from '../../../shared/dto/pagination.dto';
+import { UpdateProfileDto } from '../dto/updateProfile.dto';
 
 @Injectable()
 export class UserService {
@@ -28,5 +29,11 @@ export class UserService {
     if (user.password)
       user.password = await this.cryptoService.encryptPassword(user.password);
     return this.userRepository.updateUser(id, user);
+  }
+
+  async updateProfile(user: UpdateProfileDto): Promise<ResponseDto> {
+    if (user.password && user.password === user.confirmPassword)
+      user.password = await this.cryptoService.encryptPassword(user.password);
+    return this.userRepository.updateProfile(user);
   }
 }

@@ -48,6 +48,19 @@ export class ReportController {
   @Roles(Role.Admin)
   @Privileges(Privilege.reportList)
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('/turns')
+  async getReportTurn(
+    @Query() queryParams: FilterParamsDto,
+  ): Promise<ResponseDto> {
+    const res = await this.reportService.getReportTurn(queryParams);
+    if (res.code === 500)
+      throw new HttpException(res.msg || 'Error!!', res.code || 500);
+    return res;
+  }
+
+  @Roles(Role.Admin)
+  @Privileges(Privilege.reportList)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/dashboard')
   async getReportDashboard(
     @Query() queryParams: FilterParamsDto,
