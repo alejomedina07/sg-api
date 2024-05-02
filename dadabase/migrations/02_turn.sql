@@ -1,16 +1,16 @@
 -- Diff code generated with pgModeler (PostgreSQL Database Modeler)
 -- pgModeler version: 1.0.0-alpha1
--- Diff date: 2024-02-05 15:29:10
+-- Diff date: 2024-04-30 10:04:58
 -- Source model: system_inventory
 -- Database: system_inventory
 -- PostgreSQL version: 14.0
 
 -- [ Diff summary ]
 -- Dropped objects: 0
--- Created objects: 1
--- Changed objects: 1
+-- Created objects: 0
+-- Changed objects: 2
 
-SET search_path=public,pg_catalog,"INV","SVC","APMT","CTM","USR","CNFG","SVY";
+SET search_path=public,pg_catalog,"INV","SVC","APMT","CTM","USR","CNFG","SVY","PVD";
 -- ddl-end --
 
 
@@ -25,11 +25,5 @@ ALTER ROLE root
 	NOBYPASSRLS
 	UNENCRYPTED PASSWORD 'Id70pP%2C!3S';
 -- ddl-end --
-
-
--- [ Created constraints ] --
--- object: document_unique | type: CONSTRAINT --
--- ALTER TABLE "CTM".customer DROP CONSTRAINT IF EXISTS document_unique CASCADE;
-ALTER TABLE "CTM".customer ADD CONSTRAINT document_unique UNIQUE (document,document_type_id);
+ALTER TABLE "CTM".turn ALTER COLUMN entry_time TYPE varchar(10);
 -- ddl-end --
-

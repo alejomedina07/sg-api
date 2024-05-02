@@ -5,7 +5,6 @@ import { differenceInMinutes } from 'date-fns';
 import { Attention, Turn, TypeTurn } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
 import { FilterListService } from 'sg/core/services/filters/filterList.service';
-import { GetAccountPayableDto } from '../../../../../apps/main/src/modules/provider/dto/getAccountPayable.dto';
 import { TypeFiltersDto } from '../../../../../apps/main/src/modules/provider/dto/typeFilters.dto';
 import { GetTurnDto } from '../../../../../apps/main/src/modules/turn/dto/getTurnDto.dto';
 
@@ -17,8 +16,6 @@ const TYPES_FILTERS: TypeFiltersDto = {
     fullName: true,
     company: true,
     document: true,
-    // createdAt: true,
-    // finishAt: true,
   },
   NUMBERS: {
     id: true,
@@ -119,14 +116,15 @@ export class TurnRepository {
       const query = `SELECT
                          a.type_turn_id as id,
                          tt.name as room,
-                         l.name as type,
                          ROUND(AVG(a.total_time)::numeric, 2) AS average,
-                         COUNT(*) AS quantity
+                         COUNT(CASE WHEN a.finish_at IS NULL THEN 1 END) AS pending,
+                         COUNT(CASE WHEN a.finish_at IS NOT NULL THEN 1 END) AS attended,
+                         SUM(CASE WHEN t.double_turn THEN 2 ELSE 1 END) AS total
                      FROM "CTM".attention a
                               INNER JOIN "CTM".type_turn tt ON tt.id = a.type_turn_id
-                              INNER JOIN "CNFG".list l ON tt.type_turn_id = l.id
+                              INNER JOIN "CTM".turn t ON t.id = a.turn_id
                      WHERE DATE_TRUNC('day', a.created_at::timestamp) = CURRENT_DATE
-                     GROUP BY a.type_turn_id, tt.name, l.name;`;
+                     GROUP BY a.type_turn_id, tt.name;`;
 
       return {
         data: await this.typeTurnRepository.query(query),
@@ -141,18 +139,31 @@ export class TurnRepository {
 
   // TURN
 
-  async createTurn(data: Turn): Promise<ResponseDto> {
+  async createTurn(data: Turn, typeTurns: number[]): Promise<ResponseDto> {
     try {
+      console.log(777, data);
       const createdAt = this.getCurrentDate();
-      const procedureInsert = await this.turnRepository.manager.insert(Turn, {
-        ...data,
-        createdAt,
+      return this.entityManager.transaction(async (entityManager) => {
+        const turnSave = await entityManager.insert(Turn, {
+          ...data,
+          createdAt,
+        });
+        console.log(turnSave.identifiers[0].id);
+        const turnId = turnSave.identifiers[0].id;
+        const attentionsToInsert = typeTurns.map((typeTurnId) => ({
+          turnId,
+          typeTurnId,
+        }));
+
+        await entityManager.insert(Attention, attentionsToInsert);
+
+        return {
+          data: { id: turnId, createdAt },
+          success: true,
+          msg: 'Turno Creado!',
+          code: 200,
+        };
       });
-      return {
-        data: { id: procedureInsert.identifiers[0].id, createdAt },
-        msg: 'Turno Creado!',
-        code: 200,
-      };
     } catch (e) {
       console.log(12, e);
       return { code: 500, msg: 'Error al intentar guardar' + e, data: e };
@@ -200,6 +211,8 @@ export class TurnRepository {
     }
   }
 
+  // ATTENTION
+
   async getAttention(turnId: number): Promise<ResponseDto> {
     try {
       const data = await this.turnRepository.manager.find(Attention, {
@@ -208,95 +221,6 @@ export class TurnRepository {
       });
 
       return { data, msg: 'Obtenido correctamente!', code: 201 };
-    } catch (e) {
-      console.log(e);
-      return { code: 500, msg: 'Error al obtener' };
-    }
-  }
-
-  // ATTENTION
-
-  async createAttention(data: Attention): Promise<ResponseDto> {
-    try {
-      const attentionInsert = await this.turnRepository.manager.insert(
-        Attention,
-        { ...data, createdAt: this.getCurrentDate() },
-      );
-      return {
-        data: attentionInsert.identifiers[0].id,
-        msg: 'Atención Creada!',
-        code: 200,
-      };
-    } catch (e) {
-      console.log(666, e);
-      return { code: 500, msg: 'Error al intentar guardar' + e, data: e };
-    }
-  }
-
-  async updateAttention(id: number, data: Attention): Promise<ResponseDto> {
-    try {
-      const procedureInsert = await this.typeTurnRepository.manager.update(
-        Attention,
-        id,
-        data,
-      );
-      return { data: procedureInsert.raw, msg: 'Nota Editada!', code: 200 };
-    } catch (e) {
-      console.log(12, e);
-      return { code: 500, msg: 'Error al intentar guardar' + e, data: e };
-    }
-  }
-
-  async finishAttention(
-    id: number,
-    data: Attention,
-    isFinish: boolean,
-  ): Promise<any> {
-    try {
-      return this.entityManager.transaction(async (entityManager) => {
-        const existingAttention = await entityManager.findOne(Attention, {
-          where: { id },
-          select: ['id', 'createdAt'],
-        });
-        if (!existingAttention) {
-          return { success: false, msg: 'La atención no existe', code: 400 };
-        }
-        const finishAt = this.getCurrentDate();
-        await entityManager.update(Attention, id, {
-          ...data,
-          finishAt,
-          totalTime: differenceInMinutes(finishAt, existingAttention.createdAt),
-        });
-
-        if (isFinish) {
-          const turnSelected = await entityManager.findOne(Turn, {
-            where: { id: data.turnId },
-            select: ['id', 'createdAt'],
-          });
-          await entityManager.update(Turn, data.turnId, {
-            finishAt,
-            totalTime: differenceInMinutes(finishAt, turnSelected.createdAt),
-            isFinish: true,
-          });
-        }
-
-        return { success: true, msg: 'Actualizado exitosamente!', code: 200 };
-      });
-    } catch (e) {
-      console.log(e);
-      return { code: 500, msg: 'Error al intentar guardar', data: e };
-    }
-  }
-
-  async getAttentions(): Promise<ResponseDto> {
-    try {
-      return {
-        data: await this.typeTurnRepository.manager.find(Attention, {
-          order: { createdAt: 'DESC' },
-        }),
-        msg: 'Obtenido correctamente!',
-        code: 201,
-      };
     } catch (e) {
       console.log(e);
       return { code: 500, msg: 'Error al obtener' };

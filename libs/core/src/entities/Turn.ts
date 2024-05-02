@@ -23,6 +23,13 @@ export class Turn {
   @Column('character varying', { name: 'company', nullable: true, length: 200 })
   company: string | null;
 
+  @Column('character varying', {
+    name: 'entry_time',
+    nullable: true,
+    length: 10,
+  })
+  entryTime?: string | null;
+
   @Column('character varying', { name: 'document', nullable: true, length: 20 })
   document: string | null;
 
@@ -58,6 +65,9 @@ export class Turn {
 
   @Column('text', { name: 'note', nullable: true })
   note?: string;
+
+  @Column('boolean', { name: 'double_turn', nullable: true })
+  doubleTurn?: boolean | null;
 
   @OneToMany(() => Attention, (attention) => attention.turn)
   attentions?: Attention[];

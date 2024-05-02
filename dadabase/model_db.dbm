@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,515" last-zoom="1.1" max-obj-count="69"
+<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,676" last-zoom="1.1" max-obj-count="69"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -1056,7 +1056,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<table name="turn" layers="0" collapse-mode="1" max-obj-count="13" z-value="0">
+<table name="turn" layers="0" collapse-mode="1" max-obj-count="15" z-value="0">
 	<schema name="&quot;CTM&quot;"/>
 	<role name="root"/>
 	<position x="1620" y="740"/>
@@ -1089,6 +1089,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="note">
 		<type name="text" length="0"/>
+	</column>
+	<column name="entry_time">
+		<type name="varchar" length="10"/>
+	</column>
+	<column name="double_turn">
+		<type name="boolean" length="0"/>
 	</column>
 	<constraint name="turn_pk" type="pk-constr" table="&quot;CTM&quot;.turn">
 		<columns names="id" ref-type="src-columns"/>
@@ -1169,10 +1175,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		</idxelement>
 </index>
 
-<table name="attention" layers="0" collapse-mode="1" max-obj-count="9" z-value="0">
+<table name="attention" layers="0" collapse-mode="1" max-obj-count="10" z-value="0">
 	<schema name="&quot;CTM&quot;"/>
 	<role name="root"/>
-	<position x="1960" y="680"/>
+	<position x="1980" y="700"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1187,6 +1193,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="description">
 		<type name="text" length="0"/>
+	</column>
+	<column name="attended_at">
+		<type name="timestamp" length="0"/>
 	</column>
 	<constraint name="attention_pk" type="pk-constr" table="&quot;CTM&quot;.attention">
 		<columns names="id" ref-type="src-columns"/>

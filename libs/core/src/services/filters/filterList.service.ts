@@ -90,6 +90,9 @@ export class FilterListService {
               [TYPES_FILTERS.RELATION[key]]: ILike(`%${filters[key]}%`),
             },
           });
+        } else if (TYPES_FILTERS.EQUAL && TYPES_FILTERS.EQUAL[key]) {
+          whereConditions.push({ [key]: Equal(filters[key]) });
+          whereWithAnd[key] = Equal(filters[key]);
         }
       }
     }

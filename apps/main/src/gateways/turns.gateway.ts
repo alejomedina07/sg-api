@@ -20,8 +20,10 @@ interface Person {
   roomAppointMent?: string;
   timeAppointment?: string | null;
   takeBy?: string;
+  entryTime?: string;
   procedures?: any[];
   attentions?: any[];
+  doubleTurn?: boolean;
 }
 
 @WebSocketGateway(3001, {
@@ -113,7 +115,7 @@ export class TurnsGateway
 
   @SubscribeMessage('takenTurn')
   handleTakenTurn(client: Socket, payload: Person) {
-    console.log('takenTurn:::', payload);
+    console.log('takenTurn:::', this.turns);
     const index = this.turns.findIndex((item) => item.id === payload.id);
     // Verifica si se encontró un elemento con id igual a 1
     if (index !== -1) {
@@ -125,8 +127,6 @@ export class TurnsGateway
       };
 
       this.turnsTaken.push(turnTaken);
-
-      console.log();
 
       // const turnsTaken = this.turnsTaken.filter(
       //   (item) => item.id !== payload.id,

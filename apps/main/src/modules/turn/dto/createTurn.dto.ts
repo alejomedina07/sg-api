@@ -1,7 +1,10 @@
 import {
+  ArrayMinSize,
+  IsArray,
   IsDate,
   IsDefined,
   IsInt,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -35,6 +38,13 @@ export class CreateTurnDto {
   })
   company: string;
 
+  @ApiProperty({ description: 'Salas del turno', required: true })
+  @IsDefined({ message: 'typeTurns: Las salas son requeridas' })
+  @IsNumber({}, { each: true })
+  @IsArray()
+  @ArrayMinSize(1)
+  typeTurns: number[];
+
   @ApiProperty({ description: 'Hora del turno', required: false })
   @IsOptional()
   @IsString({
@@ -48,6 +58,13 @@ export class CreateTurnDto {
     message: 'note: La nota del turno debe ser texto',
   })
   note?: string;
+
+  @ApiProperty({ description: 'Hora de entrada del paciente', required: false })
+  @IsOptional()
+  @IsString({
+    message: 'entryTime: La hora de entrada debe ser texto',
+  })
+  entryTime?: string;
 
   @ApiProperty({ description: 'createdAt del turno', required: false })
   @IsOptional()
@@ -73,4 +90,11 @@ export class CreateTurnDto {
   })
   @IsOptional()
   isFinish?: boolean;
+
+  @ApiProperty({
+    description: 'Doble turno',
+    required: false,
+  })
+  @IsOptional()
+  doubleTurn?: boolean;
 }

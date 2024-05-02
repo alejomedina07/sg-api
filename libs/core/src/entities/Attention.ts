@@ -31,6 +31,12 @@ export class Attention {
   })
   createdAt?: Date | null;
 
+  @Column('timestamp without time zone', {
+    name: 'attended_at',
+    nullable: true,
+  })
+  attendedAt?: Date | null;
+
   @Column('integer', { name: 'type_turn_id', nullable: true })
   typeTurnId: number | null;
 

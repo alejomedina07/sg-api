@@ -37,7 +37,7 @@ export class TurnService {
   }
 
   async createTurn(typeTurn: CreateTurnDto): Promise<any> {
-    return this.turnRepository.createTurn(typeTurn);
+    return this.turnRepository.createTurn(typeTurn, typeTurn.typeTurns);
   }
 
   async updateTurn(id: number, turn: CreateTurnDto): Promise<any> {

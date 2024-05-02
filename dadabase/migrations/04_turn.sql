@@ -1,6 +1,6 @@
 -- Diff code generated with pgModeler (PostgreSQL Database Modeler)
 -- pgModeler version: 1.0.0-alpha1
--- Diff date: 2024-04-26 15:47:12
+-- Diff date: 2024-04-30 17:07:19
 -- Source model: system_inventory
 -- Database: system_inventory
 -- PostgreSQL version: 14.0
@@ -15,9 +15,9 @@ SET search_path=public,pg_catalog,"INV","SVC","APMT","CTM","USR","CNFG","SVY","P
 
 
 -- [ Created objects ] --
--- object: note | type: COLUMN --
--- ALTER TABLE "CTM".turn DROP COLUMN IF EXISTS note CASCADE;
-ALTER TABLE "CTM".turn ADD COLUMN note text;
+-- object: attended_at | type: COLUMN --
+-- ALTER TABLE "CTM".attention DROP COLUMN IF EXISTS attended_at CASCADE;
+ALTER TABLE "CTM".attention ADD COLUMN attended_at timestamp;
 -- ddl-end --
 
 
