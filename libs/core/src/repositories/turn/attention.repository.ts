@@ -17,6 +17,9 @@ const TYPES_FILTERS: TypeFiltersDto = {
   BOOLEAN: {
     isFinish: true,
   },
+  DATE: {
+    createdAt: true,
+  },
   CONTAINS: {
     fullName: true,
     company: true,

@@ -1,4 +1,5 @@
 export interface TypeFiltersDto {
+  DATE?: { [key: string]: boolean };
   EQUAL?: { [key: string]: boolean };
   BOOLEAN?: { [key: string]: boolean };
   CONTAINS?: { [key: string]: boolean };

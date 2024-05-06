@@ -6,6 +6,7 @@ import {
   FindOperator,
   ILike,
   MoreThanOrEqual,
+  Between,
 } from 'typeorm';
 import { Payment } from 'sg/core/entities';
 
@@ -93,6 +94,17 @@ export class FilterListService {
         } else if (TYPES_FILTERS.EQUAL && TYPES_FILTERS.EQUAL[key]) {
           whereConditions.push({ [key]: Equal(filters[key]) });
           whereWithAnd[key] = Equal(filters[key]);
+        } else if (TYPES_FILTERS.DATE && TYPES_FILTERS.DATE[key]) {
+          // Si el filtro es para una fecha
+          const dateFilter = new Date(filters[key]);
+          const nextDay = new Date(dateFilter);
+          nextDay.setDate(nextDay.getDate() + 1);
+          whereConditions.push({
+            [key]: Between(dateFilter, nextDay),
+          });
+          whereWithAnd[key] = {
+            Between: [dateFilter, nextDay],
+          };
         }
       }
     }

@@ -141,13 +141,10 @@ export class TurnsGateway
   }
   @SubscribeMessage('deleteTurn')
   handleDeleteTurn(client: Socket, payload: Person) {
-    console.log('handleDeleteTurn:::', payload);
     const turns = this.turns.filter((item) => item.id !== payload.id);
-    // console.log(turns);
     this.turns = turns;
-    // console.log(this.turns);
     this.server.to(`room_${payload.room}`).emit('turnList', this.turns);
-    const turnsTaken = this.turns.filter((item) => item.id !== payload.id);
+    const turnsTaken = this.turnsTaken.filter((item) => item.id !== payload.id);
     // console.log(turns);
     this.turnsTaken = turnsTaken;
     // console.log(this.turns);
@@ -191,14 +188,6 @@ export class TurnsGateway
 
   @SubscribeMessage('unlock')
   handleUnlock(client: Socket, payload: Person) {
-    // console.log('handleDeleteTurn:::', payload);
-    // const turn = this.turns.filter((item) => item.id === payload.id);
-    // // console.log(turns);
-    // if (turn?.length) {
-    //   const turns = this.turns.filter((item) => item.id !== payload.id);
-    //   this.turns = [payload, ...turns];
-    // }
-
     const turnTaken = this.turnsTaken.filter((item) => item.id === payload.id);
     // console.log(turns);
     if (turnTaken?.length) {

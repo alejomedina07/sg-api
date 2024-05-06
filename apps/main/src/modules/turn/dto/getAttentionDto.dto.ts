@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsDateString,
+  IsDefined,
   IsEnum,
   IsInt,
   IsOptional,
@@ -51,6 +53,19 @@ export class AttentionFilters {
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
   isFinish?: boolean;
+
+  @ApiProperty({ description: 'Creación', required: false, type: Date })
+  @IsOptional()
+  @IsDateString()
+  createdAt?: string;
+
+  // @ApiProperty({ description: 'Creación', required: false, type: Date })
+  // @IsOptional()
+  // // @Validate((value) => isValidDateString(value), {
+  // //   message: 'createdAt: La fecha no es correcta',
+  // // })
+  // @IsDateString({ message: 'createdAt: La fecha no es correcta' })
+  // createdAt?: Date;
 
   @ApiProperty({ description: 'ID del elemento', required: false })
   @IsOptional()

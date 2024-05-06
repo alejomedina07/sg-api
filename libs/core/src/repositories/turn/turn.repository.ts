@@ -89,7 +89,7 @@ export class TurnRepository {
             where: { status: true },
             select: ['name', 'description', 'id', 'typeTurn', 'typeTurnId'],
             relations: ['typeTurn'],
-            order: { typeTurnId: 'DESC' },
+            order: { name: 'ASC' },
           })
         : await this.typeTurnRepository.manager.find(TypeTurn, {
             relations: ['typeTurn'],
@@ -124,7 +124,8 @@ export class TurnRepository {
                               INNER JOIN "CTM".type_turn tt ON tt.id = a.type_turn_id
                               INNER JOIN "CTM".turn t ON t.id = a.turn_id
                      WHERE DATE_TRUNC('day', a.created_at::timestamp) = CURRENT_DATE
-                     GROUP BY a.type_turn_id, tt.name;`;
+                     GROUP BY a.type_turn_id, tt.name
+                     ORDER BY tt.name ASC;`;
 
       return {
         data: await this.typeTurnRepository.query(query),

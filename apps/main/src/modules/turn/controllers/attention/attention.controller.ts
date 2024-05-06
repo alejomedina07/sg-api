@@ -8,6 +8,7 @@ import {
   Put,
   Query,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Privileges, Roles } from '../../../../decorators/roles.decorator';
 import { Privilege, Role } from '../../../../enums/role.enum';
@@ -30,7 +31,9 @@ export class AttentionController {
   @Privileges(Privilege.attentionList)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
-  async getAttentions(@Query() params: GetAttentionDto): Promise<ResponseDto> {
+  async getAttentions(
+    @Query(ValidationPipe) params: GetAttentionDto,
+  ): Promise<ResponseDto> {
     return await this.turnService.getAttentions(params);
   }
 
