@@ -8,7 +8,8 @@ import {
   MoreThanOrEqual,
   Between,
 } from 'typeorm';
-import { Payment } from 'sg/core/entities';
+
+import { format } from 'date-fns';
 
 @Injectable()
 export class FilterListService {
@@ -95,21 +96,20 @@ export class FilterListService {
           whereConditions.push({ [key]: Equal(filters[key]) });
           whereWithAnd[key] = Equal(filters[key]);
         } else if (TYPES_FILTERS.DATE && TYPES_FILTERS.DATE[key]) {
-          // Si el filtro es para una fecha
           const dateFilter = new Date(filters[key]);
-          const nextDay = new Date(dateFilter);
+          let nextDay = new Date(dateFilter);
           nextDay.setDate(nextDay.getDate() + 1);
+          nextDay.setHours(0, 0, 0, 0);
           whereConditions.push({
             [key]: Between(dateFilter, nextDay),
           });
-          whereWithAnd[key] = {
-            Between: [dateFilter, nextDay],
-          };
+          whereWithAnd[key] = Between(dateFilter, nextDay);
         }
       }
     }
     if (filters) {
       if (filters.type === 'AND') {
+        console.log(66666);
         queryOptions.where =
           Object.keys(whereWithAnd).length > 0 ? whereWithAnd : undefined;
       } else {

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, FindManyOptions, Repository } from 'typeorm';
-import { differenceInMinutes } from 'date-fns';
 import { Attention, Turn, TypeTurn } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
 import { FilterListService } from 'sg/core/services/filters/filterList.service';
 import { TypeFiltersDto } from '../../../../../apps/main/src/modules/provider/dto/typeFilters.dto';
 import { GetTurnDto } from '../../../../../apps/main/src/modules/turn/dto/getTurnDto.dto';
+import { format } from 'date-fns';
 
 const TYPES_FILTERS: TypeFiltersDto = {
   BOOLEAN: {
@@ -113,6 +113,23 @@ export class TurnRepository {
 
   async getCountTypeTurns(): Promise<ResponseDto> {
     try {
+      // const query = `SELECT
+      //                    a.type_turn_id as id,
+      //                    tt.name as room,
+      //                    ROUND(AVG(a.total_time)::numeric, 2) AS average,
+      //                    COUNT(CASE WHEN a.finish_at IS NULL THEN 1 END) AS pending,
+      //                    COUNT(CASE WHEN a.finish_at IS NOT NULL THEN 1 END) AS attended,
+      //                    SUM(CASE WHEN t.double_turn THEN 2 ELSE 1 END) AS total
+      //                FROM "CTM".attention a
+      //                         INNER JOIN "CTM".type_turn tt ON tt.id = a.type_turn_id
+      //                         INNER JOIN "CTM".turn t ON t.id = a.turn_id
+      //                WHERE DATE_TRUNC('day', a.created_at::timestamp) = CURRENT_DATE
+      //                GROUP BY a.type_turn_id, tt.name
+      //                ORDER BY tt.name ASC;`;
+
+      const startDate = format(new Date(), 'yyyy-MM-dd') + ' 00:00:00',
+        endDate = format(new Date(), 'yyyy-MM-dd') + ' 23:59:59';
+
       const query = `SELECT
                          a.type_turn_id as id,
                          tt.name as room,
@@ -123,10 +140,10 @@ export class TurnRepository {
                      FROM "CTM".attention a
                               INNER JOIN "CTM".type_turn tt ON tt.id = a.type_turn_id
                               INNER JOIN "CTM".turn t ON t.id = a.turn_id
-                     WHERE DATE_TRUNC('day', a.created_at::timestamp) = CURRENT_DATE
+                     WHERE a.created_at >= '${startDate}' AND a.created_at <= '${endDate}'
                      GROUP BY a.type_turn_id, tt.name
                      ORDER BY tt.name ASC;`;
-
+      console.log(6666, query);
       return {
         data: await this.typeTurnRepository.query(query),
         msg: 'Obtenido correctamente!',

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, FindManyOptions, Repository } from 'typeorm';
+import { Between, EntityManager, FindManyOptions, Repository } from 'typeorm';
 import { differenceInMinutes } from 'date-fns';
 import { Attention, Turn, TypeTurn } from 'sg/core/entities';
 import { ResponseDto } from '../../../../../apps/main/src/shared/dto/response.dto';
@@ -106,7 +106,7 @@ export class AttentionRepository {
       });
     } catch (e) {
       console.log(12, e);
-      return { code: 500, msg: 'Error al intentar guardar' + e, data: e };
+      return { code: 500, msg: 'Error al intentar guardar' + e,  data: e };
     }
   }
 
@@ -159,7 +159,18 @@ export class AttentionRepository {
     try {
       const { page = 0, limit = 1000, filters, order } = params;
 
-      console.log(888, filters);
+      // console.log(888, filters);
+      // const dateFilter = new Date(filters.createdAt);
+      // let nextDay = new Date(dateFilter);
+      // nextDay.setDate(nextDay.getDate() + 1); // Ajustar para incluir todo el día
+      // nextDay.setHours(0, 0, 0, 0);
+      // const data = await this.attentionRepository.find({
+      //   where: { createdAt: Between(dateFilter, nextDay), typeTurnId: 4 },
+      // });
+      //
+      // console.log(data);
+      //
+      // return { data, msg: 'Obtenido correctamente!', code: 201 };
 
       let queryOptions: FindManyOptions<Attention> = {
         relations: ['attentBy', 'turn', 'typeTurn'],
@@ -173,13 +184,13 @@ export class AttentionRepository {
         TYPES_FILTERS,
         queryOptions,
       );
-      console.log(9999, queryOptions);
 
       const [data, total] = await this.attentionRepository.manager.findAndCount(
         Attention,
         queryOptions,
       );
 
+      console.log(9999, data);
       return { data, total, msg: 'Obtenido correctamente!', code: 201 };
     } catch (e) {
       console.log(e);
