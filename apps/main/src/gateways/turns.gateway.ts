@@ -24,6 +24,7 @@ interface Person {
   procedures?: any[];
   attentions?: any[];
   doubleTurn?: boolean;
+  takePreTurn?: boolean;
 }
 
 @WebSocketGateway(3001, {
@@ -64,6 +65,16 @@ export class TurnsGateway
   handlePreNewTurn(client: Socket, payload: Person) {
     // console.log('newPreTurn::', payload);
     this.preTurns.push(payload);
+    this.server.to(`room_${payload.room}`).emit('preTurnList', this.preTurns);
+  }
+  // New Pre Turn
+  @SubscribeMessage('takePreTurn')
+  handleTakePreTurn(client: Socket, payload: { id: number; room: string }) {
+    // console.log('newPreTurn::', payload);
+    // this.preTurns.push(payload);
+    this.preTurns.forEach((item) => {
+      if (item.id === payload.id) item.takePreTurn = true;
+    });
     this.server.to(`room_${payload.room}`).emit('preTurnList', this.preTurns);
   }
 
