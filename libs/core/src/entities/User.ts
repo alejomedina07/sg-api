@@ -70,6 +70,8 @@ export class User {
   @Column('text', { name: 'password', nullable: true })
   password: string | null;
 
+  passwordConfirm?: string | null;
+
   @Column('integer', { name: 'document_type_id', nullable: true })
   documentTypeId: number | null;
 

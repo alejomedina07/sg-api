@@ -82,7 +82,6 @@ values
         ('survey.create', 'Crear encuestas'),
         ('survey.edit', 'Editar encuestas'),
         ('survey.delete', 'Eliminar encuestas'),
-        -- lanzar en prod
         ('typeTurn.list', 'Listar Tipos de turnos.(Salas)'),
         ('typeTurn.create', 'Crear Tipos de turnos.(Salas)'),
         ('typeTurn.edit', 'Editar Tipos de turnos.(Salas)'),
@@ -91,14 +90,10 @@ values
         ('provider.create', 'Crear proveedores'),
         ('provider.edit', 'Editar proveedores'),
         ('provider.delete', 'Eliminar proveedores'),
-
-
         ('accountPayable.list', 'Listar cuentas por pagar'),
         ('accountPayable.create', 'Crear cuentas por pagar'),
         ('accountPayable.edit', 'Editar cuentas por pagar'),
         ('accountPayable.delete', 'Eliminar cuentas por pagar'),
-
-
         ('payment.list', 'Listar pagos'),
         ('payment.create', 'Crear pagos'),
         ('payment.edit', 'Editar pagos'),
@@ -106,7 +101,12 @@ values
         ('attention.list', 'Listar Atenciones de turnos.(Salas)'),
         ('attention.create', 'Crear Atenciones de turnos.(Salas)'),
         ('attention.edit', 'Editar Atenciones de turnos.(Salas)'),
-        ('attention.delete', 'Eliminar Atenciones de turnos.(Salas)')
+        ('attention.delete', 'Eliminar Atenciones de turnos.(Salas)'),
+        -- lanzar en prod
+        ('banner.list', 'Listar Banners'),
+        ('banner.create', 'Crear Banners'),
+        ('banner.edit', 'Editar Banners'),
+        ('banner.delete', 'Eliminar Banners')
 ;
 
 
@@ -122,7 +122,7 @@ values
 
 --
 insert into "USR".privileges (name, description)
-values         ('attention.list', 'Listar Atenciones de turnos.(Salas)'),
-               ('attention.create', 'Crear Atenciones de turnos.(Salas)'),
-               ('attention.edit', 'Editar Atenciones de turnos.(Salas)'),
-               ('attention.delete', 'Eliminar Atenciones de turnos.(Salas)');
+values         ('banner.list', 'Listar Banners'),
+               ('banner.create', 'Crear Banners'),
+               ('banner.edit', 'Editar Banners'),
+               ('banner.delete', 'Eliminar Banners');

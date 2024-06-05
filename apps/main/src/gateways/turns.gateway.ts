@@ -111,26 +111,18 @@ export class TurnsGateway
       this.turnsTaken = turnsTaken;
       this.turns = turns;
     }
-    // console.log('finish');
     this.server.to(`room_${payload.room}`).emit('turnList', turns);
     this.server
       .to(`room_${payload.room}`)
       .emit('turnTakenList', { turnsTaken: turnsTaken });
-    // this.server.to(`room_${payload.room}`).emit('turnList', this.turns);
-    // this.server
-    //   .to(`room_${payload.room}`)
-    //   .emit('turnTakenList', { turnsTaken: this.turnsTaken });
   }
 
   // Taken turns
 
   @SubscribeMessage('takenTurn')
   handleTakenTurn(client: Socket, payload: Person) {
-    console.log('takenTurn:::', this.turns);
     const index = this.turns.findIndex((item) => item.id === payload.id);
-    // Verifica si se encontró un elemento con id igual a 1
     if (index !== -1) {
-      // Extrae el elemento con id igual a 1 y guárdalo en una variable
       const turn = this.turns.splice(index, 1)[0];
       const turnTaken = {
         ...turn,
@@ -138,12 +130,6 @@ export class TurnsGateway
       };
 
       this.turnsTaken.push(turnTaken);
-
-      // const turnsTaken = this.turnsTaken.filter(
-      //   (item) => item.id !== payload.id,
-      // );
-      //
-      // this.turnsTaken = [...turnsTaken, turnTaken];
       this.server
         .to(`room_${payload.room}`)
         .emit('turnTakenList', { turnsTaken: this.turnsTaken, turnTaken });
@@ -156,10 +142,7 @@ export class TurnsGateway
     this.turns = turns;
     this.server.to(`room_${payload.room}`).emit('turnList', this.turns);
     const turnsTaken = this.turnsTaken.filter((item) => item.id !== payload.id);
-    // console.log(turns);
     this.turnsTaken = turnsTaken;
-    // console.log(this.turns);
-    // this.server.to(`room_${payload.room}`).emit('turnList', this.turns);
     this.server
       .to(`room_${payload.room}`)
       .emit('turnTakenList', { turnsTaken: this.turnsTaken });
@@ -167,30 +150,24 @@ export class TurnsGateway
 
   @SubscribeMessage('callAgain')
   handleCallAgain(client: Socket, payload: Person) {
-    console.log(777, this.turnsTaken);
     this.server.to(`room_${payload.room}`).emit('callAgain', payload);
   }
 
   @SubscribeMessage('changeRoom')
   handleChangeRoom(client: Socket, payload: Person) {
-    // console.log('handleDeleteTurn:::', payload);
     const turn = this.turns.filter((item) => item.id === payload.id);
-    // console.log(turns);
     if (turn?.length) {
       const turns = this.turns.filter((item) => item.id !== payload.id);
       this.turns = [payload, ...turns];
     }
 
     const turnTaken = this.turnsTaken.filter((item) => item.id === payload.id);
-    // console.log(turns);
     if (turnTaken?.length) {
       const turnsTaken = this.turnsTaken.filter(
         (item) => item.id !== payload.id,
       );
       this.turnsTaken = [payload, ...turnsTaken];
     }
-
-    // console.log(this.turns);
     this.server.to(`room_${payload.room}`).emit('turnList', this.turns);
     this.server
       .to(`room_${payload.room}`)
@@ -200,7 +177,6 @@ export class TurnsGateway
   @SubscribeMessage('unlock')
   handleUnlock(client: Socket, payload: Person) {
     const turnTaken = this.turnsTaken.filter((item) => item.id === payload.id);
-    // console.log(turns);
     if (turnTaken?.length) {
       const turnsTaken = this.turnsTaken.filter(
         (item) => item.id !== payload.id,
@@ -208,11 +184,30 @@ export class TurnsGateway
       this.turnsTaken = [...turnsTaken];
       this.turns = [payload, ...this.turns];
     }
-
-    // console.log(this.turns);
     this.server.to(`room_${payload.room}`).emit('turnList', this.turns);
     this.server
       .to(`room_${payload.room}`)
       .emit('turnTakenList', { turnsTaken: this.turnsTaken });
+  }
+
+  @SubscribeMessage('reCreateTurn')
+  handleReCreateTurn(client: Socket, payload: Person) {
+    try {
+      console.log(999);
+      const index = this.turns.findIndex((x) => x.id === payload.id);
+      const indexTaken = this.turnsTaken.findIndex((x) => x.id === payload.id);
+      if (index < 0 && indexTaken < 0) {
+        const turns = [...this.turns, payload];
+        console.log(777, turns);
+        this.turns = turns;
+      } else return { message: 'El turno se encuentra en el turner' };
+
+      this.server.to(`room_${payload.room}`).emit('turnList', this.turns);
+    } catch (e) {
+      console.log(e);
+    }
+    // this.server
+    //   .to(`room_${payload.room}`)
+    //   .emit('turnTakenList', { turnsTaken: this.turnsTaken });
   }
 }

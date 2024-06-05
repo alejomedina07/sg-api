@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,676" last-zoom="1.1" max-obj-count="69"
+<dbmodel pgmodeler-ver="1.0.0-alpha1" use-changelog="false" last-position="0,492" last-zoom="1.1" max-obj-count="69"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -538,7 +538,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="list" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
 	<schema name="&quot;CNFG&quot;"/>
 	<role name="root"/>
-	<position x="840" y="540"/>
+	<position x="820" y="460"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -794,7 +794,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="note" layers="0" collapse-mode="1" max-obj-count="8" z-value="0">
 	<schema name="&quot;CNFG&quot;"/>
 	<role name="root"/>
-	<position x="1220" y="560"/>
+	<position x="1200" y="480"/>
 	<column name="id" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -2063,5 +2063,32 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="&quot;CNFG&quot;.list"
 	 dst-table="&quot;CTM&quot;.type_turn"
 	 src-required="false" dst-required="false"/>
+
+<table name="banner" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="&quot;CNFG&quot;"/>
+	<role name="root"/>
+	<position x="1000" y="660"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="200"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="status" default-value="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="created_at" default-value="now()">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="photo">
+		<type name="varchar" length="200"/>
+	</column>
+	<constraint name="banner_pk" type="pk-constr" table="&quot;CNFG&quot;.banner">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
 
 </dbmodel>

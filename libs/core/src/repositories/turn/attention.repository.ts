@@ -92,10 +92,18 @@ export class AttentionRepository {
         const attention = await entityManager.findOne(Attention, {
           where: { turnId: data.turnId, typeTurnId: data.oldRoomId },
         });
-        await entityManager.save(Attention, {
-          ...attention,
-          typeTurnId: data.newRoomId,
-        });
+
+        if (attention) {
+          await entityManager.save(Attention, {
+            ...attention,
+            typeTurnId: data.newRoomId,
+          });
+        } else {
+          const oldAttention = await entityManager.findOne(Attention, {
+            where: { turnId: data.turnId, typeTurnId: data.newRoomId },
+          });
+          if (!oldAttention) throw ' Atención no encontrada';
+        }
 
         return {
           data: attention.id,
@@ -106,7 +114,7 @@ export class AttentionRepository {
       });
     } catch (e) {
       console.log(12, e);
-      return { code: 500, msg: 'Error al intentar guardar' + e,  data: e };
+      return { code: 500, msg: 'Error al intentar guardar' + e, data: e };
     }
   }
 

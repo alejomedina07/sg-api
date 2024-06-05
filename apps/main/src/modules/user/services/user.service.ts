@@ -26,8 +26,11 @@ export class UserService {
   }
 
   async updateUser(id: number, user: User): Promise<ResponseDto> {
-    if (user.password)
+    if (user.password) {
       user.password = await this.cryptoService.encryptPassword(user.password);
+      delete user.passwordConfirm;
+    }
+
     return this.userRepository.updateUser(id, user);
   }
 
